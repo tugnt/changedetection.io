@@ -160,6 +160,7 @@ LANGUAGE_DATA = {
     'hi': {'flag': 'fi fi-in fis', 'name': 'हिन्दी'},
     'id': {'flag': 'fi fi-id fis', 'name': 'Bahasa Indonesia'},
     'uk': {'flag': 'fi fi-ua fis', 'name': 'Українська'},
+    'vi': {'flag': 'fi fi-vn fis', 'name': 'Tiếng Việt'},
 }
 
 

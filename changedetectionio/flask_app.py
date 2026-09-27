@@ -174,7 +174,7 @@ _translation_overlay = os.getenv(
 if os.path.isdir(_translation_overlay):
     _translation_directories.append(_translation_overlay)
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = ';'.join(_translation_directories)
-app.config['BABEL_DEFAULT_LOCALE'] = 'en_GB'
+app.config['BABEL_DEFAULT_LOCALE'] = 'vi'
 
 # Session configuration
 # NOTE: Flask session (for locale, etc.) is separate from Flask-Login's remember-me cookie
@@ -820,7 +820,7 @@ def changedetection_app(config=None, datastore_o=None):
         # 2. Fall back to Accept-Language header
         browser_locale = request.accept_languages.best_match(_locale_match_list)
         # 3. Map browser locale to our internal locale if needed
-        return _locale_aliases.get(browser_locale, browser_locale)
+        return _locale_aliases.get(browser_locale, browser_locale) or app.config['BABEL_DEFAULT_LOCALE']
 
     # Initialize Babel with locale selector
     babel = Babel(app, locale_selector=get_locale)

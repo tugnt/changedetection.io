@@ -175,7 +175,7 @@ domain = messages
 When you find a translation error in **any** language, you must check all others for the same `msgid`:
 
 ```bash
-for lang in cs de en_GB en_US es fr it ja ko pt_BR ru tr uk zh zh_Hant_TW; do
+for lang in cs de en_GB en_US es fr it ja ko pt_BR ru tr uk vi zh zh_Hant_TW; do
   echo "=== $lang ===" && grep -A1 'msgid "YourString"' changedetectionio/translations/$lang/LC_MESSAGES/messages.po
 done
 ```
@@ -206,6 +206,7 @@ Never fix one language and move on.
 | `ru` | Russian (Русский) |
 | `tr` | Turkish (Türkçe) |
 | `uk` | Ukrainian (Українська) |
+| `vi` | Vietnamese (Tiếng Việt) |
 | `zh` | Chinese Simplified (中文简体) |
 | `zh_Hant_TW` | Chinese Traditional (繁體中文) |
 

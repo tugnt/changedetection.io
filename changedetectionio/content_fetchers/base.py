@@ -84,11 +84,15 @@ class Fetcher():
     error = None
     fetcher_description = "No description"
     headers = {}
+    http_cache_etag = None
+    http_cache_key = None
+    http_cache_last_modified = None
     favicon_blob = None
     instock_data = None
     instock_data_js = ""
     screenshot_format = None
     status_code = None
+    not_modified = False
     webdriver_js_execute_code = None
     worker_id = None
     xpath_data = None
@@ -204,6 +208,17 @@ class Fetcher():
         :return:
         """
         return {k.lower(): v for k, v in self.headers.items()}
+
+    def get_http_cache_state(self):
+        """Return the validator state produced by a conditional HTTP fetch."""
+        if not self.http_cache_key:
+            return None
+
+        return {
+            'key': self.http_cache_key,
+            'etag': self.http_cache_etag,
+            'last_modified': self.http_cache_last_modified,
+        }
 
     async def iterate_browser_steps(self, start_url=None):
         from changedetectionio.browser_steps.browser_steps import steppable_browser_interface, browser_steps_get_valid_steps

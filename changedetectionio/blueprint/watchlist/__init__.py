@@ -116,6 +116,7 @@ def construct_blueprint(datastore: ChangeDetectionStore, update_q, queuedWatchMe
                                 record_name=_('records'))
 
         sorted_tags = sorted(datastore.data['settings']['application'].get('tags').items(), key=lambda x: x[1]['title'])
+        tag_rows = datastore.get_tag_tree_rows()
 
         from changedetectionio import content_fetchers
         available_fetchers = content_fetchers.available_fetchers()
@@ -165,6 +166,7 @@ def construct_blueprint(datastore: ChangeDetectionStore, update_q, queuedWatchMe
             sort_attribute=request.args.get('sort') if request.args.get('sort') else request.cookies.get('sort'),
             sort_order=request.args.get('order') if request.args.get('order') else request.cookies.get('order'),
             tags=sorted_tags,
+            tag_rows=tag_rows,
             unread_changes_count=datastore.unread_changes_count,
             watches=sorted_watches,
             llm_configured=llm_configured,

@@ -1373,9 +1373,17 @@ msgid "Failed"
 msgstr ""
 
 #: changedetectionio/blueprint/tags/__init__.py
+msgid "Top-level group"
+msgstr ""
+
+#: changedetectionio/blueprint/tags/__init__.py
 #, python-brace-format
 msgid "The tag \"{}\" already exists"
 msgstr "タグ「{}」はすでに存在します"
+
+#: changedetectionio/blueprint/tags/__init__.py
+msgid "Invalid parent group"
+msgstr ""
 
 #: changedetectionio/blueprint/tags/__init__.py
 msgid "Tag added"
@@ -1400,6 +1408,10 @@ msgstr "タグが見つかりません"
 #: changedetectionio/blueprint/tags/__init__.py
 msgid "Updated"
 msgstr "更新しました"
+
+#: changedetectionio/blueprint/tags/form.py
+msgid "Parent group"
+msgstr ""
 
 #: changedetectionio/blueprint/tags/form.py
 msgid "Activate for individual watches in this tag/group?"

@@ -20,12 +20,14 @@ def resolve_active_tag_uuid(datastore, active_tag_req):
 
 def list_filters_from_args(datastore, args):
     active_tag_req = (args.get('tag') or '').lower().strip()
+    tag_uuid = resolve_active_tag_uuid(datastore, active_tag_req)
     return {
         'with_errors': args.get('with_errors') == "1",
         'unread_only': args.get('unread') == "1",
         'deals': args.get('deals') == "1",
         'processor': (args.get('processor') or '').strip(),
-        'tag_uuid': resolve_active_tag_uuid(datastore, active_tag_req),
+        'tag_uuid': tag_uuid,
+        'tag_uuids': datastore.get_tag_descendant_uuids(tag_uuid) if tag_uuid else set(),
         'search_q': args.get('q').strip().lower() if args.get('q') else False,
     }
 
@@ -49,7 +51,11 @@ def watch_matches_tag(datastore, watch, f):
     # Membership includes tags auto-applied via a Tag's url_match_pattern, not just
     # watch['tags'] (manually-assigned) — otherwise a regex-matched watch shows its
     # tag badge on the row but silently drops out of that tag's filtered/tab view.
-    return not f['tag_uuid'] or f['tag_uuid'] in datastore.get_all_tags_for_watch(watch['uuid'])
+    if not f['tag_uuid']:
+        return True
+
+    tag_uuids = f.get('tag_uuids') or {f['tag_uuid']}
+    return any(tag_uuid in tag_uuids for tag_uuid in datastore.get_all_tags_for_watch(watch['uuid']))
 
 
 def watch_in_context(datastore, watch, f):

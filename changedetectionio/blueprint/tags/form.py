@@ -1,6 +1,7 @@
 from wtforms import (
     Form,
     RadioField,
+    SelectField,
     StringField,
     SubmitField,
     TextAreaField,
@@ -20,6 +21,7 @@ from changedetectionio.llm.evaluator import (
 )
 
 class group_restock_settings_form(restock_settings_form):
+    parent_uuid = SelectField(_l('Parent group'), choices=[], default='')
     overrides_watch = BooleanField(_l('Activate for individual watches in this tag/group?'), default=False)
     url_match_pattern = StringField(_l('Auto-apply to watches with URLs matching'),
                                     render_kw={"placeholder": _l("e.g. *://example.com/* or github.com/myorg")})
@@ -65,4 +67,5 @@ class group_restock_settings_form(restock_settings_form):
 class SingleTag(Form):
 
     name = StringField(_l('Tag name'), [validators.InputRequired()], render_kw={"placeholder": _l("Name")})
+    parent_uuid = SelectField(_l('Parent group'), choices=[], default='')
     save_button = SubmitField(_l('Save'), render_kw={"class": "pure-button pure-button-primary"})

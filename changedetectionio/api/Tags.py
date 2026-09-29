@@ -45,10 +45,11 @@ class Tag(Resource):
             # Recheck all watches with this tag, including muted
             # First collect watches to queue
             watches_to_queue = []
+            tag_uuids = self.datastore.get_tag_descendant_uuids(uuid)
             for k in sorted(self.datastore.data['watching'].items(), key=lambda item: item[1].get('last_checked', 0)):
                 watch_uuid = k[0]
                 watch = k[1]
-                if not watch['paused'] and tag['uuid'] in watch['tags']:
+                if not watch['paused'] and tag_uuids.intersection(self.datastore.get_all_tags_for_watch(watch_uuid)):
                     watches_to_queue.append(watch_uuid)
 
             # If less than 20 watches, queue synchronously for immediate feedback
@@ -110,7 +111,12 @@ class Tag(Resource):
         if not self.datastore.data['settings']['application']['tags'].get(uuid):
             abort(400, message='No tag exists with the UUID of {}'.format(uuid))
 
-        # Delete the tag, and any tag reference
+        # Reparent children before deleting the tag, then remove every watch reference.
+        for child_tag in self.datastore.data['settings']['application']['tags'].values():
+            if child_tag.get('parent_uuid') == uuid:
+                child_tag['parent_uuid'] = None
+                child_tag.commit()
+
         del self.datastore.data['settings']['application']['tags'][uuid]
 
         # Remove tag from all watches
@@ -142,6 +148,12 @@ class Tag(Resource):
                 validate_notification_urls(notification_urls)
             except ValidationError as e:
                 return str(e), 400
+
+        if 'parent_uuid' in json_data:
+            parent_uuid = json_data.get('parent_uuid') or None
+            if not self.datastore.validate_tag_parent(uuid, parent_uuid):
+                return 'Invalid parent_uuid: parent must exist and cannot be this tag or one of its descendants', 400
+            json_data['parent_uuid'] = parent_uuid
 
         # Filter out readOnly fields (extracted from OpenAPI spec Tag schema)
         # These are system-managed fields that should never be user-settable
@@ -201,10 +213,14 @@ class Tag(Resource):
         if colour_error:
             return colour_error, 400
 
-        new_uuid = self.datastore.add_tag(title=title)
+        parent_uuid = json_data.get('parent_uuid') or None
+        if not self.datastore.validate_tag_parent(None, parent_uuid):
+            return 'Invalid parent_uuid: parent must exist', 400
+
+        new_uuid = self.datastore.add_tag(title=title, parent_uuid=parent_uuid)
         if new_uuid:
             # Apply any extra fields (e.g. processor_config_restock_diff) beyond just title
-            extra = {k: v for k, v in json_data.items() if k != 'title'}
+            extra = {k: v for k, v in json_data.items() if k not in ('title', 'parent_uuid')}
             if extra:
                 tag = self.datastore.data['settings']['application']['tags'].get(new_uuid)
                 if tag:
@@ -229,7 +245,8 @@ class Tags(Resource):
                 'date_created': tag.get('date_created', 0),
                 'notification_muted': tag.get('notification_muted', False),
                 'title': tag.get('title', ''),
-                'uuid': tag.get('uuid')
+                'uuid': tag.get('uuid'),
+                'parent_uuid': tag.get('parent_uuid')
             }
 
         return result, 200

@@ -199,6 +199,11 @@ class watch_base(dict):
             'has_ldjson_price_data': None,
             'headers': {},  # Extra headers to send
             'history_snapshot_max_length': None,
+            'http_cache': {
+                'key': None,
+                'etag': None,
+                'last_modified': None,
+            },
             'ignore_status_codes': None,
             'ignore_text': [],  # List of text to ignore when calculating the comparison checksum
             'in_stock_only': True,  # Only trigger change on going to instock from out-of-stock

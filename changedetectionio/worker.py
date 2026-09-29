@@ -189,14 +189,19 @@ async def async_update_worker(worker_id, q, notification_q, app, datastore, exec
                     # All fetchers are now async, so call directly
                     await update_handler.call_browser()
 
-                    # Run change detection in executor to avoid blocking event loop
-                    # This includes CPU-intensive operations like HTML parsing (lxml/inscriptis)
-                    # which can take 2-10ms and cause GIL contention across workers
-                    loop = asyncio.get_event_loop()
-                    changed_detected, update_obj, contents = await loop.run_in_executor(
-                        executor,
-                        lambda: update_handler.run_changedetection(watch=watch)
-                    )
+                    if update_handler.fetcher.not_modified:
+                        changed_detected = False
+                        process_changedetection_results = False
+                        update_obj['last_check_status'] = 304
+                    else:
+                        # Run change detection in executor to avoid blocking event loop
+                        # This includes CPU-intensive operations like HTML parsing (lxml/inscriptis)
+                        # which can take 2-10ms and cause GIL contention across workers
+                        loop = asyncio.get_event_loop()
+                        changed_detected, update_obj, contents = await loop.run_in_executor(
+                            executor,
+                            lambda: update_handler.run_changedetection(watch=watch)
+                        )
 
                 except PermissionError as e:
                     logger.critical(f"File permission error updating file, watch: {uuid}")
@@ -413,13 +418,22 @@ async def async_update_worker(worker_id, q, notification_q, app, datastore, exec
                     if not datastore.data['watching'].get(uuid):
                         continue
 
-                    update_obj['content-type'] = str(update_handler.fetcher.get_all_headers().get('content-type', '') or "").lower()
+                    if not update_handler.fetcher.not_modified:
+                        update_obj['content-type'] = str(update_handler.fetcher.get_all_headers().get('content-type', '') or "").lower()
 
                     if not watch.get('ignore_status_codes'):
                         update_obj['consecutive_filter_failures'] = 0
 
                     update_obj['last_error'] = False
                     cleanup_error_artifacts(uuid, datastore)
+
+                if update_handler and update_handler.fetcher:
+                    cache_state = update_handler.fetcher.get_http_cache_state()
+                    if cache_state:
+                        update_obj['http_cache'] = cache_state
+                    if not process_changedetection_results and update_obj:
+                        datastore.update_watch(uuid=uuid, update_obj=update_obj)
+                        update_obj = {}
 
                 if not datastore.data['watching'].get(uuid):
                     continue

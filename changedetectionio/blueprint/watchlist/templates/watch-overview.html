@@ -85,6 +85,10 @@ document.addEventListener('DOMContentLoaded', function() {
     transition: background-size 0.9s ease
 }
 
+.tag-tree-filter {
+    padding-left: calc(var(--tag-depth, 0) * 1.25rem);
+}
+
 /* Auto-generated processor badge colors */
 {{ processor_badge_css|safe }}
 
@@ -220,9 +224,9 @@ window.watchOverviewI18n = {
         <div id="tag-lister" class="{% if active_tag %}active-tag{% endif %}">
             <a id="tag-all" href="{{ filter_url(tag=None) }}" class="pure-button button-tag {{'active' if not active_tag_uuid }}">{{ _('All') }}</a>
             <!-- tag list -->
-            {%- for uuid, tag in tags -%}
+            {%- for uuid, tag, depth in tag_rows -%}
                 {%- if tag != "" -%}
-                    <a href="{{ filter_url(tag=uuid) }}" class="pure-button button-tag tag-{{ tag.title|sanitize_tag_class }} {{'active' if active_tag_uuid == uuid }}">{{ tag.title }}</a>
+                    <a href="{{ filter_url(tag=uuid) }}" class="pure-button button-tag tag-{{ tag.title|sanitize_tag_class }} tag-tree-filter {{'active' if active_tag_uuid == uuid }}" style="--tag-depth: {{ depth }};">{{ tag.title }}</a>
                 {%- endif -%}
             {%- endfor -%}
         </div>

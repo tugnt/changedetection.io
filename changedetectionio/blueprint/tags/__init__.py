@@ -9,6 +9,28 @@ from changedetectionio.flask_app import login_optionally_required
 from changedetectionio.llm.evaluator import get_llm_config as _get_llm_config, is_llm_features_disabled
 
 
+def _tag_parent_choices(datastore, exclude_uuid=None):
+    choices = [('', gettext('Top-level group'))]
+    choices.extend(
+        (uuid, f"{'  ' * depth}{tag.get('title', '')}")
+        for uuid, tag, depth in datastore.get_tag_tree_rows(exclude_uuid=exclude_uuid)
+    )
+    return choices
+
+
+def _tag_counts(datastore):
+    from collections import Counter
+
+    counts = Counter()
+    for watch in datastore.data['watching'].values():
+        watch_tag_uuids = datastore.get_all_tags_for_watch(watch['uuid'])
+        visible_tag_uuids = set()
+        for tag_uuid in watch_tag_uuids:
+            visible_tag_uuids.update(datastore.get_tag_ancestor_uuids(tag_uuid))
+        counts.update(visible_tag_uuids)
+    return counts
+
+
 def construct_blueprint(datastore: ChangeDetectionStore):
     tags_blueprint = Blueprint('tags', __name__, template_folder="templates")
 
@@ -20,18 +42,17 @@ def construct_blueprint(datastore: ChangeDetectionStore):
     def tags_overview_page():
         from .form import SingleTag
         add_form = SingleTag(request.form)
+        add_form.parent_uuid.choices = _tag_parent_choices(datastore)
 
         sorted_tags = sorted(datastore.data['settings']['application'].get('tags').items(), key=lambda x: x[1]['title'])
-
-        from collections import Counter
-
-        tag_count = Counter(tag for watch in datastore.data['watching'].values() if watch.get('tags') for tag in watch['tags'])
+        tag_count = _tag_counts(datastore)
 
         from changedetectionio import processors
         output = render_template("groups-overview.html",
                                  app_rss_token=datastore.data['settings']['application'].get('rss_access_token'),
                                  available_tags=sorted_tags,
                                  form=add_form,
+                                 tag_rows=datastore.get_tag_tree_rows(),
                                  generate_tag_colors=processors.generate_processor_badge_colors,
                                  tag_count=tag_count,
                                  wcag_text_color=processors.wcag_text_color,
@@ -44,6 +65,7 @@ def construct_blueprint(datastore: ChangeDetectionStore):
     def form_tag_add():
         from .form import SingleTag
         add_form = SingleTag(request.form)
+        add_form.parent_uuid.choices = _tag_parent_choices(datastore)
 
         if not add_form.validate():
             for widget, l in add_form.errors.items():
@@ -51,12 +73,17 @@ def construct_blueprint(datastore: ChangeDetectionStore):
             return redirect(url_for('tags.tags_overview_page'))
 
         title = request.form.get('name').strip()
+        parent_uuid = add_form.parent_uuid.data or None
 
         if datastore.tag_exists_by_name(title):
             flash(gettext('The tag "{}" already exists').format(title), "error")
             return redirect(url_for('tags.tags_overview_page'))
 
-        datastore.add_tag(title)
+        if not datastore.validate_tag_parent(None, parent_uuid):
+            flash(gettext('Invalid parent group'), 'error')
+            return redirect(url_for('tags.tags_overview_page'))
+
+        datastore.add_tag(title, parent_uuid=parent_uuid)
         flash(gettext("Tag added"))
 
 
@@ -76,6 +103,10 @@ def construct_blueprint(datastore: ChangeDetectionStore):
     def delete(uuid):
         # Delete the tag from settings immediately
         if datastore.data['settings']['application']['tags'].get(uuid):
+            for child_tag in datastore.data['settings']['application']['tags'].values():
+                if child_tag.get('parent_uuid') == uuid:
+                    child_tag['parent_uuid'] = None
+                    child_tag.commit()
             del datastore.data['settings']['application']['tags'][uuid]
 
         # Remove tag from all watches in background thread to avoid blocking
@@ -167,6 +198,7 @@ def construct_blueprint(datastore: ChangeDetectionStore):
                                        extra_notification_tokens=datastore.get_unique_notification_tokens_available(),
                                        default_system_settings = datastore.data['settings'],
                                        )
+        form.parent_uuid.choices = _tag_parent_choices(datastore, exclude_uuid=uuid)
 
         # Bridge API-stored processor_config_* values into the form's FormField sub-forms.
         # The API stores processor_config_restock_diff in the tag dict; find the matching
@@ -252,6 +284,7 @@ def construct_blueprint(datastore: ChangeDetectionStore):
                                data=tag,
                                extra_notification_tokens=datastore.get_unique_notification_tokens_available()
                                )
+        form.parent_uuid.choices = _tag_parent_choices(datastore, exclude_uuid=uuid)
         # @todo subclass form so validation works
         #if not form.validate():
 #            for widget, l in form.errors.items():
@@ -265,7 +298,14 @@ def construct_blueprint(datastore: ChangeDetectionStore):
                 flash(message, 'error')
             return redirect(url_for('tags.form_tag_edit', uuid=uuid))
 
-        tag.update(form.data)
+        parent_uuid = form.parent_uuid.data or None
+        if not datastore.validate_tag_parent(uuid, parent_uuid):
+            flash(gettext('Invalid parent group'), 'error')
+            return redirect(url_for('tags.form_tag_edit', uuid=uuid))
+
+        form_data = form.data
+        form_data['parent_uuid'] = parent_uuid
+        tag.update(form_data)
         tag['processor'] = 'restock_diff'
         tag.commit()
 

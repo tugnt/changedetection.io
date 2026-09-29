@@ -24,6 +24,9 @@ html[data-darkmode="true"] .watch-tag-list.tag-{{ class_name }} {
 {%- endif -%}
 {%- endif -%}
 {%- endfor -%}
+.tag-tree-title {
+    padding-left: calc(var(--tag-depth, 0) * 1.5rem);
+}
 </style>
 
 <div class="box">
@@ -34,6 +37,9 @@ html[data-darkmode="true"] .watch-tag-list.tag-{{ class_name }} {
             <div id="watch-add-wrapper-zone">
                 <div>
                     {{ render_simple_field(form.name, placeholder=_("Watch group / tag")) }}
+                </div>
+                <div>
+                    {{ render_simple_field(form.parent_uuid) }}
                 </div>
                 <div>
                     {{ render_simple_field(form.save_button, title=_("Save"), label=false ) }}
@@ -66,13 +72,13 @@ html[data-darkmode="true"] .watch-tag-list.tag-{{ class_name }} {
             {% endif %}
             <form method="POST" style="display: inline;">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            {% for uuid, tag in available_tags  %}
+            {% for uuid, tag, depth in tag_rows  %}
             <tr id="{{ uuid }}" class="">
                 <td class="watch-controls">
                     <button formaction="{{url_for('tags.mute', uuid=tag.uuid)}}"  type="submit" class="bare-btn link-mute state-{{'on' if tag.notification_muted else 'off'}}" aria-label="{{ _('Mute notifications') }}" title="{{ _('Mute notifications') }}"><i data-feather="{{ 'bell-off' if tag.notification_muted else 'bell' }}" class="icon icon-mute"></i></button>
                 </td>
                 <td class="watch-count">{{ "{:,}".format(tag_count[uuid]) if uuid in tag_count else 0 }}</td>
-                <td class="title-col inline"> <a href="{{url_for('watchlist.index', tag=uuid) }}" class="watch-tag-list tag-{{ tag.title|sanitize_tag_class }}">{{ tag.title }}</a></td>
+                <td class="title-col inline"> <a href="{{url_for('watchlist.index', tag=uuid) }}" class="watch-tag-list tag-{{ tag.title|sanitize_tag_class }} tag-tree-title" style="--tag-depth: {{ depth }};">{{ tag.title }}</a></td>
                 <td>
                     <button formaction="{{ url_for('ui.form_watch_checknow', tag=uuid) }}" type="submit" class="cdio-btn"><i data-feather="refresh-cw"></i>{{ _('Recheck') }}</button>
                     <a class="cdio-btn" href="{{ url_for('tags.form_tag_edit', uuid=uuid) }}">{{ _('Edit') }}</a>

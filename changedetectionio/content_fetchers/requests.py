@@ -5,6 +5,7 @@ import hashlib
 import os
 import re
 import asyncio
+import time
 
 from changedetectionio import strtobool
 from changedetectionio.content_fetchers.exceptions import BrowserStepsInUnsupportedFetcher, EmptyReply, Non200ErrorCodeReceived
@@ -19,6 +20,8 @@ class fetcher(Fetcher):
     def __init__(self, proxy_override=None, custom_browser_connection_url=None, **kwargs):
         super().__init__(**kwargs)
         self.proxy_override = proxy_override
+        self.curl_cffi_enabled = kwargs.get('curl_cffi_enabled', False)
+        self.curl_cffi_impersonate = kwargs.get('curl_cffi_impersonate', 'chrome120') or 'chrome120'
         # browser_connection_url is none because its always 'launched locally'
 
     def _run_sync(self,
@@ -37,7 +40,6 @@ class fetcher(Fetcher):
 
         import chardet
         import requests
-        from requests.exceptions import ProxyError, ConnectionError, RequestException
 
         if self.browser_steps:
             raise BrowserStepsInUnsupportedFetcher(url=url)
@@ -56,28 +58,63 @@ class fetcher(Fetcher):
             if self.system_https_proxy:
                 proxies['https'] = self.system_https_proxy
 
-        session = requests.Session()
-
-        # Configure retry adapter for low-level network errors only
-        # Retries connection timeouts, read timeouts, connection resets - not HTTP status codes
-        # Especially helpful in parallel test execution when servers are slow/overloaded
-        # Configurable via REQUESTS_RETRY_MAX_COUNT (default: 3 attempts)
-        from requests.adapters import HTTPAdapter
-        from urllib3.util.retry import Retry
-
         max_retries = int(os.getenv("REQUESTS_RETRY_MAX_COUNT", "6"))
-        retry_strategy = Retry(
-            total=max_retries,
-            connect=max_retries,  # Retry connection timeouts
-            read=max_retries,     # Retry read timeouts
-            status=0,             # Don't retry on HTTP status codes
-            backoff_factor=0.5,   # Wait 0.3s, 0.6s, 1.2s between retries
-            allowed_methods=["HEAD", "GET", "OPTIONS", "POST"],
-            raise_on_status=False
-        )
-        adapter = HTTPAdapter(max_retries=retry_strategy)
-        session.mount("http://", adapter)
-        session.mount("https://", adapter)
+        use_curl_cffi = self.curl_cffi_enabled and not url.startswith('file://')
+        if use_curl_cffi:
+            try:
+                from curl_cffi import requests as curl_requests
+                session = curl_requests.Session(impersonate=self.curl_cffi_impersonate)
+                logger.debug(f"Using curl_cffi impersonation '{self.curl_cffi_impersonate}' for '{url}'")
+            except Exception as e:
+                logger.warning(f"curl_cffi unavailable for '{url}', falling back to requests: {e}")
+                use_curl_cffi = False
+
+        if not use_curl_cffi:
+            session = requests.Session()
+
+            # Configure retry adapter for low-level network errors only
+            # Retries connection timeouts, read timeouts, connection resets - not HTTP status codes
+            # Especially helpful in parallel test execution when servers are slow/overloaded
+            from requests.adapters import HTTPAdapter
+            from urllib3.util.retry import Retry
+
+            retry_strategy = Retry(
+                total=max_retries,
+                connect=max_retries,
+                read=max_retries,
+                status=0,
+                backoff_factor=0.5,
+                allowed_methods=["HEAD", "GET", "OPTIONS", "POST"],
+                raise_on_status=False
+            )
+            adapter = HTTPAdapter(max_retries=retry_strategy)
+            session.mount("http://", adapter)
+            session.mount("https://", adapter)
+
+        def request_with_retries(method, request_url, data=None):
+            request_kwargs = {
+                'method': method,
+                'data': data,
+                'url': request_url,
+                'headers': request_headers,
+                'timeout': timeout,
+                'proxies': proxies,
+                'verify': False,
+                'allow_redirects': False,
+            }
+
+            if not use_curl_cffi:
+                return session.request(**request_kwargs)
+
+            for attempt in range(max_retries + 1):
+                try:
+                    return session.request(**request_kwargs)
+                except Exception:
+                    if attempt >= max_retries:
+                        raise
+                    time.sleep(min(0.5 * (2 ** attempt), 5))
+
+            raise RuntimeError("HTTP request retry loop exited unexpectedly")
 
         if strtobool(os.getenv('ALLOW_FILE_URI', 'false')) and url.startswith('file://'):
             from requests_file import FileAdapter
@@ -94,14 +131,8 @@ class fetcher(Fetcher):
             if not ok:
                 raise Exception(reason)
 
-            r = session.request(method=request_method,
-                                data=request_body.encode('utf-8') if type(request_body) is str else request_body,
-                                url=url,
-                                headers=request_headers,
-                                timeout=timeout,
-                                proxies=proxies,
-                                verify=False,
-                                allow_redirects=False)
+            request_data = request_body.encode('utf-8') if type(request_body) is str else request_body
+            r = request_with_retries(request_method, url, data=request_data)
 
             # Manually follow redirects so each hop's resolved IP can be validated,
             # preventing SSRF via an open redirect on a public host.
@@ -116,12 +147,7 @@ class fetcher(Fetcher):
                         raise Exception(f"Redirect blocked: '{redirect_url}' resolves to a private/reserved IP address "
                                         f"or contains a parser-differential payload.")
                 current_url = redirect_url
-                r = session.request('GET', redirect_url,
-                                    headers=request_headers,
-                                    timeout=timeout,
-                                    proxies=proxies,
-                                    verify=False,
-                                    allow_redirects=False)
+                r = request_with_retries('GET', redirect_url)
             else:
                 raise Exception("Too many redirects")
 
@@ -130,6 +156,21 @@ class fetcher(Fetcher):
             if proxies and 'SOCKSHTTPSConnectionPool' in msg:
                 msg = f"Proxy connection failed? {msg}"
             raise Exception(msg) from e
+
+        self.headers = r.headers
+        self.status_code = r.status_code
+
+        if r.status_code == 304:
+            self.not_modified = True
+            self.http_cache_etag = r.headers.get('ETag') or self.http_cache_etag
+            self.http_cache_last_modified = r.headers.get('Last-Modified') or self.http_cache_last_modified
+            self.content = None
+            self.raw_content = b''
+            logger.debug(f"Requests returned 304 Not Modified for '{url}'")
+            return
+
+        self.http_cache_etag = r.headers.get('ETag')
+        self.http_cache_last_modified = r.headers.get('Last-Modified')
 
         # If the response did not tell us what encoding format to expect, Then use chardet to override what `requests` thinks.
         # For example - some sites don't tell us it's utf-8, but return utf-8 content
@@ -177,8 +218,6 @@ class fetcher(Fetcher):
                             if encoding:
                                 r.encoding = encoding
 
-        self.headers = r.headers
-
         if not r.content or not len(r.content):
             logger.debug(f"Requests returned empty content for '{url}'")
             if not empty_pages_are_a_change:
@@ -192,7 +231,6 @@ class fetcher(Fetcher):
             # maybe check with content works?
             raise Non200ErrorCodeReceived(url=url, status_code=r.status_code, page_html=r.text)
 
-        self.status_code = r.status_code
         if is_binary:
             # Binary files just return their checksum until we add something smarter
             self.content = hashlib.md5(r.content).hexdigest()

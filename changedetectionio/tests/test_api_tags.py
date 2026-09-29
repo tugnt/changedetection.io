@@ -398,3 +398,44 @@ def test_api_watch_tag_field_accepts_names_and_uuids(client, live_server, measur
     assert len(datastore.data['settings']['application']['tags']) == tag_count_before
     assert datastore.get_all_tags_for_watch(res.json['uuid']) == {}
     assert client.get(url_for("watchlist.index")).status_code == 200, "A dangling tag ref must not break the list"
+
+
+def test_api_tag_hierarchy_parent_validation_and_reparenting(client, live_server, measure_memory_usage, datastore_path):
+    api_key = live_server.app.config['DATASTORE'].data['settings']['application'].get('api_access_token')
+    headers = {'x-api-key': api_key, 'content-type': 'application/json'}
+
+    parent_response = client.post(
+        url_for("tag"),
+        data=json.dumps({'title': 'Camera parent'}),
+        headers=headers,
+    )
+    assert parent_response.status_code == 201
+    parent_uuid = parent_response.json['uuid']
+
+    child_response = client.post(
+        url_for("tag"),
+        data=json.dumps({'title': 'Film child', 'parent_uuid': parent_uuid}),
+        headers=headers,
+    )
+    assert child_response.status_code == 201
+    child_uuid = child_response.json['uuid']
+
+    child_response = client.get(url_for("tag", uuid=child_uuid), headers=headers)
+    assert child_response.status_code == 200
+    assert child_response.json['parent_uuid'] == parent_uuid
+
+    parent_cycle_response = client.put(
+        url_for("tag", uuid=parent_uuid),
+        data=json.dumps({'parent_uuid': child_uuid}),
+        headers=headers,
+    )
+    assert parent_cycle_response.status_code == 400
+
+    parent_delete_response = client.delete(url_for("tag", uuid=parent_uuid), headers=headers)
+    assert parent_delete_response.status_code == 204
+
+    child_response = client.get(url_for("tag", uuid=child_uuid), headers=headers)
+    assert child_response.status_code == 200
+    assert child_response.json['parent_uuid'] is None
+
+    assert client.delete(url_for("tag", uuid=child_uuid), headers=headers).status_code == 204

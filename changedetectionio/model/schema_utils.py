@@ -19,6 +19,7 @@ import functools
 # `last_viewed` is intentionally NOT included: it's set internally by mark_all_viewed BUT
 # is also explicitly writable via the UpdateWatch schema (see api/Watch.py valid_fields).
 SYSTEM_MANAGED_NON_SPEC_FIELDS = frozenset({
+    'http_cache',                 # HTTP conditional-request validator state
     'last_check_status',           # Set by processors
     'last_filter_config_hash',     # text_json_diff internal skip-cache
     'restock',                     # Set by restock processor

@@ -843,6 +843,10 @@ components:
         - $ref: '#/components/schemas/WatchBase'
         - type: object
           properties:
+            parent_uuid:
+              type: [string, 'null']
+              format: uuid
+              description: UUID of the parent tag/group. Null or an empty value makes this a top-level group.
             overrides_watch:
               type: [boolean, 'null']
               description: |

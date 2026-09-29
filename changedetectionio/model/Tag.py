@@ -51,10 +51,13 @@ class model(EntityPersistenceMixin, watch_base):
         # See llm/evaluator.py:tag_llm_decision().
         self['llm_backend_profile'] = kw.get('default', {}).get('llm_backend_profile', None)
         self['url_match_pattern'] = kw.get('default', {}).get('url_match_pattern', '')
+        self['parent_uuid'] = kw.get('default', {}).get('parent_uuid') or None
 
         if kw.get('default'):
             self.update(kw['default'])
             del kw['default']
+
+        self['parent_uuid'] = self.get('parent_uuid') or None
 
     def matches_url(self, url: str) -> bool:
         """Return True if this tag should be auto-applied to the given watch URL.

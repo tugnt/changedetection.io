@@ -166,6 +166,16 @@
                     {{ render_field(form.requests.form.timeout) }}
                     <span class="pure-form-message-inline">{{ _('For regular plain requests (not chrome based), maximum number of seconds until timeout, 1-999.') }}</span><br>
                 </div>
+                <fieldset class="pure-group">
+                    {{ render_checkbox_field(form.requests.form.curl_cffi_enabled) }}
+                    <span class="pure-form-message-inline">
+                        {{ _('Use curl_cffi to impersonate a browser for plain HTTP requests. Disabled by default.') }}<br>
+                        {{ _('If curl_cffi is unavailable or fails to initialize, the regular HTTP client is used instead.') }}
+                    </span>
+                    <div class="pure-control-group">
+                        {{ render_field(form.requests.form.curl_cffi_impersonate) }}
+                    </div>
+                </fieldset>
                 <div class="pure-control-group inline-radio">
                     {{ render_field(form.requests.form.default_ua) }}
                     <span class="pure-form-message-inline">

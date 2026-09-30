@@ -276,7 +276,8 @@ def init_app_secret(datastore_path):
 
 @app.template_global()
 def get_darkmode_state():
-    css_dark_mode = request.cookies.get('css_dark_mode', 'false')
+    # Dark is the default look; an explicit cookie from the toggle still wins.
+    css_dark_mode = request.cookies.get('css_dark_mode', 'true')
     return 'true' if css_dark_mode and strtobool(css_dark_mode) else 'false'
 
 

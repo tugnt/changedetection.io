@@ -151,40 +151,42 @@
 html[data-darkmode="true"] {
   --color-link: #59bdfb;
   --color-text: var(--color-white);
-  --color-table-line: #262c37;
-  --color-background-gradient-first: #17324a;
-  --color-background-gradient-second: #141c3a;
-  --color-background-gradient-third: #2a1b3d;
+  --color-table-line: #242b38;
+  // Near-black with a faint blue/violet drift, so the background still has depth
+  // without reading as "dark blue".
+  --color-background-gradient-first: #0e1116;
+  --color-background-gradient-second: #0a0c11;
+  --color-background-gradient-third: #14101b;
 
-  --color-background-new-watch-input: var(--color-grey-100);
-  --color-background-new-watch-input-transparent: var(--color-grey-100);
+  --color-background-new-watch-input: #12161f;
+  --color-background-new-watch-input-transparent: #12161f;
   --color-text-new-watch-input: var(--color-text);
-  --color-background-table-thead: var(--color-grey-200);
+  --color-background-table-thead: #171c26;
   --color-text-table-head: var(--color-grey-700);
-  --color-table-background: var(--color-grey-300);
-  --color-table-stripe: var(--color-grey-325);
-  --color-background-checkbox-operations: rgba(50, 50, 50, 0.7);
-  --watchlist-row-selected: #1e3a5f; // darker blue highlight for selected rows in dark mode
-  --watchlist-row-hover: #2a2a2a;     // subtle grey highlight on row hover (dark mode)
+  --color-table-background: #12161f;
+  --color-table-stripe: #171c26;
+  --color-background-checkbox-operations: rgba(14, 17, 22, 0.85);
+  --watchlist-row-selected: #16304d; // blue highlight for selected rows in dark mode
+  --watchlist-row-hover: #1a202b;    // subtle lift on row hover (dark mode)
 
-  --color-background: var(--color-grey-300);
+  --color-background: #12161f;
   --color-text-menu-heading: var(--color-grey-850);
   --color-text-menu-link: var(--color-grey-800);
-  --color-border-table-cell: var(--color-grey-400);
+  --color-border-table-cell: #2b3340;
   --color-text-tab-active: var(--color-text);
 
-  --color-border-input: var(--color-grey-400);
+  --color-border-input: #39414f;
   --color-shadow-input: var(--color-grey-50);
-  --color-background-input: var(--color-grey-350);
+  --color-background-input: #1b212c;
   --color-text-input-description: var(--color-grey-600);
   --color-text-input-placeholder: var(--color-grey-600);
   --color-text-watch-tag-list: rgba(250, 62, 146, 0.4);
-  --color-background-code: var(--color-grey-200);
+  --color-background-code: #171c26;
 
   --color-background-tab: rgba(0, 0, 0, 0.2);
   --color-background-tab-hover: rgba(0, 0, 0, 0.5);
 
-  --color-background-snapshot-age: var(--color-grey-200);
+  --color-background-snapshot-age: #1b212c;
   --color-shadow-jump: var(--color-grey-200);
   --color-icon-github: var(--color-white);
   --color-watch-table-error: var(--color-light-red);

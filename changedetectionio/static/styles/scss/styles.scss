@@ -1123,6 +1123,13 @@ ul#highlightSnippetActions {
 
 .box {
   color: var(--color-white);
+  // Width must not follow the content: .content-main centres its children, so an
+  // intrinsically-sized panel would resize whenever rows/columns come and go.
+  // border-box keeps panels with different padding on the same edges.
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
   border: 1px solid var(--surface-panel-border);
   background: var(--surface-panel-bg);
   // Frosted panel: the page gradient stays visible but is blurred back so the

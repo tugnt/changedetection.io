@@ -49,7 +49,7 @@ def construct_tag_routes(rss_blueprint, datastore):
             # So get all watches in this tag then sort
 
             # Skip if watch doesn't have this tag
-            if tag_uuid not in watch.get('tags', []):
+            if tag_uuid not in datastore.get_group_path_for_watch(uuid):
                 continue
 
             # Skip muted watches if configured

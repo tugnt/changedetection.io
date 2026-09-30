@@ -25,6 +25,18 @@ def validate_tag_colour(json_data):
     return None
 
 
+def validate_parent(datastore, parent_uuid, group_uuid=None):
+    if not parent_uuid:
+        return None
+    tags = datastore.data['settings']['application']['tags']
+    parent = tags.get(parent_uuid)
+    if not parent or parent_uuid == group_uuid or parent.get('parent_uuid'):
+        return 'parent_uuid must identify an existing top-level group'
+    if group_uuid and any(tag.get('parent_uuid') == group_uuid for tag in tags.values()):
+        return 'A group with children cannot become a child group'
+    return None
+
+
 class Tag(Resource):
     def __init__(self, **kwargs):
         # datastore is a black box dependency
@@ -48,8 +60,14 @@ class Tag(Resource):
             for k in sorted(self.datastore.data['watching'].items(), key=lambda item: item[1].get('last_checked', 0)):
                 watch_uuid = k[0]
                 watch = k[1]
-                if not watch['paused'] and tag['uuid'] in watch['tags']:
+                if not watch['paused'] and tag['uuid'] in self.datastore.get_group_path_for_watch(watch_uuid):
                     watches_to_queue.append(watch_uuid)
+
+            # Parent and child Recheck can be requested back to back. Queue each
+            # watch only once, just as the watch-list Recheck action does.
+            active_uuids = set(self.update_q.get_queued_uuids()) | set(worker_pool.get_running_uuids())
+            watches_to_queue = [watch_uuid for watch_uuid in watches_to_queue
+                                if watch_uuid not in active_uuids]
 
             # If less than 20 watches, queue synchronously for immediate feedback
             if len(watches_to_queue) < 20:
@@ -107,16 +125,27 @@ class Tag(Resource):
     @validate_openapi_request('deleteTag')
     def delete(self, uuid):
         """Delete a tag/group and remove it from all watches."""
-        if not self.datastore.data['settings']['application']['tags'].get(uuid):
-            abort(400, message='No tag exists with the UUID of {}'.format(uuid))
+        with self.datastore.lock:
+            groups = self.datastore.data['settings']['application']['tags']
+            if not groups.get(uuid):
+                abort(400, message='No tag exists with the UUID of {}'.format(uuid))
+            valid_group_ids = set(groups)
 
-        # Delete the tag, and any tag reference
-        del self.datastore.data['settings']['application']['tags'][uuid]
+            for child in groups.values():
+                if child.get('parent_uuid') == uuid:
+                    child['parent_uuid'] = ''
+                    child.commit()
+
+            # Delete the group and its persisted tag.json.
+            del groups[uuid]
 
         # Remove tag from all watches
         for watch_uuid, watch in self.datastore.data['watching'].items():
             if watch.get('tags') and uuid in watch['tags']:
-                watch['tags'].remove(uuid)
+                direct_assigned = next((group_id for group_id in watch['tags']
+                                        if group_id in valid_group_ids), None)
+                watch['tags'] = ([] if direct_assigned == uuid else
+                                 [group_id for group_id in watch['tags'] if group_id != uuid])
                 watch.commit()
 
         return 'OK', 204
@@ -167,6 +196,20 @@ class Tag(Resource):
         if colour_error:
             return colour_error, 400
 
+        if 'title' in json_data:
+            new_title = json_data['title'].strip() if isinstance(json_data['title'], str) else ''
+            if not new_title:
+                return 'Group title must be non-empty', 400
+            existing_uuid = self.datastore.tag_uuid_for_title(new_title)
+            if existing_uuid and existing_uuid != uuid:
+                return 'A group with this title already exists', 409
+            json_data['title'] = new_title
+
+        if 'parent_uuid' in json_data:
+            parent_error = validate_parent(self.datastore, json_data['parent_uuid'], uuid)
+            if parent_error:
+                return parent_error, 400
+
         tag.update(json_data)
         tag.commit()
 
@@ -185,7 +228,10 @@ class Tag(Resource):
 
         # Silently discard `__`-prefixed transient/internal keys (not part of the public schema).
         json_data = strip_internal_api_fields(request.get_json())
-        title = json_data.get("title",'').strip()
+        title_value = json_data.get('title')
+        title = title_value.strip() if isinstance(title_value, str) else ''
+        if not title:
+            return 'Group title must be non-empty', 400
 
         # Validate that only valid fields are provided
         # Get valid fields from Tag schema
@@ -201,7 +247,19 @@ class Tag(Resource):
         if colour_error:
             return colour_error, 400
 
-        new_uuid = self.datastore.add_tag(title=title)
+        existing_uuid = self.datastore.tag_uuid_for_title(title)
+        if existing_uuid:
+            return 'A group with this title already exists', 409
+        parent_error = validate_parent(self.datastore, json_data.get('parent_uuid', ''))
+        if parent_error:
+            return parent_error, 400
+
+        try:
+            new_uuid = self.datastore.add_tag(title=title,
+                                              parent_uuid=json_data.get('parent_uuid', ''),
+                                              allow_existing=False)
+        except ValueError as error:
+            return str(error), 400
         if new_uuid:
             # Apply any extra fields (e.g. processor_config_restock_diff) beyond just title
             extra = {k: v for k, v in json_data.items() if k != 'title'}
@@ -212,7 +270,7 @@ class Tag(Resource):
                     tag.commit()
             return {'uuid': new_uuid}, 201
         else:
-            return "Invalid or unsupported tag", 400
+            return 'A group with this title already exists', 409
 
 class Tags(Resource):
     def __init__(self, **kwargs):
@@ -229,6 +287,7 @@ class Tags(Resource):
                 'date_created': tag.get('date_created', 0),
                 'notification_muted': tag.get('notification_muted', False),
                 'title': tag.get('title', ''),
+                'parent_uuid': tag.get('parent_uuid', ''),
                 'uuid': tag.get('uuid')
             }
 

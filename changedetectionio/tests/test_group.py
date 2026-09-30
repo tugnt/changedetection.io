@@ -4,8 +4,14 @@ import time
 from flask import url_for
 from .util import live_server_setup, wait_for_all_checks, extract_rss_token_from_UI, get_UUID_for_tag_name, extract_UUID_from_client, delete_all_watches
 import os
+import pytest
 
 from ..store import ChangeDetectionStore
+
+
+@pytest.fixture(autouse=True)
+def english_group_tests(client):
+    client.environ_base['HTTP_ACCEPT_LANGUAGE'] = 'en'
 
 
 # def test_setup(client, live_server, measure_memory_usage, datastore_path):
@@ -74,21 +80,19 @@ def test_setup_group_tag(client, live_server, measure_memory_usage, datastore_pa
     test_url = url_for('test_endpoint', _external=True)
     res = client.post(
         url_for("imports.import_page"),
-        data={"urls": test_url + "?first-imported=1 test-tag, extra-import-tag"},
+        data={"urls": test_url + "?first-imported=1 test-tag"},
         follow_redirects=True
     )
     assert b"1 Imported" in res.data
 
     res = client.get(url_for("watchlist.index"))
-    assert b'import-tag' in res.data
-    assert b'extra-import-tag' in res.data
+    assert b'test-tag' in res.data
 
     res = client.get(
         url_for("tags.tags_overview_page"),
         follow_redirects=True
     )
-    assert b'import-tag' in res.data
-    assert b'extra-import-tag' in res.data
+    assert b'test-tag' in res.data
 
     wait_for_all_checks(client)
 
@@ -123,7 +127,7 @@ def test_setup_group_tag(client, live_server, measure_memory_usage, datastore_pa
     wait_for_all_checks(client)
     rss_token = extract_rss_token_from_UI(client)
     res = client.get(
-        url_for("rss.feed", token=rss_token, tag="extra-import-tag", _external=True),
+        url_for("rss.feed", token=rss_token, tag="test-tag", _external=True),
         follow_redirects=True
     )
     assert b"should-be-excluded" not in res.data
@@ -231,7 +235,6 @@ def test_group_tag_notification(client, live_server, measure_memory_usage, datas
     assert "Diff Full: Some initial text" in notification_submission
     assert "New GROUP TAG ChangeDetection.io" in notification_submission
     assert "test-tag" in notification_submission
-    assert "other-tag" in notification_submission
 
     #@todo Test that multiple notifications fired
     #@todo Test that each of multiple notifications with different settings
@@ -288,7 +291,7 @@ def test_clone_tag_on_import(client, live_server, measure_memory_usage, datastor
 
     res = client.get(url_for("watchlist.index"))
     assert b'test-tag' in res.data
-    assert b'another-tag' in res.data
+    assert b'another-tag' not in res.data
 
     watch_uuid = next(iter(live_server.app.config['DATASTORE'].data['watching']))
     res = client.post(url_for("ui.form_clone", uuid=watch_uuid), follow_redirects=True)
@@ -297,7 +300,7 @@ def test_clone_tag_on_import(client, live_server, measure_memory_usage, datastor
     res = client.get(url_for("watchlist.index"))
     # 2 times plus the top link to tag
     assert res.data.count(b'test-tag') == 3
-    assert res.data.count(b'another-tag') == 3
+    assert b'another-tag' not in res.data
     delete_all_watches(client)
 
 def test_clone_tag_on_quickwatchform_add(client, live_server, measure_memory_usage, datastore_path):
@@ -315,7 +318,7 @@ def test_clone_tag_on_quickwatchform_add(client, live_server, measure_memory_usa
 
     res = client.get(url_for("watchlist.index"))
     assert b'test-tag' in res.data
-    assert b'another-tag' in res.data
+    assert b'another-tag' not in res.data
 
     watch_uuid = next(iter(live_server.app.config['DATASTORE'].data['watching']))
     res = client.post(url_for("ui.form_clone", uuid=watch_uuid), follow_redirects=True)
@@ -324,7 +327,7 @@ def test_clone_tag_on_quickwatchform_add(client, live_server, measure_memory_usa
     res = client.get(url_for("watchlist.index"))
     # 2 times plus the top link to tag
     assert res.data.count(b'test-tag') == 3
-    assert res.data.count(b'another-tag') == 3
+    assert b'another-tag' not in res.data
     delete_all_watches(client)
 
     res = client.post(url_for("tags.delete_all"), follow_redirects=True)

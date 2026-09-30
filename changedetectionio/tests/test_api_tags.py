@@ -361,12 +361,11 @@ def test_api_watch_tag_field_accepts_names_and_uuids(client, live_server, measur
     assert res.status_code == 201
     assert titles_of(res.json['uuid']) == ['RealTag']
 
-    # Names and UUIDs can be mixed, and blank entries from a trailing comma are dropped -
-    # add_tag() returns False for those and a falsy entry breaks every watch['tags'] lookup
+    # Legacy comma-separated input uses the first group only.
     res = client.post(url_for("createwatch"),
                       data=json.dumps({"url": f"{test_url}?p=4", "tag": f"Mixed,,{real_tag_uuid},"}), headers=hdr)
     assert res.status_code == 201
-    assert titles_of(res.json['uuid']) == ['Mixed', 'RealTag']
+    assert titles_of(res.json['uuid']) == ['Mixed']
     assert all(datastore.data['watching'][res.json['uuid']].get('tags')), "No falsy entries in tags"
 
     # A UUID that matches no tag is skipped rather than becoming a group named after it
@@ -386,15 +385,10 @@ def test_api_watch_tag_field_accepts_names_and_uuids(client, live_server, measur
     assert datastore.data['watching'][res.json['uuid']].get('tags') == [real_tag_uuid]
     assert len(datastore.data['settings']['application']['tags']) == tag_count_before, "Casing must not fork a second tag"
 
-    # `tags` is applied verbatim and never creates: an unknown UUID is stored as a dangling
-    # reference that simply resolves to no group. Documented, and harmless because the lookup
-    # is a dictfilt() over known tags - pinned here so changing it has to be deliberate.
+    # New watch assignments must identify one existing group.
     bogus = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
     tag_count_before = len(datastore.data['settings']['application']['tags'])
     res = client.post(url_for("createwatch"),
                       data=json.dumps({"url": f"{test_url}?p=7", "tags": [bogus]}), headers=hdr)
-    assert res.status_code == 201
-    assert datastore.data['watching'][res.json['uuid']].get('tags') == [bogus]
+    assert res.status_code == 400
     assert len(datastore.data['settings']['application']['tags']) == tag_count_before
-    assert datastore.get_all_tags_for_watch(res.json['uuid']) == {}
-    assert client.get(url_for("watchlist.index")).status_code == 200, "A dangling tag ref must not break the list"

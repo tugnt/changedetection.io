@@ -254,15 +254,18 @@ def construct_blueprint(datastore: ChangeDetectionStore):
         proxy_id = datastore.get_preferred_proxy_for_watch(uuid=watch_uuid)
         proxy = None
         if proxy_id:
-            proxy_url = datastore.proxy_list.get(proxy_id, {}).get('url')
+            proxy_url = datastore.get_proxy_url(proxy_id)
             if proxy_url:
                 from urllib.parse import urlparse
                 parsed = urlparse(proxy_url)
                 proxy = {'server': proxy_url}
                 if parsed.username:
-                    proxy['username'] = parsed.username
-                if parsed.password:
-                    proxy['password'] = parsed.password
+                    from urllib.parse import unquote
+                    proxy['username'] = unquote(parsed.username)
+                    proxy['password'] = unquote(parsed.password or '')
+                    proxy['server'] = parsed._replace(
+                        netloc=parsed.netloc.rsplit('@', 1)[-1]
+                    ).geturl()
                 logger.debug(f"Browser Steps: UUID {watch_uuid} selected proxy {proxy_url}")
 
         # Resolve the fetcher backend for this watch so we can ask it to launch its own browser
@@ -442,5 +445,3 @@ def construct_blueprint(datastore: ChangeDetectionStore):
         return response
 
     return browser_steps_blueprint
-
-

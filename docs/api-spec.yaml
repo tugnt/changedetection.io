@@ -310,20 +310,21 @@ components:
           description: |
             **Deprecated - use `tags` instead.** Kept working for API v1 and may be removed in v2.
 
-            Takes comma-separated tag *names* (not UUIDs, despite what earlier revisions of this
-            document said). Names are matched case-insensitively against existing tags and created
+            Takes one group name (not a UUID, despite what earlier revisions of this
+            document said). If several comma-separated names are supplied, only the first is used.
+            Names are matched case-insensitively against existing groups and created
             when they don't exist yet. An existing tag's UUID is also accepted and resolves to that
             tag; a UUID matching no tag is ignored.
           maxLength: 5000
-          example: "Production, Price tracking"
+          example: "Production"
         tags:
           type: array
+          maxItems: 1
           items:
             type: string
           description: |
-            Array of tag UUIDs. Unlike `tag`, these are applied exactly as given - no tag is ever
-            created from this field. The UUIDs are not validated: an unknown one is stored but
-            resolves to no group.
+            The UUID of the watch's one direct group, or an empty array. A parent group is
+            derived from the direct group's parent_uuid. UUIDs must identify existing groups.
         paused:
           type: boolean
           description: Whether the web page change monitor (watch) is paused
@@ -842,6 +843,12 @@ components:
       allOf:
         - $ref: '#/components/schemas/WatchBase'
         - type: object
+          description: |
+            A watch uses one direct group. Group filters and processor settings apply only
+            to watches directly assigned to that group; a child keeps its own settings.
+            A parent group's list and recheck include watches in its children.
+            Notification URLs resolve from watch to direct group to parent to system.
+            Muting either group in that path suppresses notifications.
           properties:
             overrides_watch:
               type: [boolean, 'null']
@@ -853,10 +860,14 @@ components:
             url_match_pattern:
               type: string
               description: |
-                Automatically apply this tag to any watch whose URL matches this pattern.
+                Automatically assign this group to an ungrouped watch whose URL matches this pattern.
+                If multiple patterns match, the first group wins.
                 Supports fnmatch wildcards (* and ?): e.g. *://example.com/* or github.com/myorg.
                 Plain strings are matched as case-insensitive substrings.
                 Leave empty to disable auto-matching.
+            parent_uuid:
+              type: string
+              description: UUID of a top-level parent group, or an empty string for a top-level group. Only two levels are supported.
             tag_colour:
               type: string
               pattern: '^(#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}))?$'
@@ -967,7 +978,7 @@ paths:
             enum: ["1"]
         - name: tag
           in: query
-          description: Tag name to filter results
+          description: Group name or UUID to filter results. A parent includes its children's watches.
           schema:
             type: string
       responses:
@@ -1016,7 +1027,7 @@ paths:
         Every watch can be configured with:
         - **Processor mode**: `processor` field (`restock_diff` or `text_json_diff` - default)
         - **Notification settings**: `notification_urls` (array), `notification_title`, `notification_body`, `notification_format`, `notification_muted`
-        - **Tags/Groups**: `tag` (UUID string) or `tags` (array of UUIDs)
+        - **Groups**: `tag` (one group name or existing UUID) or `tags` (one existing group UUID)
         - **Check settings**: `time_between_check`, `paused`, `method`, `fetch_backend`
         - **Advanced options**: `headers`, `body`, `proxy`, `browser_steps`, and more
       x-code-samples:
@@ -2068,7 +2079,7 @@ paths:
             type: string
         - name: tag
           in: query
-          description: Tag name to limit results (name not UUID)
+          description: Group name to limit results. A parent includes its children's watches.
           schema:
             type: string
         - name: partial
@@ -2107,7 +2118,7 @@ paths:
         All parameters from the Watch schema are supported (processor, fetch_backend, notification_urls, etc.).
 
         **Special Parameters:**
-        - `tag` / `tag_uuids` - Assign tags to imported watches
+        - `tag` / `tag_uuids` / `tags` - Assign one direct group to imported watches (`tags` accepts one existing group UUID)
         - `proxy` - Use specific proxy for imported watches
         - `dedupe` - Skip duplicate URLs (default: true)
 
@@ -2164,7 +2175,7 @@ paths:
       parameters:
         - name: tag_uuids
           in: query
-          description: Tag UUID(s) to apply to imported watches (comma-separated for multiple)
+          description: UUID of one existing group for imported watches. Takes precedence over tag when both are supplied.
           schema:
             type: string
           example: "550e8400-e29b-41d4-a716-446655440000"

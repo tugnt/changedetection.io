@@ -130,7 +130,10 @@ class Import(Resource):
         tag_uuids = request.args.get('tag_uuids')
 
         if tag_uuids:
-            tag_uuids = tag_uuids.split(',')
+            tag_uuids = [group_id.strip() for group_id in tag_uuids.split(',')]
+            available_groups = self.datastore.data['settings']['application']['tags']
+            if len(tag_uuids) != 1 or tag_uuids[0] not in available_groups:
+                return 'tag_uuids must identify one existing group', 400
 
         # Extract ALL other query parameters as watch configuration
         # Get schema from OpenAPI spec (replaces old schema_create_watch)
@@ -163,6 +166,17 @@ class Import(Resource):
                         f"Must be one of: {', '.join(str(v) for v in allowed_values)}"), 400
 
             extras[param_name] = converted_value
+
+        # `tags` is a regular Watch field, so it arrives through the generic query
+        # converter instead of the special tag_uuids path above. Enforce the same
+        # one-direct-group rule before creating any watches in the batch.
+        if 'tags' in extras:
+            group_ids = extras['tags']
+            available_groups = self.datastore.data['settings']['application']['tags']
+            if (not isinstance(group_ids, list) or len(group_ids) > 1 or
+                    any(not isinstance(group_id, str) or group_id not in available_groups
+                        for group_id in group_ids)):
+                return 'tags must be empty or identify one existing group', 400
 
         # Validate processor if provided
         if 'processor' in extras:

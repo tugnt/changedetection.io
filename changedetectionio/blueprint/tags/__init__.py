@@ -12,6 +12,14 @@ from changedetectionio.llm.evaluator import get_llm_config as _get_llm_config, i
 def construct_blueprint(datastore: ChangeDetectionStore):
     tags_blueprint = Blueprint('tags', __name__, template_folder="templates")
 
+    def parent_choices(exclude_uuid=None):
+        tags = datastore.data['settings']['application'].get('tags', {})
+        return [('', gettext('No parent'))] + [
+            (uuid, tag.get('title', '')) for uuid, tag in
+            sorted(tags.items(), key=lambda item: item[1].get('title', '').lower())
+            if uuid != exclude_uuid and not tag.get('parent_uuid')
+        ]
+
     # Used by any template that writes a tag colour into a <style> block
     tags_blueprint.add_app_template_filter(safe_css_colour, 'safe_css_colour')
 
@@ -20,17 +28,29 @@ def construct_blueprint(datastore: ChangeDetectionStore):
     def tags_overview_page():
         from .form import SingleTag
         add_form = SingleTag(request.form)
+        add_form.parent_uuid.choices = parent_choices()
 
-        sorted_tags = sorted(datastore.data['settings']['application'].get('tags').items(), key=lambda x: x[1]['title'])
+        sorted_tags = sorted(datastore.data['settings']['application'].get('tags').items(), key=lambda x: x[1]['title'].lower())
+        children = {}
+        for uuid, tag in sorted_tags:
+            children.setdefault(tag.get('parent_uuid') or '', []).append((uuid, tag))
+        display_tags = []
+        for uuid, tag in sorted_tags:
+            if tag.get('parent_uuid') and tag['parent_uuid'] in datastore.data['settings']['application']['tags']:
+                continue
+            display_tags.append((uuid, tag, 0))
+            display_tags.extend((child_uuid, child, 1) for child_uuid, child in children.get(uuid, []))
 
         from collections import Counter
 
-        tag_count = Counter(tag for watch in datastore.data['watching'].values() if watch.get('tags') for tag in watch['tags'])
+        tag_count = Counter(tag_uuid for watch in datastore.data['watching'].values()
+                            for tag_uuid in datastore.get_group_path_for_watch(watch['uuid']))
 
         from changedetectionio import processors
         output = render_template("groups-overview.html",
                                  app_rss_token=datastore.data['settings']['application'].get('rss_access_token'),
                                  available_tags=sorted_tags,
+                                 display_tags=display_tags,
                                  form=add_form,
                                  generate_tag_colors=processors.generate_processor_badge_colors,
                                  tag_count=tag_count,
@@ -44,6 +64,7 @@ def construct_blueprint(datastore: ChangeDetectionStore):
     def form_tag_add():
         from .form import SingleTag
         add_form = SingleTag(request.form)
+        add_form.parent_uuid.choices = parent_choices()
 
         if not add_form.validate():
             for widget, l in add_form.errors.items():
@@ -56,7 +77,15 @@ def construct_blueprint(datastore: ChangeDetectionStore):
             flash(gettext('The tag "{}" already exists').format(title), "error")
             return redirect(url_for('tags.tags_overview_page'))
 
-        datastore.add_tag(title)
+        try:
+            new_uuid = datastore.add_tag(title, parent_uuid=add_form.parent_uuid.data or '',
+                                         allow_existing=False)
+        except ValueError:
+            flash(gettext('Invalid parent group: groups can have only two levels'), 'error')
+            return redirect(url_for('tags.tags_overview_page'))
+        if not new_uuid:
+            flash(gettext('The tag "{}" already exists').format(title), "error")
+            return redirect(url_for('tags.tags_overview_page'))
         flash(gettext("Tag added"))
 
 
@@ -74,18 +103,33 @@ def construct_blueprint(datastore: ChangeDetectionStore):
     @tags_blueprint.route("/delete/<uuid_str:uuid>", methods=['POST'])
     @login_optionally_required
     def delete(uuid):
-        # Delete the tag from settings immediately
-        if datastore.data['settings']['application']['tags'].get(uuid):
-            del datastore.data['settings']['application']['tags'][uuid]
+        with datastore.lock:
+            groups = datastore.data['settings']['application']['tags']
+            if uuid not in groups:
+                flash(gettext('Group not found'), 'error')
+                return redirect(url_for('tags.tags_overview_page'))
+            valid_group_ids = set(groups)
+
+            # Keep children and their watches when a parent is removed.
+            for child in groups.values():
+                if child.get('parent_uuid') == uuid:
+                    child['parent_uuid'] = ''
+                    child.commit()
+            del groups[uuid]
 
         # Remove tag from all watches in background thread to avoid blocking
-        def remove_tag_background(tag_uuid):
+        def remove_tag_background(tag_uuid, existing_group_ids):
             """Background thread to remove tag from watches - discarded after completion."""
             removed_count = 0
             try:
                 for watch_uuid, watch in datastore.data['watching'].items():
                     if watch.get('tags') and tag_uuid in watch['tags']:
-                        watch['tags'].remove(tag_uuid)
+                        direct_assigned = next((group_id for group_id in watch['tags']
+                                                if group_id in existing_group_ids), None)
+                        # When removing the effective group from legacy multi-group
+                        # data, do not silently switch the watch to its next UUID.
+                        watch['tags'] = ([] if direct_assigned == tag_uuid else
+                                         [group_id for group_id in watch['tags'] if group_id != tag_uuid])
                         watch.commit()
                         removed_count += 1
                 logger.info(f"Background: Tag {tag_uuid} removed from {removed_count} watches")
@@ -93,7 +137,7 @@ def construct_blueprint(datastore: ChangeDetectionStore):
                 logger.error(f"Error removing tag from watches: {e}")
 
         # Start daemon thread
-        threading.Thread(target=remove_tag_background, args=(uuid,), daemon=True).start()
+        threading.Thread(target=remove_tag_background, args=(uuid, valid_group_ids), daemon=True).start()
 
         flash(gettext("Tag deleted, removing from watches in background"))
         return redirect(url_for('tags.tags_overview_page'))
@@ -101,24 +145,37 @@ def construct_blueprint(datastore: ChangeDetectionStore):
     @tags_blueprint.route("/unlink/<uuid_str:uuid>", methods=['POST'])
     @login_optionally_required
     def unlink(uuid):
-        # Unlink tag from all watches in background thread to avoid blocking
-        def unlink_tag_background(tag_uuid):
-            """Background thread to unlink tag from watches - discarded after completion."""
+        groups = datastore.data['settings']['application']['tags']
+        if uuid not in groups:
+            flash(gettext('Group not found'), 'error')
+            return redirect(url_for('tags.tags_overview_page'))
+
+        # A parent is shown with its children's watches, so Unlink covers that same
+        # branch. URL-matched watches have no manual assignment to remove.
+        branch = {uuid} | {group_uuid for group_uuid, group in groups.items()
+                           if group.get('parent_uuid') == uuid}
+
+        def unlink_tag_background(group_ids):
+            """Clear the one effective manual group from watches in this branch."""
             unlinked_count = 0
             try:
                 for watch_uuid, watch in datastore.data['watching'].items():
-                    if watch.get('tags') and tag_uuid in watch['tags']:
-                        watch['tags'].remove(tag_uuid)
+                    assigned = watch.get('tags') or []
+                    direct_assigned = next((group_id for group_id in assigned if group_id in groups), None)
+                    if direct_assigned in group_ids:
+                        # An old watch can hold extra UUIDs. Clearing all of them avoids
+                        # silently moving it into the next legacy group after unlinking.
+                        watch['tags'] = []
                         watch.commit()
                         unlinked_count += 1
-                logger.info(f"Background: Tag {tag_uuid} unlinked from {unlinked_count} watches")
+                logger.info(f"Background: Group branch {group_ids} unlinked from {unlinked_count} watches")
             except Exception as e:
                 logger.error(f"Error unlinking tag from watches: {e}")
 
         # Start daemon thread
-        threading.Thread(target=unlink_tag_background, args=(uuid,), daemon=True).start()
+        threading.Thread(target=unlink_tag_background, args=(branch,), daemon=True).start()
 
-        flash(gettext("Unlinking tag from watches in background"))
+        flash(gettext("Unlinking manually assigned watches in this group and its child groups. URL match rules can assign them again."))
         return redirect(url_for('tags.tags_overview_page'))
 
     @tags_blueprint.route("/delete_all", methods=['POST'])
@@ -167,6 +224,7 @@ def construct_blueprint(datastore: ChangeDetectionStore):
                                        extra_notification_tokens=datastore.get_unique_notification_tokens_available(),
                                        default_system_settings = datastore.data['settings'],
                                        )
+        form.parent_uuid.choices = parent_choices(exclude_uuid=uuid)
 
         # Bridge API-stored processor_config_* values into the form's FormField sub-forms.
         # The API stores processor_config_restock_diff in the tag dict; find the matching
@@ -225,6 +283,8 @@ def construct_blueprint(datastore: ChangeDetectionStore):
             w_uuid: watch
             for w_uuid, watch in datastore.data['watching'].items()
             if default.matches_url(watch.get('url', ''))
+            and uuid in datastore.get_all_tags_for_watch(w_uuid)
+            and uuid not in (watch.get('tags') or [])
         }
 
         output = render_template("edit-tag.html",
@@ -252,6 +312,18 @@ def construct_blueprint(datastore: ChangeDetectionStore):
                                data=tag,
                                extra_notification_tokens=datastore.get_unique_notification_tokens_available()
                                )
+        form.parent_uuid.choices = parent_choices(exclude_uuid=uuid)
+        parent_uuid = request.form.get('parent_uuid', '')
+        children_exist = any(t.get('parent_uuid') == uuid for t in datastore.data['settings']['application']['tags'].values())
+        if parent_uuid not in {choice[0] for choice in form.parent_uuid.choices} or (parent_uuid and children_exist):
+            flash(gettext('Invalid parent group: groups can have only two levels'), 'error')
+            return redirect(url_for('tags.form_tag_edit', uuid=uuid))
+        new_title = (form.title.data or '').strip()
+        existing_uuid = datastore.tag_uuid_for_title(new_title) if new_title else None
+        if not new_title or (existing_uuid and existing_uuid != uuid):
+            flash(gettext('Group name must be non-empty and unique'), 'error')
+            return redirect(url_for('tags.form_tag_edit', uuid=uuid))
+        form.title.data = new_title
         # @todo subclass form so validation works
         #if not form.validate():
 #            for widget, l in form.errors.items():

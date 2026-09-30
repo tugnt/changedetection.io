@@ -54,7 +54,7 @@ def construct_main_feed_routes(rss_blueprint, datastore):
             # @todo tag notification_muted skip also (improve Watch model)
             if datastore.data['settings']['application'].get('rss_hide_muted_watches') and watch.get('notification_muted'):
                 continue
-            if limit_tag and not limit_tag in watch['tags']:
+            if limit_tag and limit_tag not in datastore.get_group_path_for_watch(uuid):
                 continue
             sorted_watches.append(watch)
 

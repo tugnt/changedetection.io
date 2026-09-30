@@ -14,7 +14,11 @@ def construct_blueprint(datastore: ChangeDetectionStore):
     @notification_blueprint.route("/notification/send-test/", methods=['POST'])
     @login_optionally_required
     def ajax_callback_send_notification_test(watch_uuid=None):
-        from changedetectionio.notification_service import NotificationContextData, set_basic_notification_vars
+        from changedetectionio.notification_service import (
+            NotificationContextData,
+            _resolve_notification_urls,
+            set_basic_notification_vars,
+        )
         # Watch_uuid could be unset in the case it`s used in tag editor, global settings
         import apprise
         from changedetectionio.notification.handler import process_notification
@@ -27,35 +31,56 @@ def construct_blueprint(datastore: ChangeDetectionStore):
 
         is_global_settings_form = request.args.get('mode', '') == 'global-settings'
         is_group_settings_form = request.args.get('mode', '') == 'group-settings'
+        group_uuid = (request.form.get('group_uuid') or '').strip()
+        groups = datastore.data['settings']['application'].get('tags', {})
+        if is_group_settings_form and group_uuid and group_uuid not in groups:
+            return make_response('Error: Group not found', 400)
 
-        # Use an existing random one on the global/main settings form
+        # Global and group forms need a watch only to render example notification tokens.
         if not watch_uuid and (is_global_settings_form or is_group_settings_form) \
                 and datastore.data.get('watching'):
-            logger.debug(f"Send test notification - Choosing random Watch {watch_uuid}")
-            watch_uuid = random.choice(list(datastore.data['watching'].keys()))
+            candidates = list(datastore.data['watching'])
+            if is_group_settings_form and group_uuid:
+                in_group = [uuid for uuid in candidates
+                            if group_uuid in datastore.get_group_path_for_watch(uuid)]
+                candidates = in_group or candidates
+            watch_uuid = random.choice(candidates)
+            logger.debug(f"Send test notification - Choosing Watch {watch_uuid}")
 
         if not watch_uuid:
             return make_response("Error: You must have atleast one watch configured for 'test notification' to work", 400)
 
         watch = datastore.data['watching'].get(watch_uuid)
-        notification_urls = request.form.get('notification_urls','').strip().splitlines()
+        if not watch:
+            return make_response('Error: Watch not found', 404)
+
+        notification_urls = [url.strip() for url in
+                             request.form.get('notification_urls', '').splitlines() if url.strip()]
 
         if not notification_urls:
-            logger.debug("Test notification - Trying by group/tag in the edit form if available")
-            # On an edit page, we should also fire off to the tags if they have notifications
-            if request.form.get('tags') and request.form['tags'].strip():
-                for k in request.form['tags'].split(','):
-                    tag = datastore.tag_exists_by_name(k.strip())
-                    notification_urls = tag.get('notifications_urls') if tag and tag.get('notifications_urls') else None
-
-        if not notification_urls and not is_global_settings_form and not is_group_settings_form:
-            # In the global settings, use only what is typed currently in the text box
-            logger.debug("Test notification - Trying by global system settings notifications")
-            if datastore.data['settings']['application'].get('notification_urls'):
-                notification_urls = datastore.data['settings']['application']['notification_urls']
+            if is_group_settings_form:
+                if not group_uuid:
+                    return make_response('Error: Group not selected', 400)
+                notification_urls = _resolve_notification_urls(datastore, group_uuid_override=group_uuid)
+            elif is_global_settings_form:
+                notification_urls = datastore.data['settings']['application'].get('notification_urls')
+            else:
+                # The watch editor may be testing a group choice or a cleared URL field
+                # before saving. Honour those form values without changing the watch.
+                selected_group = None
+                if 'tags' in request.form:
+                    selected_group = (request.form.get('tags') or '').split(',')[0].strip()
+                    if selected_group and selected_group not in groups:
+                        selected_group = datastore.tag_uuid_for_title(selected_group) or ''
+                notification_urls = _resolve_notification_urls(
+                    datastore,
+                    watch=watch,
+                    group_uuid_override=selected_group,
+                    include_watch_urls='notification_urls' not in request.form,
+                )
 
         if not notification_urls:
-            return 'Error: No Notification URLs set/found'
+            return make_response('Error: No Notification URLs set/found', 400)
 
         for n_url in notification_urls:
             # We are ONLY validating the apprise:// part here, convert all tags to something so as not to break apprise URLs

@@ -36,12 +36,18 @@ html[data-darkmode="true"] .watch-tag-list.tag-{{ class_name }} {
                     {{ render_simple_field(form.name, placeholder=_("Watch group / tag")) }}
                 </div>
                 <div>
+                    {{ render_simple_field(form.parent_uuid) }}
+                </div>
+                <div>
                     {{ render_simple_field(form.save_button, title=_("Save"), label=false ) }}
                 </div>
             </div>
             <br>
             <div style="color: #fff;">{{ _('Groups allows you to manage filters and notifications for multiple watches under a single organisational tag.') }}</div>
         </fieldset>
+    </form>
+    <form id="group-actions" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     </form>
     <!-- @todo maybe some overview matrix, 'tick' with which has notification, filter rules etc -->
     <div id="watch-table-wrapper">
@@ -64,17 +70,18 @@ html[data-darkmode="true"] .watch-tag-list.tag-{{ class_name }} {
                 <td colspan="3">{{ _('No website organisational tags/groups configured') }}</td>
             </tr>
             {% endif %}
-            <form method="POST" style="display: inline;">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            {% for uuid, tag in available_tags  %}
+            {% for uuid, tag, depth in display_tags %}
             <tr id="{{ uuid }}" class="">
                 <td class="watch-controls">
-                    <button formaction="{{url_for('tags.mute', uuid=tag.uuid)}}"  type="submit" class="bare-btn link-mute state-{{'on' if tag.notification_muted else 'off'}}" aria-label="{{ _('Mute notifications') }}" title="{{ _('Mute notifications') }}"><i data-feather="{{ 'bell-off' if tag.notification_muted else 'bell' }}" class="icon icon-mute"></i></button>
+                    <button form="group-actions" formaction="{{url_for('tags.mute', uuid=tag.uuid)}}"  type="submit" class="bare-btn link-mute state-{{'on' if tag.notification_muted else 'off'}}" aria-label="{{ _('Mute notifications') }}" title="{{ _('Mute notifications') }}"><i data-feather="{{ 'bell-off' if tag.notification_muted else 'bell' }}" class="icon icon-mute"></i></button>
                 </td>
                 <td class="watch-count">{{ "{:,}".format(tag_count[uuid]) if uuid in tag_count else 0 }}</td>
-                <td class="title-col inline"> <a href="{{url_for('watchlist.index', tag=uuid) }}" class="watch-tag-list tag-{{ tag.title|sanitize_tag_class }}">{{ tag.title }}</a></td>
+                <td class="title-col inline">
+                    {% if depth %}<span aria-hidden="true" style="margin-left:1.5em">↳</span>{% endif %}
+                    <a href="{{url_for('watchlist.index', tag=uuid) }}" class="watch-tag-list tag-{{ tag.title|sanitize_tag_class }}">{{ tag.title }}</a>
+                </td>
                 <td>
-                    <button formaction="{{ url_for('ui.form_watch_checknow', tag=uuid) }}" type="submit" class="cdio-btn"><i data-feather="refresh-cw"></i>{{ _('Recheck') }}</button>
+                    <button form="group-actions" formaction="{{ url_for('ui.form_watch_checknow', tag=uuid) }}" type="submit" class="cdio-btn"><i data-feather="refresh-cw"></i>{{ _('Recheck') }}</button>
                     <a class="cdio-btn" href="{{ url_for('tags.form_tag_edit', uuid=uuid) }}">{{ _('Edit') }}</a>
                     <a class="cdio-btn cdio-btn--danger"
                        href="{{ url_for('tags.delete', uuid=uuid) }}"
@@ -91,14 +98,13 @@ html[data-darkmode="true"] .watch-tag-list.tag-{{ class_name }} {
                        data-requires-confirm
                        data-confirm-type="warning"
                        data-confirm-title="{{ _('Unlink Group?') }}"
-                       data-confirm-message="{{ _('<p>Are you sure you want to unlink all watches from group <strong>%(title)s</strong>?</p><p>The tag will be kept but watches will be removed from it.</p>', title=tag.title) }}"
+                       data-confirm-message="{{ _('<p>Unlink manually assigned watches from <strong>%(title)s</strong> and any child groups?</p><p>The groups will be kept. URL match rules can assign watches to them again.</p>', title=tag.title) }}"
                        data-confirm-button="{{ _('Unlink') }}"
-                       title="{{ _('Keep the tag but unlink any watches') }}">{{ _('Unlink') }}</a>
+                       title="{{ _('Keep the group but unlink manually assigned watches') }}">{{ _('Unlink') }}</a>
                     <a href="{{ url_for('rss.rss_tag_feed', tag_uuid=uuid, token=app_rss_token)}}"><img alt="{{ _('RSS Feed for this watch') }}" style="padding-left: 1em;" src="{{url_for('static_content', group='images', filename='generic_feed-icon.svg')}}" height="15"></a>
                 </td>
             </tr>
             {% endfor %}
-            </form>
             </tbody>
         </table>
         </div>

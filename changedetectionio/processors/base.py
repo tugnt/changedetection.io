@@ -171,7 +171,7 @@ class difference_detection_processor():
         logger.info(f"Using preloaded Add-Watch snapshot for {self.watch.get('uuid')} - skipping network fetch")
         return True
 
-    async def call_browser(self, preferred_proxy_id=None):
+    async def call_browser(self, preferred_proxy_id=None, diagnostic=False):
 
         from requests.structures import CaseInsensitiveDict
 
@@ -195,7 +195,7 @@ class difference_detection_processor():
         if preferred_proxy_id:
             # Custom browser endpoints should NOT have a proxy added
             if not prefer_fetch_backend.startswith('extra_browser_'):
-                proxy_url = self.datastore.proxy_list.get(preferred_proxy_id).get('url')
+                proxy_url = self.datastore.get_proxy_url(preferred_proxy_id)
                 logger.debug(f"Selected proxy key '{preferred_proxy_id}' as proxy URL '{proxy_url}' for {url}")
             else:
                 logger.debug("Skipping adding proxy data when custom Browser endpoint is specified. ")
@@ -216,7 +216,8 @@ class difference_detection_processor():
 
         if self.watch.has_browser_steps:
             self.fetcher.browser_steps = browser_steps_get_valid_steps(self.watch.get('browser_steps', []))
-            self.fetcher.browser_steps_screenshot_path = os.path.join(self.datastore.datastore_path, self.watch.get('uuid'))
+            if not diagnostic:
+                self.fetcher.browser_steps_screenshot_path = os.path.join(self.datastore.datastore_path, self.watch.get('uuid'))
 
         # Tweak the base config with the per-watch ones
         from changedetectionio.jinja2_custom import render as jinja_render
@@ -264,10 +265,10 @@ class difference_detection_processor():
         # And here we go! call the right browser with browser-specific settings
         empty_pages_are_a_change = self.datastore.data['settings']['application'].get('empty_pages_are_a_change', False)
         # All fetchers are now async
-        await self.fetcher.run(
+        run_options = dict(
             current_include_filters=self.watch.get('include_filters'),
             empty_pages_are_a_change=empty_pages_are_a_change,
-            fetch_favicon=self.watch.favicon_is_expired() and self.datastore.data['settings']['application'].get('ui', {}).get('favicons_enabled', True),
+            fetch_favicon=not diagnostic and self.watch.favicon_is_expired() and self.datastore.data['settings']['application'].get('ui', {}).get('favicons_enabled', True),
             ignore_status_codes=ignore_status_codes,
             is_binary=is_binary,
             request_body=request_body,
@@ -280,7 +281,22 @@ class difference_detection_processor():
         )
 
         # @todo .quit here could go on close object, so we can run JS if change-detected
-        await self.fetcher.quit(watch=self.watch)
+        if diagnostic:
+            import tempfile
+            from changedetectionio.content_fetchers.requests import fetcher as RequestsFetcher
+            with tempfile.TemporaryDirectory(prefix='watch-test-') as test_dir:
+                if self.watch.has_browser_steps:
+                    self.fetcher.browser_steps_screenshot_path = test_dir
+                try:
+                    await self.fetcher.run(**run_options)
+                finally:
+                    # Requests.quit removes the watch's saved screenshot. Browser
+                    # fetchers still need their session closed on failed tests.
+                    if not isinstance(self.fetcher, RequestsFetcher):
+                        await self.fetcher.quit(watch=None)
+        else:
+            await self.fetcher.run(**run_options)
+            await self.fetcher.quit(watch=self.watch)
 
         # Sanitize lone surrogates - these can appear when servers return malformed/mixed-encoding
         # content that gets decoded into surrogate characters (e.g. \udcad). Without this,
@@ -291,6 +307,22 @@ class difference_detection_processor():
 
         if self.fetcher.content and isinstance(self.fetcher.content, str):
             self.fetcher.content = self.fetcher.content.encode('utf-8', errors='replace').decode('utf-8')
+
+        # Some anti-bot services return their challenge with HTTP 200. Treating
+        # that HTML as a successful check creates false changes and snapshots.
+        if not is_binary:
+            from changedetectionio.content_fetchers.block_detection import detect_block_page
+            from changedetectionio.content_fetchers.exceptions import BlockPageReceived
+            provider = detect_block_page(self.fetcher.content, self.fetcher.get_all_headers())
+            if not provider and self.watch.get('processor') == 'restock_diff' and self.fetcher.get_last_status_code() in (403, 429):
+                provider = 'HTTP access denial'
+            if provider:
+                raise BlockPageReceived(
+                    provider=provider,
+                    status_code=self.fetcher.get_last_status_code(),
+                    screenshot=self.fetcher.screenshot,
+                    page_html=self.fetcher.content,
+                )
 
         # After init, call run_changedetection() which will do the actual change-detection
 

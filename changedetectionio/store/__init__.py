@@ -19,6 +19,7 @@ import re
 import secrets
 import sys
 import time
+import threading
 import uuid as uuid_builder
 from loguru import logger
 from blinker import signal
@@ -43,7 +44,6 @@ from .updates import DatastoreUpdatesMixin
 # Because the server will run as a daemon and wont know the URL for notification links when firing off a notification
 BASE_URL_NOT_SET_TEXT = '("Base URL" not set - see settings - notifications)'
 
-dictfilt = lambda x, y: dict([(i, x[i]) for i in x if i in set(y)])
 
 
 # Is there an existing library to ensure some data store (JSON etc) is in sync with CRUD methods?
@@ -58,6 +58,8 @@ class ChangeDetectionStore(DatastoreUpdatesMixin, FileSavingDataStore):
     def __init__(self, datastore_path="/datastore", include_default_watches=True, version_tag="0.0.0"):
         # Initialize parent class
         super().__init__()
+        self._proxy_rotation_lock = threading.Lock()
+        self._proxy_rotation_positions = {}
 
         # Should only be active for docker
         # logging.basicConfig(filename='/dev/stdout', level=logging.INFO)
@@ -523,7 +525,7 @@ class ChangeDetectionStore(DatastoreUpdatesMixin, FileSavingDataStore):
         """
         deleted_count = 0
         for uuid, watch in self.__data['watching'].items():
-            if watch.get('tags') and tag_uuid in watch['tags']:
+            if tag_uuid in self.get_all_tags_for_watch(uuid):
                 if watch.data_dir:
                     checksum_file = os.path.join(watch.data_dir, 'last-checksum.txt')
                     if os.path.isfile(checksum_file):
@@ -727,7 +729,6 @@ class ChangeDetectionStore(DatastoreUpdatesMixin, FileSavingDataStore):
 
         # Incase these are copied across, assume it's a reference and deepcopy()
         apply_extras = deepcopy(extras)
-        apply_extras['tags'] = [] if not apply_extras.get('tags') else apply_extras.get('tags')
 
         # Was it a share link? try to fetch the data
         if (url.startswith("https://changedetection.io/share/")):
@@ -793,20 +794,31 @@ class ChangeDetectionStore(DatastoreUpdatesMixin, FileSavingDataStore):
                 flash(self.watch_limit_message(), 'error')
             return None
 
-        if tag and type(tag) == str:
-            # A comma separated string of tag *titles*, created when they don't exist yet.
+        # A direct UUID takes precedence over the legacy name parameter. Keep order stable.
+        requested_group_ids = apply_extras.get('tags') or []
+        if isinstance(requested_group_ids, str):
+            requested_group_ids = [requested_group_ids]
+        elif not isinstance(requested_group_ids, list):
+            requested_group_ids = []
+        existing_tag_uuids = self.__data['settings']['application'].get('tags', {})
+        selected_group = next((group_id for group_id in requested_group_ids
+                               if isinstance(group_id, str) and group_id in existing_tag_uuids), None)
+        if not selected_group and tag_uuids:
+            selected_group = next((group_id.strip() for group_id in tag_uuids
+                                   if isinstance(group_id, str) and group_id.strip() in existing_tag_uuids), None)
+
+        if not selected_group and tag and type(tag) == str:
+            # Legacy comma-separated input: only the first group is used.
             # An existing tag's UUID is accepted here too: the API documented this field as taking
             # a UUID for years, and honouring that beats creating a tag *titled* with the UUID.
-            existing_tag_uuids = self.__data['settings']['application'].get('tags', {})
-
-            for tag_name in tag.split(','):
+            for tag_name in tag.split(',')[:1]:
                 tag_name = tag_name.strip()
                 if not tag_name:
                     continue
 
                 if _TAG_UUID_RE.match(tag_name):
                     if tag_name in existing_tag_uuids:
-                        apply_extras['tags'].append(tag_name)
+                        selected_group = tag_name
                         continue
                     # UUID-shaped but no such tag, and no tag literally titled that either -
                     # a stale or foreign ID. Skip it rather than leave behind a group named
@@ -819,16 +831,10 @@ class ChangeDetectionStore(DatastoreUpdatesMixin, FileSavingDataStore):
                 # add_tag() returns False for a title it won't create - never let that into the list,
                 # a falsy entry blows up every lookup of watch['tags']
                 if tag_uuid:
-                    apply_extras['tags'].append(tag_uuid)
+                    selected_group = tag_uuid
 
-        # Or if UUIDs given directly
-        if tag_uuids:
-            for t in tag_uuids:
-                apply_extras['tags'] = list(set(apply_extras['tags'] + [t.strip()]))
-
-        # Make any uuids unique
-        if apply_extras.get('tags'):
-            apply_extras['tags'] = list(set(apply_extras.get('tags')))
+        # One direct group per watch. The parent is derived from the group tree.
+        apply_extras['tags'] = [selected_group] if selected_group else []
 
         # 'processor' reaches here from callers that do NOT enum-validate it the way the API does:
         # /imports/import passes request.values through verbatim, and the share-link path above
@@ -985,6 +991,15 @@ class ChangeDetectionStore(DatastoreUpdatesMixin, FileSavingDataStore):
                 with open(os.path.join(self.datastore_path, "proxies.json"), encoding='utf-8') as f:
                     proxy_list = json.load(f)
 
+        # A pool is one selectable proxy in the UI. Keep a representative URL
+        # for existing UI/proxy-check code; fetches select the next pool member.
+        for entry in proxy_list.values():
+            if isinstance(entry, dict) and isinstance(entry.get('urls'), list):
+                urls = [url for url in entry['urls'] if isinstance(url, str) and url]
+                if urls:
+                    entry['urls'] = urls
+                    entry['url'] = urls[0]
+
         # Mapping from UI config if available
         extras = self.data['settings']['requests'].get('extra_proxies')
         if extras:
@@ -999,6 +1014,19 @@ class ChangeDetectionStore(DatastoreUpdatesMixin, FileSavingDataStore):
             proxy_list["no-proxy"] = {'label': gettext("No proxy"), 'url': ''}
 
         return proxy_list if len(proxy_list) else None
+
+    def get_proxy_url(self, proxy_id):
+        """Return the next endpoint for a pool, or the static proxy URL."""
+        entry = (self.proxy_list or {}).get(proxy_id, {})
+        urls = entry.get('urls')
+        if urls is None:
+            return entry.get('url')
+        if not urls:
+            raise ValueError(f"Proxy pool '{proxy_id}' has no valid URLs")
+        with self._proxy_rotation_lock:
+            position = self._proxy_rotation_positions.get(proxy_id, 0)
+            self._proxy_rotation_positions[proxy_id] = (position + 1) % len(urls)
+        return urls[position % len(urls)]
 
     def get_preferred_proxy_for_watch(self, uuid):
         """
@@ -1104,28 +1132,36 @@ class ChangeDetectionStore(DatastoreUpdatesMixin, FileSavingDataStore):
 
         return None
 
-    def add_tag(self, title):
+    def add_tag(self, title, parent_uuid='', allow_existing=True):
         # If name exists, return that
         n = title.strip().lower()
         logger.debug(f">>> Adding new tag - '{n}'")
         if not n:
             return False
 
-        existing_uuid = self.tag_uuid_for_title(title)
-        if existing_uuid:
-            logger.warning(f"Tag '{title}' already exists, skipping creation.")
-            return existing_uuid
-
         # Eventually almost everything todo with a watch will apply as a Tag
         # So we use the same model as a Watch
         with self.lock:
+            # Validate and insert under the same lock so simultaneous create
+            # requests cannot create duplicate titles.
+            existing_uuid = self.tag_uuid_for_title(title)
+            if existing_uuid:
+                logger.warning(f"Tag '{title}' already exists, skipping creation.")
+                return existing_uuid if allow_existing else None
+
+            if parent_uuid:
+                parent = self.__data['settings']['application'].get('tags', {}).get(parent_uuid)
+                if not parent or parent.get('parent_uuid'):
+                    raise ValueError('A child group must have an existing top-level parent')
+
             from ..model import Tag
             new_tag = Tag.model(
                 datastore_path=self.datastore_path,
                 __datastore=self.__data,
                 default={
                     'title': title.strip(),
-                    'date_created': int(time.time())
+                    'date_created': int(time.time()),
+                    'parent_uuid': parent_uuid,
                 }
             )
 
@@ -1138,22 +1174,23 @@ class ChangeDetectionStore(DatastoreUpdatesMixin, FileSavingDataStore):
         return new_uuid
 
     def get_all_tags_for_watch(self, uuid):
-        """This should be in Watch model but Watch doesn't have access to datastore, not sure how to solve that yet"""
+        """Return the watch's direct group. Older watches may still store extra UUIDs."""
         watch = self.data['watching'].get(uuid)
-        if not watch:
+        from changedetectionio.grouping import direct_group_for_watch
+        direct = direct_group_for_watch(watch, self.__data['settings']['application']['tags'])
+        return {direct[0]: direct[1]} if direct else {}
+
+    def get_group_path_for_watch(self, uuid):
+        """Return direct group followed by its parent, for scope and notifications."""
+        path = self.get_all_tags_for_watch(uuid)
+        if not path:
             return {}
-
-        # Start with manually assigned tags
-        result = dictfilt(self.__data['settings']['application']['tags'], watch.get('tags', []))
-
-        # Additionally include any tag whose url_match_pattern matches this watch's URL
-        watch_url = watch.get('url', '')
-        if watch_url:
-            for tag_uuid, tag in self.__data['settings']['application']['tags'].items():
-                if tag_uuid not in result and tag.matches_url(watch_url):
-                    result[tag_uuid] = tag
-
-        return result
+        direct = next(iter(path.values()))
+        parent_uuid = direct.get('parent_uuid')
+        tags = self.__data['settings']['application']['tags']
+        if parent_uuid and parent_uuid in tags and parent_uuid not in path:
+            path[parent_uuid] = tags[parent_uuid]
+        return path
 
     @property
     def extra_browsers(self):
@@ -1193,11 +1230,13 @@ class ChangeDetectionStore(DatastoreUpdatesMixin, FileSavingDataStore):
         matching_uuids = []
         query = query.lower().strip()
         tag = self.tag_exists_by_name(tag_limit) if tag_limit else False
+        if tag_limit and not tag:
+            return []
 
         for uuid, watch in self.data['watching'].items():
             # Filter by tag if requested
             if tag_limit:
-                if not tag.get('uuid') in watch.get('tags', []):
+                if tag.get('uuid') not in self.get_group_path_for_watch(uuid):
                     continue
 
             # Search in URL, title, or error messages

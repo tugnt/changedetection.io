@@ -4,6 +4,8 @@
 {% from '_common_fields.html' import render_common_settings_form %}
 <script>
     const notification_base_url="{{url_for('ui.ui_notification.ajax_callback_send_notification_test', mode="group-settings")}}";
+    const notification_allow_inherited_urls=true;
+    const notification_group_uuid={{ data.uuid|tojson }};
 </script>
 
 <script src="{{url_for('static_content', group='js', filename='tabs.js')}}" defer></script>
@@ -51,8 +53,12 @@
                         {{ render_field(form.title, placeholder="https://...", required=true, class="m-d") }}
                     </div>
                     <div class="pure-control-group">
+                        {{ render_field(form.parent_uuid) }}
+                        <span class="pure-form-message-inline">{{ _('Groups can have one parent level only.') }}</span>
+                    </div>
+                    <div class="pure-control-group">
                         {{ render_field(form.url_match_pattern, class="m-d") }}
-                        <span class="pure-form-message-inline">{{ _('Automatically applies this tag to any watch whose URL matches. Supports wildcards: <code>*example.com*</code> or plain substring: <code>github.com/myorg</code>')|safe }}</span>
+                        <span class="pure-form-message-inline">{{ _('Automatically assigns this group to an ungrouped watch whose URL matches. If several patterns match, the first group wins. Supports wildcards: <code>*example.com*</code> or plain substring: <code>github.com/myorg</code>')|safe }}</span>
                     </div>
                     {% if matching_watches %}
                     <div class="pure-control-group">
@@ -101,6 +107,7 @@
             <div class="tab-pane-inner" id="filters-and-triggers">
                 {# TRANSLATORS: CJK fonts lack native italics; allow substitution with conventional local styling. dennis-ignore: W303 #}
                 <p>{{ _('These settings are <strong><i>added</i></strong> to any existing watch configurations.')|safe }}</p>
+                <p class="pure-form-message-inline">{{ _('Filters apply to watches directly in this group. Child groups use their own filters.') }}</p>
 
                 {% include "edit/include_subtract.html" %}
                 <div class="text-filtering border-fieldset">
@@ -132,12 +139,13 @@
                         {% if has_default_notification_urls %}
                         <div class="inline-warning">
                             <img class="inline-warning-icon" src="{{url_for('static_content', group='images', filename='notice.svg')}}" alt="{{ _('Look out!') }}" title="{{ _('Lookout!') }}" >
-                            {{ _('There are <a href="%(url)s">system-wide notification URLs enabled</a>, this form will override notification settings for this watch only &dash; an empty Notification URL list here will still send notifications.', url=url_for('settings.notifications.apprise'))|safe }}
+                            {{ _('There are <a href="%(url)s">system-wide notification URLs enabled</a>. An empty URL list in this group uses its parent group channel, if set, then the system channel.', url=url_for('settings.notifications.apprise'))|safe }}
                         </div>
                         {% endif %}
-                        <a href="#notifications" id="notification-setting-reset-to-default" class="pure-button button-xsmall" style="right: 20px; top: 20px; position: absolute; background-color: #5f42dd; border-radius: 4px; font-size: 70%; color: #fff">{{ _('Use system defaults') }}</a>
+                        <a href="#notifications" id="notification-setting-reset-to-default" class="pure-button button-xsmall" style="right: 20px; top: 20px; position: absolute; background-color: #5f42dd; border-radius: 4px; font-size: 70%; color: #fff">{{ _('Clear notification overrides') }}</a>
 
                         {{ render_common_settings_form(form, emailprefix, settings_application, extra_notification_token_placeholder_info) }}
+                        <p class="pure-form-message-inline">{{ _('Notification URLs use this group, then its parent group, then system settings. Muting a parent also mutes its children.') }}</p>
                     </div>
                 </fieldset>
             </div>

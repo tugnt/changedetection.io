@@ -16,9 +16,11 @@ def construct_blueprint(datastore: ChangeDetectionStore, update_q, queuedWatchMe
     edit_blueprint = Blueprint('ui_edit', __name__, template_folder="../ui/templates")
 
     def _watch_tags(watch):
-        """(uuid, tag) for this watch's tags, in its own tag order, skipping UUIDs we don't know."""
+        """The one direct group whose settings can affect this watch."""
+        from changedetectionio.grouping import direct_group_for_watch
         tags = datastore.data['settings']['application'].get('tags', {})
-        return [(tag_uuid, tags[tag_uuid]) for tag_uuid in watch.get('tags', []) if tag_uuid in tags]
+        direct = direct_group_for_watch(watch, tags)
+        return [direct] if direct else []
 
     def _resolve_llm_group_overrides(watch, datastore) -> dict:
         """
@@ -65,8 +67,8 @@ def construct_blueprint(datastore: ChangeDetectionStore, update_q, queuedWatchMe
 
     def _watch_has_tag_options_set(watch):
         """This should be fixed better so that Tag is some proper Model, a tag is just a Watch also"""
-        for tag_uuid, tag in datastore.data['settings']['application'].get('tags', {}).items():
-            if tag_uuid in watch.get('tags', []) and (tag.get('include_filters') or tag.get('subtractive_selectors')):
+        for tag_uuid, tag in _watch_tags(watch):
+            if tag.get('include_filters') or tag.get('subtractive_selectors'):
                 return True
 
     @edit_blueprint.route("/edit/<uuid_str:uuid>", methods=['GET', 'POST'])
@@ -206,8 +208,29 @@ def construct_blueprint(datastore: ChangeDetectionStore, update_q, queuedWatchMe
 
         if request.method == 'POST' and form.validate():
 
+            # Resolve the submitted group before any watch or processor config is
+            # changed. An unknown UUID must reject the whole edit.
+            submitted_group = form.data.get('tags') or ''
+            if isinstance(submitted_group, list):
+                submitted_group = submitted_group[0] if submitted_group else ''
+            first_group = submitted_group.split(',')[0].strip()
+            group_uuid = None
+            if first_group:
+                groups = datastore.data['settings']['application'].get('tags', {})
+                group_uuid = first_group if first_group in groups else datastore.tag_uuid_for_title(first_group)
+                if not group_uuid:
+                    from uuid import UUID
+                    try:
+                        UUID(first_group)
+                    except ValueError:
+                        group_uuid = datastore.add_tag(title=first_group)
+                    else:
+                        flash(gettext('Group not found'), 'error')
+                        return redirect(url_for('ui.ui_edit.edit_page', uuid=uuid))
+
             extra_update_obj = {
                 'consecutive_filter_failures': 0,
+                'consecutive_access_blocks': 0,
                 'last_error' : False
             }
 
@@ -248,16 +271,7 @@ def construct_blueprint(datastore: ChangeDetectionStore, update_q, queuedWatchMe
             if _resolve_llm_group_overrides(datastore.data['watching'][uuid], datastore).get('llm_backend_profile'):
                 extra_update_obj['llm_backend_profile'] = datastore.data['watching'][uuid].get('llm_backend_profile', True)
 
-            # Because wtforms doesn't support accessing other data in process_ , but we convert the CSV list of tags back to a list of UUIDs
-            tag_uuids = []
-            if form.data.get('tags'):
-                # Sometimes in testing this can be list, dont know why
-                if type(form.data.get('tags')) == list:
-                    extra_update_obj['tags'] = form.data.get('tags')
-                else:
-                    for t in form.data.get('tags').split(','):
-                        tag_uuids.append(datastore.add_tag(title=t))
-                    extra_update_obj['tags'] = tag_uuids
+            extra_update_obj['tags'] = [group_uuid] if group_uuid else []
 
             datastore.data['watching'][uuid].update(form.data)
             datastore.data['watching'][uuid].update(extra_update_obj)
@@ -321,7 +335,16 @@ def construct_blueprint(datastore: ChangeDetectionStore, update_q, queuedWatchMe
             if request.args.get("next") and request.args.get("next") == 'diff':
                 return redirect(url_for('ui.ui_diff.diff_history_page', uuid=uuid))
 
-            return redirect(url_for('watchlist.index', tag=request.args.get("tag",'')))
+            active_tag = request.args.get('tag', '')
+            if active_tag:
+                groups = datastore.data['settings']['application'].get('tags', {})
+                active_group_uuid = active_tag if active_tag in groups else datastore.tag_uuid_for_title(active_tag)
+                # When moving a watch, return to the destination group if the old
+                # child or parent view can no longer show it.
+                if active_group_uuid and active_group_uuid not in datastore.get_group_path_for_watch(uuid):
+                    active_tag = group_uuid or ''
+
+            return redirect(url_for('watchlist.index', tag=active_tag))
 
         else:
             if request.method == 'POST' and not form.validate():
@@ -382,12 +405,13 @@ def construct_blueprint(datastore: ChangeDetectionStore, update_q, queuedWatchMe
                 'timezone_default_config': datastore.data['settings']['application'].get('scheduler_timezone_default'),
                 'using_global_webdriver_wait': not default['webdriver_delay'],
                 'uuid': uuid,
+                'restock_test_url': url_for('ui.ui_edit.test_restock', uuid=uuid),
                 'watch': watch,
                 'capabilities': capabilities,
                 'auto_applied_tags': {
                     tag_uuid: tag
-                    for tag_uuid, tag in datastore.data['settings']['application']['tags'].items()
-                    if tag_uuid not in watch.get('tags', []) and tag.matches_url(watch.get('url', ''))
+                    for tag_uuid, tag in datastore.get_all_tags_for_watch(uuid).items()
+                    if tag_uuid not in watch.get('tags', [])
                 },
                 # LLM intent context
                 'llm_configured': bool(_get_llm_config(datastore)),
@@ -437,6 +461,94 @@ def construct_blueprint(datastore: ChangeDetectionStore, update_q, queuedWatchMe
 
         # Return a 500 error
         abort(500)
+
+    @edit_blueprint.route('/edit/<uuid_str:uuid>/test-restock', methods=['POST'])
+    @login_optionally_required
+    def test_restock(uuid):
+        """Run a read-only fetch and extraction for the edit page."""
+        import asyncio
+        from flask import jsonify
+        from changedetectionio.processors.restock_diff.processor import perform_site_check
+        from changedetectionio.content_fetchers.exceptions import (
+            Non200ErrorCodeReceived, BlockPageReceived)
+
+        watch = datastore.data['watching'].get(uuid)
+        if not watch or watch.get('processor') != 'restock_diff':
+            abort(404)
+        checker = perform_site_check(datastore=datastore, watch_uuid=uuid)
+        from changedetectionio.content_fetchers import resolve_content_fetcher
+        _, backend_name, _ = resolve_content_fetcher(watch=checker.watch, datastore=datastore)
+        settings = dict(checker.get_restock_settings(checker.watch))
+        group_overrides = any(tag.get('overrides_watch') for _, tag in _watch_tags(checker.watch))
+        if not group_overrides:
+            for field in ('availability_selector', 'price_selector', 'in_stock_labels', 'out_of_stock_labels'):
+                key = f'processor_config_restock_diff-{field}'
+                if key in request.form:
+                    settings[field] = request.form[key][:1000]
+        checker.diagnostic_settings = settings
+        proxy_id = datastore.get_preferred_proxy_for_watch(uuid=uuid)
+        proxy_entry = (datastore.proxy_list or {}).get(proxy_id) or {}
+        result = {'state': 'unknown', 'http_status': None, 'fetcher': backend_name,
+                  'proxy': str(proxy_entry.get('label') or 'No proxy')[:100],
+                  'source': None, 'price': None, 'availability': None,
+                  'evidence': [], 'error': None}
+        try:
+            asyncio.run(checker.call_browser(diagnostic=True))
+            result['http_status'] = checker.fetcher.get_last_status_code()
+            result['fetcher'] = checker.fetcher.backend_name
+            data, multiple, configured, source = checker.extract_product_data(checker.watch)
+            if data.get('price') is None or data.get('availability') is None:
+                from changedetectionio.pluggy_interface import get_itemprop_availability_from_plugin
+                from changedetectionio.llm.evaluator import llm_enabled_for_watch, resolve_intent
+                llm_on, _ = llm_enabled_for_watch(checker.watch, datastore)
+                intent, _ = resolve_intent(checker.watch, datastore) if llm_on else ('', '')
+                plugin_data = get_itemprop_availability_from_plugin(
+                    checker.fetcher.content, checker.fetcher.backend_name,
+                    checker.fetcher, checker.watch.link, llm_intent=intent or None)
+                if plugin_data:
+                    data = {key: value for key, value in plugin_data.items() if not key.startswith('_')}
+                    source = 'Fetcher plugin'
+            if configured['availability'] is not None:
+                data['availability'] = configured['availability']
+            elif settings.get('availability_selector'):
+                data.pop('availability', None)
+            if configured['price'] is not None:
+                data['price'] = configured['price']
+            result['source'] = source
+            result['evidence'] = configured['evidence']
+            result['price'] = data.get('price')
+            result['availability'] = data.get('availability')
+            if settings.get('availability_selector') and configured['availability'] is None:
+                result['availability'] = None
+            if configured['error']:
+                result['error'] = configured['error']
+            if multiple and data.get('price') is None:
+                result['error'] = 'Multiple prices in product metadata'
+            from changedetectionio.processors.restock_diff.rules import availability_state
+            state = availability_state(data.get('availability'))
+            if state is not None:
+                result['state'] = 'in_stock' if state else 'out_of_stock'
+            if configured['in_stock'] is not None:
+                result['state'] = 'in_stock' if configured['in_stock'] else 'out_of_stock'
+            elif not settings.get('availability_selector') and checker.fetcher.instock_data not in (None, 'Possibly in stock'):
+                result['state'] = 'out_of_stock'
+            if not result['evidence'] and data:
+                result['evidence'] = [{'source': source, 'field': 'product metadata',
+                                       'matches': [str(data.get('availability') or '')[:300],
+                                                   str(data.get('price') or '')[:100]]}]
+            if not data and not result['error']:
+                result['error'] = 'No stock or price data found'
+        except BlockPageReceived as exc:
+            result.update(state='blocked', http_status=exc.status_code,
+                          error=f'Blocked by {exc.provider} challenge page')
+        except Non200ErrorCodeReceived as exc:
+            result.update(state='blocked' if exc.status_code in (403, 429) else 'unknown',
+                          http_status=exc.status_code, error=f'HTTP {exc.status_code}')
+        except Exception as exc:
+            logger.warning(f'Restock test failed for {uuid}: {exc}')
+            # Fetcher exceptions may contain a proxy URL with credentials.
+            result['error'] = f'{type(exc).__name__}: Fetch or extraction failed; see server logs'
+        return jsonify(result)
 
     @edit_blueprint.route("/edit/<uuid_str:uuid>/get-data-package", methods=['GET'])
     @login_optionally_required

@@ -34,6 +34,11 @@ def run_preloaded_first_check(datastore, uuid):
         if not handler._consume_preloaded_fetch():
             return False
 
+        from changedetectionio.blueprint.add_watch_ui import snapshot_block_error
+        error = snapshot_block_error(handler.fetcher.content, handler.fetcher.get_last_status_code())
+        if error:
+            raise ValueError(error)
+
         changed_detected, update_obj, contents = handler.run_changedetection(watch=watch)
 
         # Mirror the worker's first-snapshot save path (the parts that apply with no network).
@@ -91,6 +96,13 @@ def construct_blueprint(datastore: ChangeDetectionStore, update_q, queuedWatchMe
         processor = request.form.get('processor', processors.get_default_processor())
         llm_intent = request.form.get('llm_intent', '').strip()
         extras = {'paused': add_paused, 'processor': processor}
+
+        proxy_id = (request.form.get('proxy') or '').strip()
+        if proxy_id:
+            if proxy_id not in (datastore.proxy_list or {}):
+                flash(gettext('Invalid proxy selected'), 'error')
+                return redirect(url_for('watchlist.index'))
+            extras['proxy'] = proxy_id
 
         # Browser picked on the Add Watch page (validated against the live-preview capable
         # list by the form). Absent from the watch-list quick-add, which leaves the new

@@ -127,19 +127,19 @@ def _handle_operations(op, uuids, datastore, worker_pool, update_q, queuedWatchM
             result_type = 'error'
 
     elif (op == 'assign-tag'):
-        op_extradata = extra_data
+        op_extradata = (extra_data or '').strip()
         if op_extradata:
             tag_uuid = datastore.add_tag(title=op_extradata)
-            if op_extradata and tag_uuid:
+            if tag_uuid:
                 for uuid in uuids:
                     if datastore.data['watching'].get(uuid):
-                        # Bug in old versions caused by bad edit page/tag handler
-                        if isinstance(datastore.data['watching'][uuid]['tags'], str):
-                            datastore.data['watching'][uuid]['tags'] = []
-
-                        datastore.data['watching'][uuid]['tags'].append(tag_uuid)
+                        # A watch has one direct group. Its parent is derived from that group.
+                        datastore.data['watching'][uuid]['tags'] = [tag_uuid]
                         datastore.data['watching'][uuid].commit()
-        result_message = gettext("{} watches were tagged").format(len(uuids))
+                result_message = gettext("{} watches were tagged").format(len(uuids))
+        if not result_message:
+            result_message = gettext("Enter a group name")
+            result_type = 'error'
 
     if uuids:
         for uuid in uuids:

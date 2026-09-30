@@ -51,6 +51,8 @@ class model(EntityPersistenceMixin, watch_base):
         # See llm/evaluator.py:tag_llm_decision().
         self['llm_backend_profile'] = kw.get('default', {}).get('llm_backend_profile', None)
         self['url_match_pattern'] = kw.get('default', {}).get('url_match_pattern', '')
+        # Empty for a top-level group. A child can only point at a top-level group.
+        self['parent_uuid'] = kw.get('default', {}).get('parent_uuid', '')
 
         if kw.get('default'):
             self.update(kw['default'])
@@ -62,13 +64,8 @@ class model(EntityPersistenceMixin, watch_base):
         Wildcard patterns (*,?,[ ) use fnmatch; anything else is a case-insensitive
         substring match. Returns False if no pattern is configured.
         """
-        import fnmatch
-        pattern = self.get('url_match_pattern', '').strip()
-        if not pattern or not url:
-            return False
-        if any(c in pattern for c in ('*', '?', '[')):
-            return fnmatch.fnmatch(url.lower(), pattern.lower())
-        return pattern.lower() in url.lower()
+        from changedetectionio.grouping import group_matches_url
+        return group_matches_url(self, url)
 
     # _save_to_disk() method provided by EntityPersistenceMixin
     # commit() and _get_commit_data() methods inherited from watch_base

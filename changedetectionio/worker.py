@@ -149,6 +149,7 @@ async def async_update_worker(worker_id, q, notification_q, app, datastore, exec
                 changed_detected = False
                 contents = b''
                 process_changedetection_results = True
+                restock_failure_state = 'unknown'
                 update_obj = {}
 
                 # Clear last errors
@@ -238,6 +239,8 @@ async def async_update_worker(worker_id, q, notification_q, app, datastore, exec
                     process_changedetection_results = False
 
                 except content_fetchers_exceptions.Non200ErrorCodeReceived as e:
+                    if e.status_code in (403, 429):
+                        restock_failure_state = 'blocked'
                     if e.status_code == 403:
                         err_text = "Error - 403 (Access denied) received"
                     elif e.status_code == 404:
@@ -250,6 +253,13 @@ async def async_update_worker(worker_id, q, notification_q, app, datastore, exec
                         extra = ' (Access denied or blocked)' if str(e.status_code).startswith('4') else ''
                         err_text = f"Error - Request returned a HTTP error code {e.status_code}{extra}"
 
+                    if e.page_html and e.status_code in (403, 429, 503):
+                        from changedetectionio.content_fetchers.block_detection import detect_block_page
+                        provider = detect_block_page(e.page_html)
+                        if provider:
+                            err_text += f' ({provider} access block)'
+                            restock_failure_state = 'blocked'
+
                     if e.screenshot:
                         watch.save_screenshot(screenshot=e.screenshot, as_error=True)
                         e.screenshot = None  # Free memory immediately
@@ -259,7 +269,27 @@ async def async_update_worker(worker_id, q, notification_q, app, datastore, exec
                     if e.page_text:
                         watch.save_error_text(contents=e.page_text)
 
-                    datastore.update_watch(uuid=uuid, update_obj={'last_error': err_text})
+                    block_count = int(watch.get('consecutive_access_blocks') or 0) + 1 if e.status_code in (403, 429) else 0
+                    datastore.update_watch(uuid=uuid, update_obj={
+                        'last_error': err_text,
+                        'last_check_status': e.status_code,
+                        'consecutive_access_blocks': block_count,
+                    })
+                    process_changedetection_results = False
+
+                except content_fetchers_exceptions.BlockPageReceived as e:
+                    restock_failure_state = 'blocked'
+                    err_text = f"Blocked by {e.provider} challenge page (HTTP {e.status_code}); content was not saved"
+                    if e.screenshot:
+                        watch.save_screenshot(screenshot=e.screenshot, as_error=True)
+                        e.screenshot = None
+                    if e.page_text:
+                        watch.save_error_text(contents=e.page_text)
+                    datastore.update_watch(uuid=uuid, update_obj={
+                        'last_error': err_text,
+                        'last_check_status': e.status_code,
+                        'consecutive_access_blocks': int(watch.get('consecutive_access_blocks') or 0) + 1,
+                    })
                     process_changedetection_results = False
 
                 except FilterNotFoundInResponse as e:
@@ -305,6 +335,15 @@ async def async_update_worker(worker_id, q, notification_q, app, datastore, exec
                     # Yes fine, so nothing todo, don't continue to process.
                     process_changedetection_results = False
                     changed_detected = False
+                    datastore.update_watch(uuid=uuid, update_obj={
+                        'last_error': False,
+                        'last_check_status': update_handler.fetcher.get_last_status_code(),
+                        'consecutive_access_blocks': 0,
+                        **({'restock_check_state': watch.get('restock_last_success_state') or
+                             (('in_stock' if watch['restock']['in_stock'] else 'out_of_stock')
+                              if watch.get('restock') and watch['restock'].get('in_stock') is not None else 'unknown')}
+                           if watch.get('processor') == 'restock_diff' else {}),
+                    })
                     logger.debug(f'[{uuid}] - checksumFromPreviousCheckWasTheSame - Checksum from previous check was the same, nothing todo here.')
                     # Reset the edited flag since we successfully completed the check
                     watch.reset_watch_edited_flag()
@@ -419,10 +458,14 @@ async def async_update_worker(worker_id, q, notification_q, app, datastore, exec
                         update_obj['consecutive_filter_failures'] = 0
 
                     update_obj['last_error'] = False
+                    update_obj['consecutive_access_blocks'] = 0
                     cleanup_error_artifacts(uuid, datastore)
 
                 if not datastore.data['watching'].get(uuid):
                     continue
+
+                if watch.get('processor') == 'restock_diff' and not process_changedetection_results:
+                    datastore.update_watch(uuid=uuid, update_obj={'restock_check_state': restock_failure_state})
 
                 logger.debug(f"Processing watch UUID: {uuid} - xpath_data length returned {len(update_handler.xpath_data) if update_handler and update_handler.xpath_data else 'empty.'}")
                 if update_handler and process_changedetection_results:

@@ -297,11 +297,11 @@ def tag_llm_applies_to_watches(tag) -> bool:
 
 
 def _watch_tags(watch, datastore):
-    """Yield this watch's tag dicts, in the watch's own tag order, skipping unknown UUIDs."""
-    for tag_uuid in watch.get('tags', []):
-        tag = datastore.data['settings']['application'].get('tags', {}).get(tag_uuid)
-        if tag:
-            yield tag
+    """Yield this watch's one direct group; a parent lends only a notification URL."""
+    from changedetectionio.grouping import direct_group_for_watch
+    group = direct_group_for_watch(watch, datastore.data['settings']['application'].get('tags', {}))
+    if group:
+        yield group[1]
 
 
 def _tags_applying_llm(watch, datastore):

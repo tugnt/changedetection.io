@@ -69,6 +69,7 @@ $(document).ready(() => {
             data: {
                 url: url,
                 fetch_backend: $('input[name="fetch_backend"]:checked').val() || '',
+                proxy: $('#add-watch-proxy').val() || '',
                 csrf_token: $('#new-watch-form input[name="csrf_token"]').val() || '',
             },
             dataType: 'json',
@@ -84,6 +85,11 @@ $(document).ready(() => {
     }
 
     $go.on('click', fetchSnapshot);
+
+    $('#add-watch-proxy').on('change', () => {
+        $temporaryUuid.val('');
+        showState('empty');
+    });
 
     // Enter in the URL box should fetch a preview, not submit the whole form
     $url.on('keydown', (e) => {

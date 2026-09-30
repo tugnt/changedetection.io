@@ -1798,6 +1798,11 @@ def ticker_thread_check_time_launch_checks():
                 else watch.threshold_seconds()
             )
 
+            # A short normal interval must not keep hammering an IP that just
+            # received an access block. Manual "Check now" remains available.
+            from changedetectionio.recheck_backoff import watch_access_block_delay
+            threshold = max(threshold, watch_access_block_delay(watch))
+
             # #580 - Jitter plus/minus amount of time to make the check seem more random to the server
             jitter = datastore.data['settings']['requests'].get('jitter_seconds', 0)
             if jitter > 0:

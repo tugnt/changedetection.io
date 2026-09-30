@@ -139,12 +139,21 @@ class StringTagUUID(StringField):
                     if tag_title:
                         tag_titles.append(tag_title)
 
-            return ', '.join(tag_titles)
+            return tag_titles[0] if tag_titles else ''
 
         if not self.data:
             return ''
 
-        return 'error'
+        if isinstance(self.data, str):
+            datastore = getattr(self, 'datastore', None)
+            if datastore:
+                group = datastore.data['settings']['application']['tags'].get(self.data)
+                if group:
+                    return group.get('title', '')
+            # Keep a newly typed name visible if another form field fails validation.
+            return self.data
+
+        return ''
 
 class LabelAfterInputTableWidget(widgets.TableWidget):
     """

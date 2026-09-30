@@ -153,9 +153,10 @@ window.watchOverviewI18n = {
 
 
 <div class="box" id="add-watch-ui">
-    <form class="pure-form" action="{{ url_for('ui.ui_views.form_quick_watch_add') }}" method="POST" id="new-watch-form">
+    <form class="pure-form" action="{{ url_for('ui.ui_views.form_quick_watch_add', tag=active_tag_uuid) }}" method="POST" id="new-watch-form">
         <div id="add-watch-url-row">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% if active_tag_uuid %}<input type="hidden" name="tags" value="{{ active_tag_uuid }}">{% endif %}
             <label for="url"><strong>{{ _('Web page URL') }}</strong></label>
             {{ render_nolabel_field(form.url, placeholder="www.website.com/page.html", required=true, class="pure-input-1", span_wrap=false) }}
             <button type="submit"  id="add-watch-go" class="pure-button pure-button-primary">{{ _('Watch') }}</button>
@@ -220,9 +221,9 @@ window.watchOverviewI18n = {
         <div id="tag-lister" class="{% if active_tag %}active-tag{% endif %}">
             <a id="tag-all" href="{{ filter_url(tag=None) }}" class="pure-button button-tag {{'active' if not active_tag_uuid }}">{{ _('All') }}</a>
             <!-- tag list -->
-            {%- for uuid, tag in tags -%}
+            {%- for uuid, tag, depth in tag_tree -%}
                 {%- if tag != "" -%}
-                    <a href="{{ filter_url(tag=uuid) }}" class="pure-button button-tag tag-{{ tag.title|sanitize_tag_class }} {{'active' if active_tag_uuid == uuid }}">{{ tag.title }}</a>
+                    <a href="{{ filter_url(tag=uuid) }}" class="pure-button button-tag tag-{{ tag.title|sanitize_tag_class }} {{'active' if active_tag_uuid == uuid }}">{% if depth %}↳ {% endif %}{{ tag.title }}</a>
                 {%- endif -%}
             {%- endfor -%}
         </div>

@@ -91,9 +91,8 @@ def get_watch_label(datastore, watch):
 
 
 def add_watch_categories(fe, watch, datastore):
-    """Add category tags to a feed entry based on watch tags."""
-    for tag_uuid in watch.get('tags', []):
-        tag = datastore.data['settings']['application'].get('tags', {}).get(tag_uuid)
+    """Add the direct group and its parent as feed categories."""
+    for tag in datastore.get_group_path_for_watch(watch['uuid']).values():
         if tag and tag.get('title'):
             fe.category(term=tag.get('title'))
 
@@ -154,4 +153,3 @@ def populate_feed_entry(fe, watch, content, guid, timestamp, link=None, title_su
     # container's local timezone and relabelling it as UTC shifts every pubDate by the local offset
     dt = datetime.datetime.fromtimestamp(int(timestamp), tz=pytz.UTC)
     fe.pubDate(dt)
-

@@ -1,7 +1,7 @@
 import os
 import time
 
-from flask import Blueprint, request, make_response, render_template, redirect, url_for, flash, session
+from flask import Blueprint, request, make_response, render_template, redirect, url_for, flash, session, abort
 from flask_paginate import Pagination, get_page_parameter
 from flask_babel import gettext as _
 
@@ -51,6 +51,8 @@ def construct_blueprint(datastore: ChangeDetectionStore, update_q, queuedWatchMe
                     active_tag = tag
                     active_tag_uuid = uuid
                     break
+            if not active_tag_uuid:
+                abort(404, description=_('Group not found'))
 
         # Redirect for the old rss path which used the /?rss=true
         if request.args.get('rss'):
@@ -116,6 +118,13 @@ def construct_blueprint(datastore: ChangeDetectionStore, update_q, queuedWatchMe
                                 record_name=_('records'))
 
         sorted_tags = sorted(datastore.data['settings']['application'].get('tags').items(), key=lambda x: x[1]['title'])
+        tag_tree = []
+        for uuid, tag in sorted_tags:
+            if tag.get('parent_uuid') and tag['parent_uuid'] in datastore.data['settings']['application']['tags']:
+                continue
+            tag_tree.append((uuid, tag, 0))
+            tag_tree.extend((child_uuid, child, 1) for child_uuid, child in sorted_tags
+                            if child.get('parent_uuid') == uuid)
 
         from changedetectionio import content_fetchers
         available_fetchers = content_fetchers.available_fetchers()
@@ -165,6 +174,7 @@ def construct_blueprint(datastore: ChangeDetectionStore, update_q, queuedWatchMe
             sort_attribute=request.args.get('sort') if request.args.get('sort') else request.cookies.get('sort'),
             sort_order=request.args.get('order') if request.args.get('order') else request.cookies.get('order'),
             tags=sorted_tags,
+            tag_tree=tag_tree,
             unread_changes_count=datastore.unread_changes_count,
             watches=sorted_watches,
             llm_configured=llm_configured,

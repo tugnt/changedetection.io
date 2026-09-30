@@ -22,6 +22,8 @@ venv/
 .idea
 .vscode/settings.json
 *~
+*.swp
+*.swo
 
 # Datastore files
 datastore/

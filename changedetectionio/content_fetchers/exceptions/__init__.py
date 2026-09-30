@@ -1,5 +1,18 @@
 from loguru import logger
 
+
+class BlockPageReceived(Exception):
+    """A provider challenge was returned in place of the watched page."""
+
+    def __init__(self, provider, status_code=None, screenshot=None, page_html=None):
+        self.provider = provider
+        self.status_code = status_code
+        self.screenshot = screenshot
+        self.page_text = None
+        if page_html:
+            from changedetectionio import html_tools
+            self.page_text = html_tools.html_to_text(page_html)
+
 class Non200ErrorCodeReceived(Exception):
     def __init__(self, status_code, url, screenshot=None, xpath_data=None, page_html=None):
         # Set this so we can use it in other parts of the app
@@ -8,6 +21,7 @@ class Non200ErrorCodeReceived(Exception):
         self.screenshot = screenshot
         self.xpath_data = xpath_data
         self.page_text = None
+        self.page_html = page_html
 
         if page_html:
             from changedetectionio import html_tools

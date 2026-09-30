@@ -9,6 +9,40 @@ from changedetectionio.auth_decorator import login_optionally_required
 from . import browser_config
 from changedetectionio.store import ChangeDetectionStore
 from changedetectionio.validate_url import is_fetch_url_allowed
+from changedetectionio.content_fetchers.block_detection import detect_block_page
+
+
+def snapshot_block_error(html, status_code):
+    """Explain access blocks before a preview is saved as a product snapshot."""
+    provider = detect_block_page(html)
+    if provider:
+        return f'{provider} returned an access challenge (HTTP {status_code}); preview was not saved.'
+    if status_code in (403, 429):
+        return f'The website returned HTTP {status_code}; preview was not saved.'
+    return None
+
+
+def preview_proxy_settings(datastore, requested_id):
+    """Resolve the Add Watch proxy choice using the same default as new watches."""
+    proxies = datastore.proxy_list or {}
+    if requested_id and requested_id not in proxies:
+        raise ValueError('Invalid proxy selected')
+    proxy_id = requested_id or datastore.data['settings']['requests'].get('proxy')
+    if not proxy_id or proxy_id not in proxies:
+        proxy_id = next(iter(proxies), None)
+    if not proxy_id or proxy_id == 'no-proxy':
+        return None
+    proxy_url = datastore.get_proxy_url(proxy_id)
+    if not proxy_url:
+        return None
+    from urllib.parse import urlparse, unquote
+    parsed = urlparse(proxy_url)
+    proxy = {'server': proxy_url}
+    if parsed.username:
+        proxy['username'] = unquote(parsed.username)
+        proxy['password'] = unquote(parsed.password or '')
+        proxy['server'] = parsed._replace(netloc=parsed.netloc.rsplit('@', 1)[-1]).geturl()
+    return proxy
 
 
 def construct_blueprint(datastore: ChangeDetectionStore):
@@ -43,6 +77,8 @@ def construct_blueprint(datastore: ChangeDetectionStore):
             # Listed but not selectable (the system default when it can't render a preview)
             unusable_browsers=browser_config.unusable_values(datastore),
             system_default_browser=browser_config.system_default_description(datastore),
+            proxies=datastore.proxy_list or {},
+            groups=datastore.data['settings']['application'].get('tags', {}),
         )
 
     @add_watch_ui_blueprint.route("/snapshot", methods=['POST'])
@@ -66,7 +102,7 @@ def construct_blueprint(datastore: ChangeDetectionStore):
             _close_session_resources,
             acquire_browser_for_fetcher,
         )
-        from changedetectionio.browser_steps.browser_steps import browsersteps_live_ui
+        from changedetectionio.browser_steps.browser_steps import browsersteps_live_ui, track_latest_navigation_response
 
         # Opportunistically sweep snapshots that were fetched but never saved.
         datastore.cleanup_temporary_watches()
@@ -98,6 +134,11 @@ def construct_blueprint(datastore: ChangeDetectionStore):
             return make_response('No interactive browser available that can render a live preview '
                                  '(needs screenshots + element data)', 400)
 
+        try:
+            proxy = preview_proxy_settings(datastore, (request.form.get('proxy') or '').strip())
+        except ValueError as e:
+            return make_response(str(e), 400)
+
         # acquire_browser_for_fetcher() looks the name up as a fetcher class, so 'system'
         # has to be collapsed to the real backend first or a fetcher that launches its own
         # browser would be skipped in favour of the CDP endpoint.
@@ -107,13 +148,14 @@ def construct_blueprint(datastore: ChangeDetectionStore):
         async def _fetch_snapshot():
             keepalive_ms = 30 * 1000
             browser, playwright_context = await acquire_browser_for_fetcher(
-                resolved_fetcher, proxy=None, keepalive_ms=keepalive_ms
+                resolved_fetcher, proxy=proxy, keepalive_ms=keepalive_ms
             )
 
-            stepper = browsersteps_live_ui(playwright_browser=browser, proxy=None, start_url=url)
+            stepper = browsersteps_live_ui(playwright_browser=browser, proxy=proxy, start_url=url)
             session = {'browserstepper': stepper, 'browser': browser, 'playwright_context': playwright_context}
             try:
-                await stepper.connect(proxy=None)
+                await stepper.connect(proxy=proxy)
+                navigation_response = track_latest_navigation_response(stepper.page)
                 await stepper.call_action(action_name="Goto site", selector=None, optional_value=None)
                 (screenshot, xpath_data) = await stepper.get_current_state()
                 # Also grab the rendered HTML so the processor can run on submit without
@@ -123,12 +165,17 @@ def construct_blueprint(datastore: ChangeDetectionStore):
                     html = await stepper.page.content()
                 except Exception as e:
                     logger.warning(f"Add-watch snapshot: could not capture page HTML for {url}: {e}")
-                return (screenshot, xpath_data, html)
+                response = navigation_response.get('response') if navigation_response else None
+                status_code = response.status if response else None
+                error = snapshot_block_error(html, status_code)
+                if error:
+                    raise ValueError(error)
+                return (screenshot, xpath_data, html, status_code)
             finally:
                 await _close_session_resources(session, label=' for add-watch snapshot')
 
         try:
-            (screenshot, xpath_data, html) = run_async_in_browser_loop(_fetch_snapshot())
+            (screenshot, xpath_data, html, status_code) = run_async_in_browser_loop(_fetch_snapshot())
         except Exception as e:
             logger.error(f"Add-watch snapshot fetch failed for {url}: {e}")
             if 'ECONNREFUSED' in str(e):
@@ -155,7 +202,7 @@ def construct_blueprint(datastore: ChangeDetectionStore):
             # by difference_detection_processor.call_browser). Only written when we got HTML.
             if html:
                 with open(os.path.join(temp_dir, "preload-fetch.json"), 'w', encoding='utf-8') as f:
-                    json.dump({"content": html, "status_code": 200,
+                    json.dump({"content": html, "status_code": status_code or 200,
                                "headers": {"content-type": "text/html"}}, f)
             # This directory becomes the new watch's data_dir on submit, so the watch's own
             # settings file is where the previewing browser belongs: record it here and the

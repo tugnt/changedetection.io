@@ -211,8 +211,12 @@ class fetcher(Fetcher):
             # Playwright needs separate username and password values
             parsed = urlparse(self.proxy.get('server'))
             if parsed.username:
-                self.proxy['username'] = parsed.username
-                self.proxy['password'] = parsed.password
+                from urllib.parse import unquote
+                self.proxy['username'] = unquote(parsed.username)
+                self.proxy['password'] = unquote(parsed.password or '')
+                self.proxy['server'] = parsed._replace(
+                    netloc=parsed.netloc.rsplit('@', 1)[-1]
+                ).geturl()
 
     async def screenshot_step(self, step_n=''):
         super().screenshot_step(step_n=step_n)
@@ -387,9 +391,12 @@ class fetcher(Fetcher):
                     logger.error(f"Error fetching FavIcon info {str(e)}, continuing.")
 
             if self.status_code != 200 and not ignore_status_codes:
+                page_html = await self.page.content()
                 screenshot = await capture_full_page_async(self.page, screenshot_format=self.screenshot_format, watch_uuid=watch_uuid, lock_viewport_elements=self.lock_viewport_elements)
-                # Finally block will handle cleanup
-                raise Non200ErrorCodeReceived(url=url, status_code=self.status_code, screenshot=screenshot)
+                await context.close()
+                await browser.close()
+                raise Non200ErrorCodeReceived(url=url, status_code=self.status_code,
+                                              screenshot=screenshot, page_html=page_html)
 
             if not empty_pages_are_a_change and len((await self.page.content()).strip()) == 0:
                 logger.debug("Content Fetcher > Content was empty, empty_pages_are_a_change = False")
@@ -504,5 +511,3 @@ class PlaywrightFetcherPlugin:
 
 # Create module-level instance for plugin registration
 playwright_plugin = PlaywrightFetcherPlugin()
-
-

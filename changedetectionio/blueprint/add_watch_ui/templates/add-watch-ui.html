@@ -69,6 +69,17 @@
                         </ul>
                     </div>
 {%- endif -%}
+                    {% if proxies %}
+                    <div class="add-watch-option-group">
+                        <label for="add-watch-proxy">{{ _('Proxy') }}</label>
+                        <select name="proxy" id="add-watch-proxy">
+                            <option value="">{{ _('Default') }}</option>
+                            {% for key, proxy in proxies.items() %}
+                            <option value="{{ key }}">{{ proxy.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
                     <div class="add-watch-option-group" id="by-element-toggle-group">
                         {%- if llm_configured -%}
                         <label class="pure-checkbox" for="by-element-toggle">
@@ -93,7 +104,13 @@
                     {% endif %}
 
                     <div class="add-watch-option-group" id="watch-group-tag">
-                        {{ render_field(form.tags, value='', placeholder=_("Watch group / tag"), class="transparent-field") }}
+                        {{ render_field(form.tags, value='', list="available-groups", placeholder=_("Watch group / tag"), class="transparent-field") }}
+                        <datalist id="available-groups">
+                            {% for group_uuid, group in groups.items() %}
+                            {% set parent = groups.get(group.get('parent_uuid')) %}
+                            <option value="{{ group.title }}" label="{% if parent %}{{ parent.title }} / {% endif %}{{ group.title }}" data-group-uuid="{{ group_uuid }}">{% if parent %}{{ parent.title }} / {% endif %}{{ group.title }}</option>
+                            {% endfor %}
+                        </datalist>
                     </div>
 
                     <div class="add-watch-option-group" id="add-watch-submit-row">
@@ -112,5 +129,6 @@
 </script>
 <script src="{{url_for('static_content', group='js', filename='plugins.js')}}"></script>
 <script src="{{url_for('static_content', group='js', filename='visual-selector.js')}}"></script>
+<script src="{{url_for('static_content', group='js', filename='watch-group-picker.js')}}"></script>
 <script src="{{url_for('add_watch_ui.static', filename='add-watch.js')}}"></script>
 {%- endblock -%}

@@ -95,8 +95,8 @@ def test_auto_applied_tag_shows_on_watch_edit(client, live_server, measure_memor
         "Watch edit page must indicate the tag is auto-applied by pattern"
 
 
-def test_multiple_pattern_tags_all_applied(client, live_server, measure_memory_usage, datastore_path):
-    """A watch matching multiple tag patterns must receive all of them, not just the first."""
+def test_multiple_pattern_tags_choose_one_group(client, live_server, measure_memory_usage, datastore_path):
+    """When patterns overlap, the first matching group is the watch's direct group."""
     set_original_response(datastore_path=datastore_path)
 
     api_key = live_server.app.config['DATASTORE'].data['settings']['application'].get('api_access_token')
@@ -139,8 +139,8 @@ def test_multiple_pattern_tags_all_applied(client, live_server, measure_memory_u
     datastore = live_server.app.config['DATASTORE']
     resolved = datastore.get_all_tags_for_watch(watch_uuid)
 
-    assert tag_docs_uuid in resolved, "First matching tag must be included"
-    assert tag_python_uuid in resolved, "Second matching tag must be included"
+    assert tag_docs_uuid in resolved, "First matching group must be included"
+    assert tag_python_uuid not in resolved, "A watch can have only one direct group"
     assert tag_rust_uuid not in resolved, "Non-matching tag must NOT be included"
 
 

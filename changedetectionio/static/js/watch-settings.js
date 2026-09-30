@@ -83,7 +83,7 @@ $(document).ready(function () {
         $('#notification_title').val('');
         $('#notification_body').val('');
         $('#notification_format').val('System default');
-        $('#notification_urls').val('');
+        $('#notification_urls').val('').trigger('input');
         $('#notification_muted_none').prop('checked', true); // in the case of a ternary field
         e.preventDefault();
     });
@@ -112,4 +112,3 @@ $(document).ready(function () {
     _mt[i18nT('tabContentBefore', 'Content raw/before filters')] = "#text-preview-before-inner";
     $('.minitabs-wrapper').miniTabs(_mt);
 });
-

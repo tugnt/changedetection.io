@@ -394,6 +394,8 @@ class model(EntityPersistenceMixin, watch_base):
             'has_ldjson_price_data': None,
             'last_checked': 0,
             'last_error': False,
+            'restock_check_state': 'unknown',
+            'restock_last_success_state': 'unknown',
             'last_notification_error': False,
             'last_viewed': 0,
             'previous_md5': False,
@@ -1360,4 +1362,3 @@ class model(EntityPersistenceMixin, watch_base):
 
         res = "\n".join(output)
         return res
-

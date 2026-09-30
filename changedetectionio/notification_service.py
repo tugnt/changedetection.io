@@ -14,6 +14,36 @@ import time
 from changedetectionio.notification import default_notification_format, valid_notification_formats
 
 
+def _resolve_notification_urls(datastore, watch=None, group_uuid_override=None, include_watch_urls=True):
+    """Choose one destination: watch, direct group, parent group, then global."""
+    if watch and watch.get('notification_muted'):
+        return None
+
+    if group_uuid_override is None:
+        group_path = datastore.get_group_path_for_watch(watch.get('uuid')) if watch else {}
+    else:
+        # An explicit empty UUID means that the watch editor has removed its group.
+        groups = datastore.data['settings']['application'].get('tags', {})
+        direct = groups.get(group_uuid_override)
+        group_path = {group_uuid_override: direct} if direct else {}
+        parent_uuid = direct.get('parent_uuid') if direct else None
+        if parent_uuid and parent_uuid in groups:
+            group_path[parent_uuid] = groups[parent_uuid]
+
+    # Muting a group must suppress its whole branch, including a watch-level URL.
+    if any(group.get('notification_muted') for group in group_path.values()):
+        return None
+
+    if watch and include_watch_urls and watch.get('notification_urls'):
+        return watch['notification_urls']
+
+    for group in group_path.values():
+        if group.get('notification_urls'):
+            return group['notification_urls']
+
+    return datastore.data['settings']['application'].get('notification_urls') or None
+
+
 def _check_cascading_vars(datastore, var_name, watch):
     """
     Check notification variables in cascading priority:
@@ -25,6 +55,9 @@ def _check_cascading_vars(datastore, var_name, watch):
         default_notification_title
     )
 
+    if var_name == 'notification_urls':
+        return _resolve_notification_urls(datastore, watch=watch)
+
     # Would be better if this was some kind of Object where Watch can reference the parent datastore etc
     v = watch.get(var_name)
     if v and not watch.get('notification_muted'):
@@ -33,6 +66,7 @@ def _check_cascading_vars(datastore, var_name, watch):
 
         return v
 
+    # Message settings stay local to the direct group; only URLs inherit from a parent.
     tags = datastore.get_all_tags_for_watch(uuid=watch.get('uuid'))
     if tags:
         for tag_uuid, tag in tags.items():
@@ -483,7 +517,8 @@ class NotificationService:
         if not watch:
             return
 
-        filter_list = ", ".join(watch['include_filters'])
+        from changedetectionio.processors.text_json_diff.processor import FilterConfig
+        filter_list = ", ".join(FilterConfig(watch, self.datastore).include_filters)
         # @todo - This could be a markdown template on the disk, apprise will convert the markdown to HTML+Plaintext parts in the email, and then 'markup_text_links_to_html_links' is not needed
         body = f"""Hello,
 
@@ -503,14 +538,10 @@ Thanks - Your omniscient changedetection.io installation.
         })
         n_object['markup_text_links_to_html_links'] = (n_object.get('notification_format') or '').startswith('html')
 
-        if len(watch['notification_urls']):
-            n_object['notification_urls'] = watch['notification_urls']
-
-        elif len(self.datastore.data['settings']['application']['notification_urls']):
-            n_object['notification_urls'] = self.datastore.data['settings']['application']['notification_urls']
+        n_object['notification_urls'] = _check_cascading_vars(self.datastore, 'notification_urls', watch)
 
         # Only prepare to notify if the rules above matched
-        if 'notification_urls' in n_object:
+        if n_object['notification_urls']:
             n_object.update({
                 'watch_url': watch['url'],
                 'watch_open_url': watch.open_link_override or watch['url'],
@@ -553,14 +584,10 @@ Thanks - Your omniscient changedetection.io installation.
         })
         n_object['markup_text_links_to_html_links'] = (n_object.get('notification_format') or '').startswith('html')
 
-        if len(watch['notification_urls']):
-            n_object['notification_urls'] = watch['notification_urls']
-
-        elif len(self.datastore.data['settings']['application']['notification_urls']):
-            n_object['notification_urls'] = self.datastore.data['settings']['application']['notification_urls']
+        n_object['notification_urls'] = _check_cascading_vars(self.datastore, 'notification_urls', watch)
 
         # Only prepare to notify if the rules above matched
-        if 'notification_urls' in n_object:
+        if n_object['notification_urls']:
             n_object.update({
                 'watch_url': watch['url'],
                 'watch_open_url': watch.open_link_override or watch['url'],

@@ -107,9 +107,10 @@ $(document).ready(function () {
     $('textarea.notification-urls, select.notification-format').on('change input', checkDiscordHtmlWarning);
     checkDiscordHtmlWarning();
 
-    // Nothing to test against when there are no notification URLs - hide the button.
+    // Watch and group editors can test the channel inherited from their group or system.
     function updateSendTestVisibility() {
-        $('#send-test-notification').toggle(notificationLines().length > 0);
+        var canInherit = typeof notification_allow_inherited_urls !== 'undefined' && notification_allow_inherited_urls;
+        $('#send-test-notification').toggle(canInherit || notificationLines().length > 0);
     }
 
     // Keep the friendly chips in sync whenever the raw URLs change (typed or programmatic).
@@ -149,12 +150,13 @@ $(document).ready(function () {
     $('#send-test-notification').click(function (e) {
         e.preventDefault();
 
-        data = {
+        var data = {
             notification_urls: $('textarea.notification-urls').val(),
             notification_title: $('input.notification-title').val(),
             notification_body: $('textarea.notification-body').val(),
             notification_format: $('select.notification-format').val(),
             tags: $('#tags').val(),
+            group_uuid: typeof notification_group_uuid !== 'undefined' ? notification_group_uuid : '',
             window_url: window.location.href,
         }
 
@@ -164,16 +166,13 @@ $(document).ready(function () {
             type: "POST",
             url: notification_base_url,
             data: data,
-            statusCode: {
-                400: function (data) {
-                    $("#notification-test-log>span").text(data.responseText);
-                },
-            }
         }).done(function (data) {
             $("#notification-test-log>span").text(data);
         }).fail(function (jqXHR, textStatus, errorThrown) {
             // Handle connection refused or other errors
-            if (textStatus === "error" && errorThrown === "") {
+            if (jqXHR.responseText && jqXHR.status === 400) {
+                $("#notification-test-log>span").text(jqXHR.responseText);
+            } else if (textStatus === "error" && errorThrown === "") {
                 console.error("Connection refused or server unreachable");
                 $("#notification-test-log>span").text("Error: Connection refused or server is unreachable.");
             } else {
@@ -185,4 +184,3 @@ $(document).ready(function () {
         })
     });
 });
-

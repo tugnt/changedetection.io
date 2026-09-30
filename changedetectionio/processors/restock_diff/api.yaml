@@ -17,6 +17,20 @@ components:
           type: boolean
           default: true
           description: Monitor and track price changes
+        availability_selector:
+          type: string
+          maxLength: 300
+          description: CSS selector for the product availability label
+        in_stock_labels:
+          type: string
+          description: Comma or newline separated labels that mean in stock
+        out_of_stock_labels:
+          type: string
+          description: Comma or newline separated labels that mean out of stock
+        price_selector:
+          type: string
+          maxLength: 300
+          description: CSS selector for the product price
         price_change_min:
           type: [number, 'null']
           description: Trigger a notification when the price drops below this value

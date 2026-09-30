@@ -408,6 +408,43 @@ class perform_site_check(difference_detection_processor):
     screenshot = None
     xpath_data = None
 
+    def get_restock_settings(self, watch):
+        if getattr(self, 'diagnostic_settings', None) is not None:
+            return self.diagnostic_settings
+        settings = self.get_extra_watch_config('restock_diff.json').get('restock_diff') or {
+            'follow_price_changes': True, 'in_stock_processing': 'in_stock_only'}
+        from changedetectionio.grouping import direct_group_for_watch
+        direct = direct_group_for_watch(watch, self.datastore.data['settings']['application']['tags'])
+        if direct and direct[1].get('overrides_watch'):
+            return direct[1].get('processor_config_restock_diff') or {}
+        return settings
+
+    def extract_product_data(self, watch):
+        """Return product data and bounded evidence; used by checks and Test watch."""
+        from .rules import extract_configured
+        configured = extract_configured(self.fetcher.content, self.get_restock_settings(watch))
+        data = {}
+        multiple_prices = False
+        try:
+            data = extract_itemprop_availability_safe(self.fetcher.content)
+        except MoreThanOnePriceFound:
+            multiple_prices = True
+        from .sony_store import extract_sony_store_product
+        sony_data = extract_sony_store_product(self.fetcher.content, watch.link)
+        if sony_data:
+            data.update(sony_data)
+        source = 'Sony Store markup' if sony_data else 'Product metadata'
+        if configured['availability'] is not None:
+            data['availability'] = configured['availability']
+            source = 'CSS selector'
+        elif self.get_restock_settings(watch).get('availability_selector'):
+            data.pop('availability', None)
+            source = 'CSS selector (no stock match)'
+        if configured['price'] is not None:
+            data['price'] = configured['price']
+            source = 'CSS selector' if not sony_data else 'CSS selector + Sony Store markup'
+        return data, multiple_prices, configured, source
+
     def run_changedetection(self, watch, force_reprocess=False):
         import hashlib
 
@@ -443,9 +480,6 @@ class perform_site_check(difference_detection_processor):
         update_obj['content-type'] = self.fetcher.headers.get('Content-Type', '')  # Use hyphen (matches OpenAPI spec)
         update_obj["last_check_status"] = self.fetcher.get_last_status_code()
 
-        # Save the raw content checksum to file (processor implementation detail, not watch config)
-        self.update_last_raw_content_checksum(current_raw_document_checksum)
-
         # Only try to process restock information (like scraping for keywords) if the page was actually rendered correctly.
         # Otherwise it will assume "in stock" because nothing suggesting the opposite was found
 #useless
@@ -463,34 +497,10 @@ class perform_site_check(difference_detection_processor):
 
         # Which restock settings to compare against?
         # Settings are stored in restock_diff.json (migrated from watch.json by update_30).
-        _extra_config = self.get_extra_watch_config('restock_diff.json')
-        restock_settings = _extra_config.get('restock_diff') or {
-            'follow_price_changes': True,
-            'in_stock_processing': 'in_stock_only',
-        }
-
-        # See if any tags have 'activate for individual watches in this tag/group?' enabled and use the first we find
-        for tag_uuid in watch.get('tags'):
-            tag = self.datastore.data['settings']['application']['tags'].get(tag_uuid, {})
-            if tag.get('overrides_watch'):
-                restock_settings = tag.get('processor_config_restock_diff') or {}
-                logger.info(f"Watch {watch.get('uuid')} - Tag '{tag.get('title')}' selected for restock settings override")
-                break
+        restock_settings = self.get_restock_settings(watch)
 
 
-        itemprop_availability = {}
-        multiple_prices_found = False
-
-        # Try built-in extraction first, this will scan metadata in the HTML
-        # On Linux, this runs in a subprocess to prevent lxml/extruct memory leaks
-        try:
-            itemprop_availability = extract_itemprop_availability_safe(self.fetcher.content)
-        except MoreThanOnePriceFound as e:
-            # Don't raise immediately - let plugins try to handle this case
-            # Plugins might be able to determine which price is correct
-            logger.warning(f"Built-in detection found multiple prices on {watch.get('url')}, will try plugin override")
-            multiple_prices_found = True
-            itemprop_availability = {}
+        itemprop_availability, multiple_prices_found, configured, extraction_source = self.extract_product_data(watch)
 
         # If built-in extraction didn't get both price AND availability, try plugin override
         # Only check plugin if this watch is using a fetcher that might provide better data
@@ -537,6 +547,16 @@ class perform_site_check(difference_detection_processor):
                 if not plugin_availability:
                     logger.debug("No item price/availability from plugins")
 
+        # An explicit selector is authoritative. Its failure must remain Unknown,
+        # even when a plugin or stale product metadata makes a different claim.
+        if restock_settings.get('availability_selector'):
+            if configured['availability'] is None:
+                itemprop_availability.pop('availability', None)
+            else:
+                itemprop_availability['availability'] = configured['availability']
+        if configured['price'] is not None:
+            itemprop_availability['price'] = configured['price']
+
         # If we had multiple prices and plugins also failed, NOW raise the exception
         if multiple_prices_found and not itemprop_availability.get('price'):
             raise ProcessorException(
@@ -548,7 +568,7 @@ class perform_site_check(difference_detection_processor):
             )
 
         # Something valid in get_itemprop_availability() by scraping metadata ?
-        if itemprop_availability.get('price') or itemprop_availability.get('availability'):
+        if itemprop_availability.get('price') is not None or itemprop_availability.get('availability'):
             # Store for other usage. Wrap in Restock() so it's ALWAYS a Restock, never a plain
             # dict: the built-in extruct path returns a Restock, but plugin fallbacks (e.g. the
             # LLM restock scraper) return a plain dict. A plain dict here later blows up callers
@@ -557,17 +577,8 @@ class perform_site_check(difference_detection_processor):
             update_obj['restock'] = Restock(itemprop_availability)
 
             if itemprop_availability.get('availability'):
-                # @todo: Configurable?
-                if any(substring.lower() in itemprop_availability['availability'].lower() for substring in [
-                    'instock',
-                    'instoreonly',
-                    'limitedavailability',
-                    'onlineonly',
-                    'presale']
-                       ):
-                    update_obj['restock']['in_stock'] = True
-                else:
-                    update_obj['restock']['in_stock'] = False
+                from .rules import availability_state
+                update_obj['restock']['in_stock'] = availability_state(itemprop_availability['availability'])
 
         # Main detection method
         fetched_md5 = None
@@ -586,9 +597,11 @@ class perform_site_check(difference_detection_processor):
         else:
             update_obj['restock']['last_price'] = old_restock.get('last_price')  # unchanged: keep the existing reference
 
-        if not self.fetcher.instock_data and not itemprop_availability.get('availability') and not itemprop_availability.get('price'):
+        if not self.fetcher.instock_data and not itemprop_availability.get('availability') and itemprop_availability.get('price') is None:
             raise ProcessorException(
-                message=f"Unable to extract restock data for this page unfortunately. (Got code {self.fetcher.get_last_status_code()} from server), no embedded stock information was found and nothing interesting in the text, try using this watch with Chrome.",
+                message=(f"Could not identify stock or price on this page (HTTP {self.fetcher.get_last_status_code()}). "
+                         "Try Chrome if the product details load with JavaScript, or monitor the stock label "
+                         "with Webpage Text/HTML and a CSS selector."),
                 url=watch.get('url'),
                 status_code=self.fetcher.get_last_status_code(),
                 screenshot=self.fetcher.screenshot,
@@ -597,19 +610,34 @@ class perform_site_check(difference_detection_processor):
 
         logger.debug(f"self.fetcher.instock_data is - '{self.fetcher.instock_data}' and itemprop_availability.get('availability') is {itemprop_availability.get('availability')}")
         # Nothing automatic in microdata found, revert to scraping the page
-        if self.fetcher.instock_data and itemprop_availability.get('availability') is None:
+        if (not restock_settings.get('availability_selector') and self.fetcher.instock_data
+                and itemprop_availability.get('availability') is None):
             # 'Possibly in stock' comes from stock-not-in-stock.js when no string found above the fold.
             # Careful! this does not really come from chrome/js when the watch is set to plaintext
-            update_obj['restock']["in_stock"] = True if self.fetcher.instock_data == 'Possibly in stock' else False
+            if self.fetcher.instock_data != 'Possibly in stock':
+                update_obj['restock']["in_stock"] = False
             logger.debug(f"Watch UUID {watch.get('uuid')} restock check returned instock_data - '{self.fetcher.instock_data}' from JS scraper.")
 
         # Very often websites will lie about the 'availability' in the metadata, so if the scraped version says its NOT in stock, use that.
-        if self.fetcher.instock_data and self.fetcher.instock_data != 'Possibly in stock':
+        if (not restock_settings.get('availability_selector') and self.fetcher.instock_data
+                and self.fetcher.instock_data != 'Possibly in stock'):
             if update_obj['restock'].get('in_stock'):
                 logger.warning(
                     f"Lie detected in the availability machine data!! when scraping said its not in stock!! itemprop was '{itemprop_availability}' and scraped from browser was '{self.fetcher.instock_data}' update obj was {update_obj['restock']} ")
                 logger.warning(f"Setting instock to FALSE, scraper found '{self.fetcher.instock_data}' in the body but metadata reported not-in-stock")
                 update_obj['restock']["in_stock"] = False
+
+        # A price-only extraction does not establish stock. Preserve the last known
+        # availability and never turn unknown into an availability notification.
+        if update_obj['restock'].get('in_stock') is None:
+            update_obj['restock']['in_stock'] = old_restock.get('in_stock')
+            update_obj['restock_check_state'] = 'unknown'
+        else:
+            update_obj['restock_check_state'] = 'in_stock' if update_obj['restock']['in_stock'] else 'out_of_stock'
+        update_obj['restock_last_success_state'] = update_obj['restock_check_state']
+        if new_price is None:
+            update_obj['restock']['price'] = old_price
+            update_obj['restock']['currency'] = old_restock.get('currency')
 
         # What we store in the snapshot
         price = update_obj.get('restock').get('price') if update_obj.get('restock').get('price') else ""
@@ -623,7 +651,8 @@ class perform_site_check(difference_detection_processor):
         logger.debug(f"Watch UUID {watch.get('uuid')} restock check - Previous MD5: {watch.get('previous_md5')}, Fetched MD5 {fetched_md5}")
 
         # out of stock -> back in stock only?
-        if watch.get('restock') and watch['restock'].get('in_stock') != update_obj['restock'].get('in_stock'):
+        if (update_obj['restock_check_state'] != 'unknown' and watch.get('restock')
+                and watch['restock'].get('in_stock') != update_obj['restock'].get('in_stock')):
             # Yes if we only care about it going to instock, AND we are in stock
             if restock_settings.get('in_stock_processing') == 'in_stock_only' and update_obj['restock']['in_stock']:
                 changed_detected = True
@@ -680,5 +709,7 @@ class perform_site_check(difference_detection_processor):
 
         # Always record the new checksum
         update_obj["previous_md5"] = fetched_md5
+
+        self.update_last_raw_content_checksum(current_raw_document_checksum)
 
         return changed_detected, update_obj, snapshot_content.strip()

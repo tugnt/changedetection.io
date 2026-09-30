@@ -142,6 +142,9 @@ class Watch(Resource):
         watch['viewed'] = watch_obj.viewed
         watch['link'] = watch_obj.link
         watch['open_link'] = watch_obj.open_link
+        # Legacy watches may still store several UUIDs. Expose the effective group so a
+        # GET -> PUT round trip can edit them under the one-group rule.
+        watch['tags'] = list(self.datastore.get_all_tags_for_watch(uuid))
 
         # Resolved processor config: tag override wins over watch-level config (mirrors restock processor logic)
         import json
@@ -154,9 +157,7 @@ class Watch(Resource):
             except (json.JSONDecodeError, IOError) as e:
                 logger.warning(f"Failed to read restock_diff.json for watch {uuid}: {e}")
         restock_source = 'watch'
-        tags = self.datastore.data['settings']['application'].get('tags', {})
-        for tag_uuid in (watch_obj.get('tags') or []):
-            tag = tags.get(tag_uuid, {})
+        for tag_uuid, tag in self.datastore.get_all_tags_for_watch(uuid).items():
             if tag.get('overrides_watch'):
                 restock_config = dict(tag.get('processor_config_restock_diff') or {})
                 restock_source = f'tag:{tag_uuid}'
@@ -267,6 +268,12 @@ class Watch(Resource):
         unknown_fields = set(json_data.keys()) - valid_fields
         if unknown_fields:
             return f"Unknown field(s): {', '.join(sorted(unknown_fields))}", 400
+
+        if 'tags' in json_data:
+            group_ids = json_data['tags']
+            if not isinstance(group_ids, list) or len(group_ids) > 1 or any(
+                    group_id not in self.datastore.data['settings']['application']['tags'] for group_id in group_ids):
+                return 'A watch can belong to one existing group only', 400
 
         # Update watch with regular (non-processor-config) fields
         watch.update(json_data)
@@ -559,6 +566,12 @@ class CreateWatch(Resource):
             except ValidationError as e:
                 return str(e), 400
 
+        if 'tags' in json_data:
+            group_ids = json_data['tags']
+            if not isinstance(group_ids, list) or len(group_ids) > 1 or any(
+                    group_id not in self.datastore.data['settings']['application']['tags'] for group_id in group_ids):
+                return 'A watch can belong to one existing group only', 400
+
         # Handle processor-config-* fields separately (save to JSON, not watch)
         from changedetectionio import processors
 
@@ -599,11 +612,14 @@ class CreateWatch(Resource):
         """List watches."""
         list = {}
 
-        tag_limit = request.args.get('tag', '').lower()
+        tag_limit = request.args.get('tag', '').lower().strip()
         for uuid, watch in self.datastore.data['watching'].items():
-            # Watch tags by name (replace the other calls?)
+            # The filter includes children of a parent; the response lists one direct group.
             tags = self.datastore.get_all_tags_for_watch(uuid=uuid)
-            if tag_limit and not any(v.get('title').lower() == tag_limit for k, v in tags.items()):
+            path = self.datastore.get_group_path_for_watch(uuid=uuid)
+            if tag_limit and not any(
+                    tag_uuid == tag_limit or (tag.get('title') or '').lower() == tag_limit
+                    for tag_uuid, tag in path.items()):
                 continue
 
             list[uuid] = {

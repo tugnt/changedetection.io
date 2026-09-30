@@ -635,6 +635,9 @@ class perform_site_check(difference_detection_processor):
         else:
             update_obj['restock_check_state'] = 'in_stock' if update_obj['restock']['in_stock'] else 'out_of_stock'
         update_obj['restock_last_success_state'] = update_obj['restock_check_state']
+        # Re-set every check: a marker left over from an earlier check must never be
+        # mistaken for a fresh buy signal.
+        update_obj['restock_transition'] = None
         if new_price is None:
             update_obj['restock']['price'] = old_price
             update_obj['restock']['currency'] = old_restock.get('currency')
@@ -653,6 +656,11 @@ class perform_site_check(difference_detection_processor):
         # out of stock -> back in stock only?
         if (update_obj['restock_check_state'] != 'unknown' and watch.get('restock')
                 and watch['restock'].get('in_stock') != update_obj['restock'].get('in_stock')):
+            # Confirmed out-of-stock -> in-stock. worker.py turns this into the transition_id
+            # once it knows the history timestamp the transition is stored under.
+            if update_obj['restock_check_state'] == 'in_stock':
+                update_obj['restock_transition'] = 'in_stock'
+
             # Yes if we only care about it going to instock, AND we are in stock
             if restock_settings.get('in_stock_processing') == 'in_stock_only' and update_obj['restock']['in_stock']:
                 changed_detected = True

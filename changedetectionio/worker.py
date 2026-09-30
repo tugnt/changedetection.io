@@ -602,6 +602,16 @@ async def async_update_worker(worker_id, q, notification_q, app, datastore, exec
                                                     timestamp=int(fetch_start_time),
                                                     snapshot_id=update_obj.get('previous_md5', 'none'))
 
+                            # Stamp the confirmed out-of-stock -> in-stock transition with the
+                            # timestamp it was just recorded under. Written only when the
+                            # transition is newly confirmed, so a notification retry or a later
+                            # poll of the same event keeps reading the same ID.
+                            if update_obj.get('restock_transition') == 'in_stock':
+                                from changedetectionio.processors.restock_diff import build_transition_id
+                                transition_id = build_transition_id(uuid, int(fetch_start_time))
+                                datastore.update_watch(uuid=uuid, update_obj={'restock_transition_id': transition_id})
+                                logger.info(f"Watch UUID {uuid} back in stock - transition_id {transition_id}")
+
                             # Save AI summary file now that the new snapshot is committed —
                             # watch.history.keys()[-1] now reflects the just-saved version,
                             # so the cache filename matches what the UI will later look up.

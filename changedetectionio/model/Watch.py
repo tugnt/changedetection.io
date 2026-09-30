@@ -396,6 +396,8 @@ class model(EntityPersistenceMixin, watch_base):
             'last_error': False,
             'restock_check_state': 'unknown',
             'restock_last_success_state': 'unknown',
+            'restock_transition': None,
+            'restock_transition_id': None,
             'last_notification_error': False,
             'last_viewed': 0,
             'previous_md5': False,

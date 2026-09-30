@@ -95,6 +95,15 @@ def get_price_from_history_str(history_str):
         return None
 
 
+def build_transition_id(watch_uuid, history_timestamp):
+    """Stable ID for one out-of-stock -> in-stock transition.
+
+    Keyed on the history timestamp the transition was recorded under, so re-sending or
+    re-polling the same event yields the same ID and the consumer can de-duplicate it.
+    """
+    return f"{watch_uuid}:{int(history_timestamp)}"
+
+
 class Watch(BaseWatch):
     def __init__(self, *arg, **kw):
         super().__init__(*arg, **kw)
@@ -109,6 +118,7 @@ class Watch(BaseWatch):
         values = super().extra_notification_token_values()
         # Copy so the derived 'previous_price' token added below doesn't mutate the stored restock object
         values['restock'] = dict(self.get('restock', {}))
+        values['transition_id'] = self.get('restock_transition_id') or ''
 
         values['restock']['previous_price'] = None
         if self.history_n >= 2:
@@ -133,6 +143,7 @@ class Watch(BaseWatch):
         values.append(('restock.in_stock', "In stock status"))
         values.append(('restock.last_price', "Price at the previous check"))
         values.append(('restock.previous_price', "Previous price in history"))
+        values.append(('transition_id', "Stable ID of the last out-of-stock to in-stock transition"))
 
         return values
 

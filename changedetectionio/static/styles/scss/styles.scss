@@ -41,6 +41,7 @@
 @use "parts/pwa_install";
 @use "parts/tabs";
 @use "parts/sub_tabs";
+@use "parts/group_picker";
 
 // Smooth transitions for theme switching
 // Disabled - people complained
@@ -72,7 +73,9 @@ a,
 body {
   color: var(--color-text);
   background: var(--color-background-page);
-  font-family: Helvetica Neue, Helvetica, Lucida Grande, Arial, Ubuntu, Cantarell, Fira Sans, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 // Page-level layout primitive: holds the fixed left rail and the main content
@@ -368,7 +371,7 @@ a.pure-button-selected {
   background: var(--color-background-button-tag);
   color: var(--color-text-button);
   font-size: 75%;
-  border-radius: 6px;
+  border-radius: var(--radius-pill);
   margin-right: 4px;
   &.active {
     background: var(--color-background-button-tag-active);
@@ -399,7 +402,7 @@ a.pure-button-selected {
   li {
     list-style: none;
     padding: 1em;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     color: var(--color-text-messages);
     font-weight: bold;
 
@@ -757,13 +760,21 @@ footer {
 .pure-form input[type=week],
 .pure-form select,
 .pure-form textarea {
-  border: var(--color-border-input);
-  box-shadow: inset 0 1px 3px var(--color-shadow-input);
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
   background-color: var(--color-background-input);
   color: var(--color-text-input);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 
   &:active {
     background-color: var(--color-background-input);
+  }
+
+  &:focus {
+    border-color: var(--color-background-button-primary);
+    box-shadow: 0 0 0 3px var(--color-focus-ring);
+    outline: none;
   }
 }
 
@@ -1112,12 +1123,14 @@ ul#highlightSnippetActions {
 
 .box {
   color: var(--color-white);
-  border-width: 1px;
-  border-style: dashed;
-  border-color: rgba(255, 255, 255, 0.25);
-  border-image: initial;
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: var(--common-round-border);
+  border: 1px solid var(--surface-panel-border);
+  background: var(--surface-panel-bg);
+  // Frosted panel: the page gradient stays visible but is blurred back so the
+  // content on top keeps its contrast.
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
   padding: $common-gap*2;
 }
 

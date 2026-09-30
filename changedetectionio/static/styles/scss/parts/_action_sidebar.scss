@@ -482,6 +482,12 @@ body.actionside-bar-on {
     display: none;
   }
 
+  // Text-only footer item with no icon — in the collapsed rail it has nothing to
+  // shrink to and would spill past the rail edge mid-word.
+  #new-version-text {
+    display: none;
+  }
+
   #cdio-logo {
     #logo-expanded {
       display: none;
@@ -490,6 +496,10 @@ body.actionside-bar-on {
 
   &.actionsidebar-expanded {
     #checking-now-stats-sidebar {
+      display: block;
+    }
+
+    #new-version-text {
       display: block;
     }
 

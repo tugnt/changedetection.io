@@ -304,7 +304,9 @@ body.watch-selection-active #checkbox-operations {
         gap: 6px;
         @media (min-width: 767px) {
           > * {
-            opacity: 0.2;
+            // Muted rather than near-invisible: the actions still recede behind
+            // the row content but stay readable, so they don't look broken.
+            opacity: 0.55;
             transition: opacity 0.12s ease;
           }
         }

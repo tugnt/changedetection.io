@@ -1,0 +1,61 @@
+// Styled replacement for the browser's native <datalist> popup on the
+// "Group Tag" field (see static/js/watch-group-picker.js). The native popup is
+// drawn by the OS, so it can be neither themed nor positioned with CSS.
+
+.group-picker {
+  position: relative;
+  // The wrapper is injected around an existing field — stay out of the way of
+  // whatever width the input already had.
+  display: block;
+}
+
+.group-picker__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 60;
+  // Width is set from the input's measured width in watch-group-picker.js — the
+  // wrapper is full-width, so a percentage here would overshoot the field.
+  box-sizing: border-box;
+  min-width: 12rem;
+  max-height: 16rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+
+  background: var(--color-background);
+  border: 1px solid var(--color-border-table-cell);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.group-picker__option {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  // The list sits over the page gradient, so it sets its own text colour rather
+  // than inheriting the white used by surrounding form chrome.
+  color: var(--color-text);
+}
+
+.group-picker__option--active {
+  background: var(--color-background-menu-link-hover);
+}
+
+.group-picker__path {
+  font-size: 0.72rem;
+  line-height: 1.2;
+  color: var(--color-text-input-description);
+}
+
+.group-picker__title {
+  font-size: var(--body-main-text-size);
+  font-weight: 600;
+  line-height: 1.25;
+}

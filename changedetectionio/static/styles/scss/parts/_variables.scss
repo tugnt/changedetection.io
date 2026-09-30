@@ -24,9 +24,9 @@
   --color-light-red: #dd0000;
 
   --color-background-page: var(--color-grey-100);
-  --color-background-gradient-first: #5ad8f7;
-  --color-background-gradient-second: #2f50af;
-  --color-background-gradient-third: #9150bf;
+  --color-background-gradient-first: #5b9bd5;
+  --color-background-gradient-second: #3a4a8f;
+  --color-background-gradient-third: #5f4585;
   // The page's atmosphere gradient, shared so anything that needs to sit ON the
   // page background (e.g. the left rail rolling out over content) can repaint
   // an identical copy instead of approximating it with a flat colour. The
@@ -53,7 +53,7 @@
   --color-text-tab-active: #222;
   --color-api-key: #0078e7;
 
-  --color-background-button-primary: #0078e7;
+  --color-background-button-primary: #2f6fed;
   --color-background-button-green: #42dd53;
   --color-background-button-red: #dd4242;
   --color-background-button-success: rgb(28, 184, 65);
@@ -99,7 +99,8 @@
   --color-text-input-description: var(--color-grey-500);
   --color-text-input-placeholder: var(--color-grey-600);
 
-  --color-background-table-thead: var(--color-grey-800);
+  --color-background-table-thead: #f7f8fa;
+  --color-text-table-head: var(--color-grey-400);
   --color-border-table-cell: var(--color-grey-700);
 
   --color-text-menu-heading: var(--color-white);
@@ -124,21 +125,42 @@
   --color-sidebar-shadow: 6px 0 28px rgba(0, 0, 0, 0.18);
   --color-sidebar-item-hover-bg: var(--color-grey-325);
   --color-sidebar-item-active-bg: rgba(0, 0, 0, 0.10);
-  --common-round-border: 8px;
+  --common-round-border: 10px;
+
+  // Corner-radius scale. Components pick a step instead of hard-coding pixels so
+  // the whole UI keeps one rounding rhythm.
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  // Elevation scale — two-layer shadows (tight contact shadow + soft ambient)
+  // read as depth instead of the single blurry drop shadow.
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+  --shadow-md: 0 4px 12px rgba(16, 24, 40, 0.08), 0 2px 4px rgba(16, 24, 40, 0.06);
+  --shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.14), 0 4px 10px rgba(16, 24, 40, 0.08);
+
+  // Translucent panels that sit directly on the page gradient (.box, top menu).
+  --surface-panel-bg: rgba(255, 255, 255, 0.10);
+  --surface-panel-border: rgba(255, 255, 255, 0.18);
+
+  // Focus ring colour, used as a soft halo around focused inputs/controls.
+  --color-focus-ring: rgba(47, 111, 237, 0.28);
 }
 
 html[data-darkmode="true"] {
   --color-link: #59bdfb;
   --color-text: var(--color-white);
   --color-table-line: #262c37;
-  --color-background-gradient-first: #3f90a5;
-  --color-background-gradient-second: #1e316c;
-  --color-background-gradient-third: #4d2c64;
+  --color-background-gradient-first: #17324a;
+  --color-background-gradient-second: #141c3a;
+  --color-background-gradient-third: #2a1b3d;
 
   --color-background-new-watch-input: var(--color-grey-100);
   --color-background-new-watch-input-transparent: var(--color-grey-100);
   --color-text-new-watch-input: var(--color-text);
   --color-background-table-thead: var(--color-grey-200);
+  --color-text-table-head: var(--color-grey-700);
   --color-table-background: var(--color-grey-300);
   --color-table-stripe: var(--color-grey-325);
   --color-background-checkbox-operations: rgba(50, 50, 50, 0.7);
@@ -174,6 +196,15 @@ html[data-darkmode="true"] {
   --color-sidebar-shadow: 6px 0 28px rgba(0, 0, 0, 0.45);
   --color-sidebar-item-hover-bg: rgba(255, 255, 255, 0.06);
   --color-sidebar-item-active-bg: rgba(255, 255, 255, 0.10);
+
+  // Shadows need more opacity to stay readable against dark surfaces.
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30), 0 1px 3px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.36), 0 2px 4px rgba(0, 0, 0, 0.24);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.48), 0 4px 10px rgba(0, 0, 0, 0.32);
+
+  --surface-panel-bg: rgba(255, 255, 255, 0.05);
+  --surface-panel-border: rgba(255, 255, 255, 0.10);
+  --color-focus-ring: rgba(89, 189, 251, 0.30);
 
   .icon-spread {
     filter: hue-rotate(-10deg) brightness(1.5);

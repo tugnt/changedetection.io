@@ -8,3 +8,7 @@ $desktop-wide-breakpoint: 980px;
 
 $common-gap: 0.55rem;
 $top-menu-icon-size: 1.3rem;
+
+// One width for every page's main panel, so the content column doesn't jump
+// between pages. Tune here, not per component.
+$content-max-width: 1400px;

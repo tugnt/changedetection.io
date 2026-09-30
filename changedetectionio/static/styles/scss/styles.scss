@@ -837,7 +837,13 @@ textarea::placeholder {
 
 
 .edit-form {
-  max-width: 95%;
+  // Same rule as .box: without an explicit width, align-items:center on
+  // .content-main sizes the form to its contents, so each page came out a
+  // different width (imports 760px, settings 1028px).
+  box-sizing: border-box;
+  width: 100%;
+  max-width: $content-max-width;
+  margin-inline: auto;
 
   .box-wrap {
     position: relative;
@@ -846,6 +852,9 @@ textarea::placeholder {
   .inner {
     background: var(--color-background);
     padding: $common-gap*2;
+    // Top edge stays square so the tab strip above still reads as attached.
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    box-shadow: var(--shadow-lg);
   }
 
   #actions {
@@ -1128,7 +1137,7 @@ ul#highlightSnippetActions {
   // border-box keeps panels with different padding on the same edges.
   box-sizing: border-box;
   width: 100%;
-  max-width: 1400px;
+  max-width: $content-max-width;
   margin-inline: auto;
   border: 1px solid var(--surface-panel-border);
   background: var(--surface-panel-bg);

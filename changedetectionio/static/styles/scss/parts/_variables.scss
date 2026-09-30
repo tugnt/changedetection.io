@@ -3,6 +3,9 @@
  */
 
 :root {
+  // Lets the browser paint its own chrome (scrollbars, date pickers, spinners)
+  // to match the theme instead of always rendering them light.
+  color-scheme: light;
   --body-main-text-size: 0.9rem;
   --color-white: #fff;
   --color-grey-50: #111;
@@ -149,6 +152,7 @@
 }
 
 html[data-darkmode="true"] {
+  color-scheme: dark;
   --color-link: #59bdfb;
   --color-text: var(--color-white);
   --color-table-line: #242b38;

@@ -34,8 +34,8 @@ body.wrapped-tabs {
     li {
       white-space: nowrap;
       color: var(--color-text-tab);
-      border-top-left-radius: 5px;
-      border-top-right-radius: 5px;
+      border-top-left-radius: var(--radius-sm);
+      border-top-right-radius: var(--radius-sm);
       background-color: var(--color-background-tab);
 
       &:not(.active) {

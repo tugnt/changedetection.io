@@ -1,4 +1,4 @@
-# Translations template for changedetection.io.
+# Vietnamese translations for changedetection.io.
 # Copyright (C) 2026 ORGANIZATION
 # This file is distributed under the same license as the changedetection.io project.
 # Automatically generated, 2026.
@@ -10,19 +10,19 @@ msgstr ""
 "POT-Creation-Date: 1970-01-01 00:00+0000\n"
 "PO-Revision-Date: 2026-09-27 00:00+0000\n"
 "Last-Translator: Vietnamese Translation Team\n"
+"Language: vi\n"
 "Language-Team: Vietnamese\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
-"Language: vi\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: changedetectionio/blueprint/add_watch_ui/__init__.py
-msgid ""
-"Adding a watch with a browser needs an interactive browser (screenshots + "
-"element data) - none is configured."
-msgstr "Thêm mục giám sát bằng trình duyệt cần có trình duyệt tương tác (ảnh chụp màn hình + dữ liệu phần tử) - không có trình duyệt nào được định cấu hình."
+msgid "Adding a watch with a browser needs an interactive browser (screenshots + element data) - none is configured."
+msgstr ""
+"Thêm mục giám sát bằng trình duyệt cần có trình duyệt tương tác (ảnh chụp màn hình + dữ liệu phần tử) - không có "
+"trình duyệt nào được định cấu hình."
 
 #: changedetectionio/blueprint/add_watch_ui/browser_config.py
 #, python-format
@@ -55,8 +55,7 @@ msgstr "Nhập URL vào hộp nhập ở trên để bắt đầu."
 msgid "Fetching screenshot and element information…"
 msgstr "Đang tìm nạp ảnh chụp màn hình và thông tin thành phần…"
 
-#: changedetectionio/blueprint/add_watch_ui/templates/add-watch-ui.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/add_watch_ui/templates/add-watch-ui.html changedetectionio/blueprint/ui/templates/edit.html
 msgid "Currently:"
 msgstr "Hiện tại "
 
@@ -73,13 +72,11 @@ msgstr "Chọn trình duyệt"
 msgid "%(browser)s cannot render a live preview, choose a browser below"
 msgstr "%(browser)s không thể hiển thị bản xem trước trực tiếp, hãy chọn trình duyệt bên dưới"
 
-#: changedetectionio/blueprint/add_watch_ui/templates/add-watch-ui.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/add_watch_ui/templates/add-watch-ui.html changedetectionio/blueprint/ui/templates/edit.html
 msgid "Select by element"
 msgstr "Chọn theo Phần Tử"
 
-#: changedetectionio/blueprint/add_watch_ui/templates/add-watch-ui.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/add_watch_ui/templates/add-watch-ui.html changedetectionio/blueprint/ui/templates/edit.html
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "Clear selection"
 msgstr "Xóa sạch lựa chọn"
@@ -92,9 +89,11 @@ msgstr "Điều quan trọng — khi nào cần thông báo cho tôi"
 #: changedetectionio/blueprint/add_watch_ui/templates/add-watch-ui.html
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid ""
-"e.g. Notify me when products go in/out of stock, lead times change by more "
-"than a week, or new product variants appear. Skip review additions."
-msgstr "ví dụ: Thông báo cho tôi khi sản phẩm hết hàng, thời gian giao hàng thay đổi hơn một tuần hoặc các biến thể sản phẩm mới xuất hiện. Bỏ qua đánh giá bổ sung."
+"e.g. Notify me when products go in/out of stock, lead times change by more than a week, or new product variants "
+"appear. Skip review additions."
+msgstr ""
+"ví dụ: Thông báo cho tôi khi sản phẩm hết hàng, thời gian giao hàng thay đổi hơn một tuần hoặc các biến thể sản phẩm "
+"mới xuất hiện. Bỏ qua đánh giá bổ sung."
 
 #: changedetectionio/blueprint/add_watch_ui/templates/add-watch-ui.html
 #: changedetectionio/blueprint/tags/templates/groups-overview.html
@@ -149,8 +148,7 @@ msgstr "Bao gồm mục giám sát"
 msgid "Replace existing watches of the same UUID"
 msgstr "Thay thế mục giám sát hiện có cùng UUID"
 
-#: changedetectionio/blueprint/backups/restore.py
-#: changedetectionio/blueprint/backups/templates/backup_restore.html
+#: changedetectionio/blueprint/backups/restore.py changedetectionio/blueprint/backups/templates/backup_restore.html
 msgid "Restore backup"
 msgstr "Khôi phục lại bản sao lưu"
 
@@ -194,10 +192,10 @@ msgid "A backup is running!"
 msgstr "Sao lưu đang thực hiện"
 
 #: changedetectionio/blueprint/backups/templates/backup_create.html
-msgid ""
-"Here you can download and request a new backup, when a backup is completed "
-"you will see it listed below."
-msgstr "Tại đây bạn có thể tải xuống và yêu cầu bản sao lưu mới, khi bản sao lưu hoàn tất, bạn sẽ thấy bản sao lưu được liệt kê bên dưới."
+msgid "Here you can download and request a new backup, when a backup is completed you will see it listed below."
+msgstr ""
+"Tại đây bạn có thể tải xuống và yêu cầu bản sao lưu mới, khi bản sao lưu hoàn tất, bạn sẽ thấy bản sao lưu được liệt "
+"kê bên dưới."
 
 #: changedetectionio/blueprint/backups/templates/backup_create.html
 msgid "Mb"
@@ -220,15 +218,11 @@ msgid "A restore is running!"
 msgstr "Quá trình khôi phục đang diễn ra!"
 
 #: changedetectionio/blueprint/backups/templates/backup_restore.html
-msgid ""
-"Restore a backup. Must be a .zip backup file created on/after v0.53.1 (new "
-"database layout)."
+msgid "Restore a backup. Must be a .zip backup file created on/after v0.53.1 (new database layout)."
 msgstr "Khôi phục bản sao lưu. Phải là tệp sao lưu .zip được tạo vào/sau v0.53.1 (bố cục cơ sở dữ liệu mới)."
 
 #: changedetectionio/blueprint/backups/templates/backup_restore.html
-msgid ""
-"Note: This does not override the main application settings, only watches and "
-"groups."
+msgid "Note: This does not override the main application settings, only watches and groups."
 msgstr "Lưu ý: Điều này không ghi đè lên cài đặt ứng dụng chính, chỉ các mục giám sát và nhóm."
 
 #: changedetectionio/blueprint/backups/templates/backup_restore.html
@@ -253,9 +247,7 @@ msgid "Replace any existing watches of the same UUID?"
 msgstr "Thay thế mọi mục giám sát hiện có cùng UUID?"
 
 #: changedetectionio/blueprint/imports/importer.py
-msgid ""
-"Importing 5,000 of the first URLs from your list, the rest can be imported "
-"again."
+msgid "Importing 5,000 of the first URLs from your list, the rest can be imported again."
 msgstr "Nhập 5.000 URL đầu tiên từ danh sách của bạn, phần còn lại có thể được nhập lại."
 
 #: changedetectionio/blueprint/imports/importer.py
@@ -273,8 +265,7 @@ msgstr "Cấu trúc JSON trông không hợp lệ, nó có bị hỏng không?"
 
 #: changedetectionio/blueprint/imports/importer.py
 #, python-brace-format
-msgid ""
-"{count} Imported from Distill.io in {duration}s, {skipped_count} Skipped."
+msgid "{count} Imported from Distill.io in {duration}s, {skipped_count} Skipped."
 msgstr "{count} Đã nhập từ Distill.io trong {duration}giây, đã bỏ qua {skipped_count}."
 
 #: changedetectionio/blueprint/imports/importer.py
@@ -283,15 +274,12 @@ msgstr "Không thể đọc tệp XLSX xuất, có gì đó không ổn với t�
 
 #: changedetectionio/blueprint/imports/importer.py
 #, python-brace-format
-msgid ""
-"Error processing row number {}, URL value was incorrect, row was skipped."
+msgid "Error processing row number {}, URL value was incorrect, row was skipped."
 msgstr "Lỗi xử lý số hàng {}, giá trị URL không chính xác, hàng đã bị bỏ qua."
 
 #: changedetectionio/blueprint/imports/importer.py
 #, python-brace-format
-msgid ""
-"Error processing row number {}, check all cell data types are correct, row "
-"was skipped."
+msgid "Error processing row number {}, check all cell data types are correct, row was skipped."
 msgstr "Lỗi xử lý số hàng {}, kiểm tra tất cả các loại dữ liệu ô là chính xác, hàng đã bị bỏ qua."
 
 #: changedetectionio/blueprint/imports/importer.py
@@ -326,13 +314,10 @@ msgid "backups section"
 msgstr "phần sao lưu"
 
 #: changedetectionio/blueprint/imports/templates/import.html
-msgid ""
-"Enter one URL per line, and optionally add tags for each URL after a space, "
-"delineated by comma (,):"
+msgid "Enter one URL per line, and optionally add tags for each URL after a space, delineated by comma (,):"
 msgstr "Nhập một URL trên mỗi dòng và tùy chọn thêm thẻ cho mỗi URL sau dấu cách, được phân định bằng dấu phẩy (,):"
 
-#: changedetectionio/blueprint/imports/templates/import.html
-#: changedetectionio/templates/edit/include_subtract.html
+#: changedetectionio/blueprint/imports/templates/import.html changedetectionio/templates/edit/include_subtract.html
 #: changedetectionio/templates/edit/text-options.html
 msgid "Example"
 msgstr "Ví dụ"
@@ -342,18 +327,17 @@ msgid "URLs which do not pass validation will stay in the textarea."
 msgstr "URL không vượt qua xác thực sẽ ở trong vùng văn bản."
 
 #: changedetectionio/blueprint/imports/templates/import.html
-msgid ""
-"Copy and Paste your Distill.io watch 'export' file, this should be a JSON "
-"file."
+msgid "Copy and Paste your Distill.io watch 'export' file, this should be a JSON file."
 msgstr "Sao chép và dán tệp 'xuất' mục giám sát Distill.io của bạn, đây phải là tệp JSON."
 
 #. CJK fonts lack native italics; allow substitution with conventional local styling. dennis-ignore: W303
 #: changedetectionio/blueprint/imports/templates/import.html
 msgid ""
-"This is <i>experimental</i>, supported fields are <code>name</code>, "
-"<code>uri</code>, <code>tags</code>, <code>config:selections</code>, the "
-"rest (including <code>schedule</code>) are ignored."
-msgstr "Đây là <i>experimental</i>, các trường được hỗ trợ là <code>name</code>, <code>uri</code>, <code>tags</code>, <code>config: selections</code>, phần còn lại (bao gồm <code>schedule</code>) bị bỏ qua."
+"This is <i>experimental</i>, supported fields are <code>name</code>, <code>uri</code>, <code>tags</code>, "
+"<code>config:selections</code>, the rest (including <code>schedule</code>) are ignored."
+msgstr ""
+"Đây là <i>experimental</i>, các trường được hỗ trợ là <code>name</code>, <code>uri</code>, <code>tags</code>, "
+"<code>config: selections</code>, phần còn lại (bao gồm <code>schedule</code>) bị bỏ qua."
 
 #: changedetectionio/blueprint/imports/templates/import.html
 msgid "How to export?"
@@ -400,8 +384,7 @@ msgstr "Tên nhóm / thẻ"
 msgid "Recheck time (minutes)"
 msgstr "Kiểm tra lại thời gian (phút)"
 
-#: changedetectionio/blueprint/imports/templates/import.html
-#: changedetectionio/templates/sidebar-nav.html
+#: changedetectionio/blueprint/imports/templates/import.html changedetectionio/templates/sidebar-nav.html
 msgid "Import"
 msgstr "Nhập Khẩu"
 
@@ -424,9 +407,7 @@ msgstr "Không tìm thấy mục giám sát có UUID %(uuid)s"
 
 #: changedetectionio/blueprint/rss/single_watch.py
 #, python-format
-msgid ""
-"Watch %(uuid)s does not have enough history snapshots to show changes (need "
-"at least 2)"
+msgid "Watch %(uuid)s does not have enough history snapshots to show changes (need at least 2)"
 msgstr "Xem %(uuid)s không có đủ ảnh chụp nhanh lịch sử để hiển thị các thay đổi (cần ít nhất 2)"
 
 #: changedetectionio/blueprint/settings/__init__.py
@@ -435,9 +416,7 @@ msgstr "Đã xóa bảo vệ bằng mật khẩu."
 
 #: changedetectionio/blueprint/settings/__init__.py
 #, python-brace-format
-msgid ""
-"Warning: Worker count ({worker_count}) is close to or exceeds available CPU "
-"cores ({cpu_count})"
+msgid "Warning: Worker count ({worker_count}) is close to or exceeds available CPU cores ({cpu_count})"
 msgstr "Cảnh báo: Số lượng người lao động ({worker_count}) gần bằng hoặc vượt quá số lõi CPU khả dụng ({cpu_count})"
 
 #: changedetectionio/blueprint/settings/__init__.py
@@ -458,15 +437,12 @@ msgstr "Lỗi khi điều chỉnh nhân viên: {}"
 msgid "Password protection enabled."
 msgstr "Đã bật bảo vệ bằng mật khẩu."
 
-#: changedetectionio/blueprint/settings/__init__.py
-#: changedetectionio/blueprint/settings/notifications/__init__.py
+#: changedetectionio/blueprint/settings/__init__.py changedetectionio/blueprint/settings/notifications/__init__.py
 msgid "Settings updated."
 msgstr "Cài đặt cập nhật"
 
-#: changedetectionio/blueprint/settings/__init__.py
-#: changedetectionio/blueprint/settings/notifications/__init__.py
-#: changedetectionio/blueprint/ui/edit.py
-#: changedetectionio/processors/extract.py
+#: changedetectionio/blueprint/settings/__init__.py changedetectionio/blueprint/settings/notifications/__init__.py
+#: changedetectionio/blueprint/ui/edit.py changedetectionio/processors/extract.py
 msgid "An error occurred, please see below."
 msgstr "Đã xảy ra lỗi, vui lòng xem bên dưới."
 
@@ -492,8 +468,8 @@ msgstr "Tất cả các thông báo đã được bật tiếng."
 
 #: changedetectionio/blueprint/settings/llm.py
 msgid ""
-"api_key is required when api_base differs from the saved configuration. "
-"Refusing to send the stored API key to a different endpoint."
+"api_key is required when api_base differs from the saved configuration. Refusing to send the stored API key to a "
+"different endpoint."
 msgstr "api_key là bắt buộc khi api_base khác với cấu hình đã lưu. Từ chối gửi khóa API được lưu trữ đến một điểm cuối khác."
 
 #: changedetectionio/blueprint/settings/llm.py
@@ -510,10 +486,10 @@ msgid "Default Notifications"
 msgstr "Thông báo mặc định"
 
 #: changedetectionio/blueprint/settings/notifications/templates/apprise.html
-msgid ""
-"These notifications apply to all web page watches, or you can configure them "
-"per group or per watch separately."
-msgstr "Những thông báo này áp dụng cho tất cả mục giám sát trên trang web hoặc bạn có thể định cấu hình chúng cho mỗi nhóm hoặc từng mục giám sát riêng biệt."
+msgid "These notifications apply to all web page watches, or you can configure them per group or per watch separately."
+msgstr ""
+"Những thông báo này áp dụng cho tất cả mục giám sát trên trang web hoặc bạn có thể định cấu hình chúng cho mỗi nhóm "
+"hoặc từng mục giám sát riêng biệt."
 
 #. FIXME: fragment msgids (#4074)
 #: changedetectionio/blueprint/settings/notifications/templates/apprise.html
@@ -549,8 +525,7 @@ msgstr "Để bảo mật, nhật ký này được làm trống khi khởi đ�
 msgid "Install and create shortcut - then \"install\""
 msgstr "Cài đặt và tạo phím tắt - sau đó \"cài đặt\""
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/blueprint/tags/templates/edit-tag.html
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/blueprint/tags/templates/edit-tag.html
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid "General"
 msgstr "TỔNG QUAN"
@@ -579,8 +554,7 @@ msgstr "Comment"
 msgid "CAPTCHA & Proxies"
 msgstr "CAPTCHA & Proxy"
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/blueprint/tags/templates/edit-tag.html
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/blueprint/tags/templates/edit-tag.html
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid "AI / LLM"
 msgstr "AI / LLM"
@@ -599,20 +573,15 @@ msgid "more info"
 msgstr "thêm thông tin"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"After this many consecutive times that the CSS/xPath filter is missing, send "
-"a notification"
+msgid "After this many consecutive times that the CSS/xPath filter is missing, send a notification"
 msgstr "Sau nhiều lần liên tiếp này mà bộ lọc CSS/xPath bị thiếu, hãy gửi thông báo"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
 msgid "Set to <strong>0</strong> to disable"
 msgstr "Đặt thành <strong>0</strong> để tắt"
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/blueprint/ui/templates/edit.html
-msgid ""
-"Limit collection of history snapshots for each watch to this number of "
-"history items."
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/blueprint/ui/templates/edit.html
+msgid "Limit collection of history snapshots for each watch to this number of history items."
 msgstr "Giới hạn bộ sưu tập ảnh chụp nhanh lịch sử cho mỗi mục giám sát ở số lượng mục lịch sử này."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
@@ -632,15 +601,11 @@ msgid "Clear Snapshot History"
 msgstr "Xóa lịch sử ảnh chụp nhanh"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"Allow access to the watch change history page when password is enabled (Good "
-"for sharing the diff page)"
+msgid "Allow access to the watch change history page when password is enabled (Good for sharing the diff page)"
 msgstr "Cho phép truy cập vào trang lịch sử thay đổi của mục giám sát khi mật khẩu được bật (Tốt để chia sẻ trang khác)"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"When a request returns no content, or the HTML does not contain any text, is "
-"this considered a change?"
+msgid "When a request returns no content, or the HTML does not contain any text, is this considered a change?"
 msgstr "Khi một yêu cầu không trả về nội dung hoặc HTML không chứa bất kỳ văn bản nào, đây có được coi là một thay đổi không?"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
@@ -653,15 +618,11 @@ msgstr "Cài đặt trên điện thoại của bạn"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
 #, python-format
-msgid ""
-"Scan this, then use your phone browser's menu%(icon)s and choose "
-"\"%(action)s\"."
+msgid "Scan this, then use your phone browser's menu%(icon)s and choose \"%(action)s\"."
 msgstr "Quét cái này, sau đó sử dụng menu%(icon)s của trình duyệt điện thoại của bạn và chọn \"%(action)s\"."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"On Android you can then share any web page straight to this install from the "
-"share sheet."
+msgid "On Android you can then share any web page straight to this install from the share sheet."
 msgstr "Sau đó, trên Android, bạn có thể chia sẻ bất kỳ trang web nào trực tiếp vào bản cài đặt này từ trang chia sẻ."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
@@ -672,36 +633,32 @@ msgstr "Trên iPhone, ứng dụng cài đặt nhưng Safari không hỗ trợ p
 msgid "Choose a default proxy for all watches"
 msgstr "Chọn một proxy mặc định cho tất cả mục giám sát"
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/blueprint/ui/templates/edit.html
-msgid ""
-"Use the <strong>Basic</strong> method (default) where your watched sites "
-"don't need Javascript to render."
-msgstr "Sử dụng phương thức <strong>Basic</strong> (mặc định) nơi các trang web đã xem của bạn không cần Javascript để hiển thị."
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/blueprint/ui/templates/edit.html
+msgid "Use the <strong>Basic</strong> method (default) where your watched sites don't need Javascript to render."
+msgstr ""
+"Sử dụng phương thức <strong>Basic</strong> (mặc định) nơi các trang web đã xem của bạn không cần Javascript để hiển "
+"thị."
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/blueprint/ui/templates/edit.html
 msgid ""
-"The <strong>Chrome/Javascript</strong> method requires a network connection "
-"to a running WebDriver+Chrome server, set by the ENV var 'WEBDRIVER_URL'."
-msgstr "Phương thức <strong>Chrome/Javascript</strong> yêu cầu kết nối mạng với máy chủ WebDriver+Chrome đang chạy, được đặt bởi var 'WEBDRIVER_URL'."
+"The <strong>Chrome/Javascript</strong> method requires a network connection to a running WebDriver+Chrome server, set"
+" by the ENV var 'WEBDRIVER_URL'."
+msgstr ""
+"Phương thức <strong>Chrome/Javascript</strong> yêu cầu kết nối mạng với máy chủ WebDriver+Chrome đang chạy, được đặt "
+"bởi var 'WEBDRIVER_URL'."
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/blueprint/ui/templates/edit.html
 msgid ""
-"If you're having trouble waiting for the page to be fully rendered (text "
-"missing etc), try increasing the 'wait' time here."
+"If you're having trouble waiting for the page to be fully rendered (text missing etc), try increasing the 'wait' time"
+" here."
 msgstr "Nếu bạn gặp sự cố khi chờ trang được hiển thị đầy đủ (thiếu văn bản, v.v.), hãy thử tăng thời gian 'chờ' tại đây."
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/blueprint/ui/templates/edit.html
 msgid "This will wait <i>n</i> seconds before extracting the text."
 msgstr "Thao tác này sẽ chờ <i>n</i> giây trước khi trích xuất văn bản."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"Number of concurrent workers to process watches. More workers = faster "
-"processing but higher memory usage."
+msgid "Number of concurrent workers to process watches. More workers = faster processing but higher memory usage."
 msgstr "Số lượng worker đồng thời để xử lý các mục giám sát. Nhiều worker hơn = xử lý nhanh hơn nhưng sử dụng bộ nhớ cao hơn."
 
 #. FIXME: fragment msgids (#4074)
@@ -722,15 +679,11 @@ msgid "actively processing"
 msgstr "tích cực xử lý"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"Example - 3 seconds random jitter could trigger up to 3 seconds earlier or "
-"up to 3 seconds later"
+msgid "Example - 3 seconds random jitter could trigger up to 3 seconds earlier or up to 3 seconds later"
 msgstr "Ví dụ - Bộ rung ngẫu nhiên 3 giây có thể kích hoạt sớm hơn tối đa 3 giây hoặc muộn hơn tối đa 3 giây"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"For regular plain requests (not chrome based), maximum number of seconds "
-"until timeout, 1-999."
+msgid "For regular plain requests (not chrome based), maximum number of seconds until timeout, 1-999."
 msgstr "Đối với các yêu cầu thông thường (không dựa trên chrome), số giây tối đa cho đến khi hết thời gian chờ, 1-999."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
@@ -739,10 +692,10 @@ msgstr "Áp dụng cho tất cả các yêu cầu."
 
 #. FIXME: fragment msgids (#4074)
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"Note: Simply changing the User-Agent often does not defeat anti-robot "
-"technologies, it's important to consider"
-msgstr "Lưu ý: Chỉ cần thay đổi Tác nhân người dùng thường không đánh bại các công nghệ chống rô bốt, điều quan trọng là phải xem xét"
+msgid "Note: Simply changing the User-Agent often does not defeat anti-robot technologies, it's important to consider"
+msgstr ""
+"Lưu ý: Chỉ cần thay đổi Tác nhân người dùng thường không đánh bại các công nghệ chống rô bốt, điều quan trọng là phải"
+" xem xét"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
 msgid "all of the ways that the browser is detected"
@@ -752,17 +705,13 @@ msgstr "tất cả các cách mà trình duyệt được phát hiện"
 msgid "Connect using Bright Data proxies, find out more here."
 msgstr "Kết nối bằng proxy Dữ liệu sáng, tìm hiểu thêm tại đây."
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/blueprint/ui/templates/edit.html
-#: changedetectionio/templates/_common_fields.html
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/blueprint/ui/templates/diff.html
+#: changedetectionio/blueprint/ui/templates/edit.html changedetectionio/templates/_common_fields.html
 msgid "Tip:"
 msgstr "Gợi ý:"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"Ignore whitespace, tabs and new-lines/line-feeds when considering if a "
-"change was detected."
+msgid "Ignore whitespace, tabs and new-lines/line-feeds when considering if a change was detected."
 msgstr "Bỏ qua khoảng trắng, tab và dòng mới/nguồn cấp dữ liệu dòng khi xem xét liệu có phát hiện thay đổi hay không."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
@@ -770,74 +719,56 @@ msgid "Note:"
 msgstr "Lưu ý:"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"Changing this will change the status of your existing watches, possibly "
-"trigger alerts etc."
+msgid "Changing this will change the status of your existing watches, possibly trigger alerts etc."
 msgstr "Thay đổi điều này sẽ thay đổi trạng thái của mục giám sát hiện tại, có thể kích hoạt cảnh báo, v.v."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"Render anchor tag content, default disabled, when enabled renders links as"
+msgid "Render anchor tag content, default disabled, when enabled renders links as"
 msgstr "Hiển thị nội dung thẻ neo, mặc định bị vô hiệu hóa, khi được bật hiển thị liên kết dưới dạng"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"Changing this could affect the content of your existing watches, possibly "
-"trigger alerts etc."
+msgid "Changing this could affect the content of your existing watches, possibly trigger alerts etc."
 msgstr "Thay đổi này có thể ảnh hưởng đến nội dung của mục giám sát hiện tại, có thể kích hoạt cảnh báo, v.v."
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/templates/edit/include_subtract.html
-msgid ""
-"Remove HTML element(s) by CSS and XPath selectors before text conversion."
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/templates/edit/include_subtract.html
+msgid "Remove HTML element(s) by CSS and XPath selectors before text conversion."
 msgstr "Xóa (các) phần tử HTML bằng bộ chọn CSS và XPath trước khi chuyển đổi văn bản."
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/templates/edit/include_subtract.html
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/templates/edit/include_subtract.html
 msgid "Don't paste HTML here, use only CSS and XPath selectors"
 msgstr "Không dán HTML ở đây, chỉ sử dụng trình chọn CSS và XPath"
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/templates/edit/include_subtract.html
-msgid ""
-"Add multiple elements, CSS or XPath selectors per line to ignore multiple "
-"parts of the HTML."
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/templates/edit/include_subtract.html
+msgid "Add multiple elements, CSS or XPath selectors per line to ignore multiple parts of the HTML."
 msgstr "Thêm nhiều phần tử, bộ chọn CSS hoặc XPath trên mỗi dòng để bỏ qua nhiều phần của HTML."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
 msgid "Note: This is applied globally in addition to the per-watch rules."
 msgstr "Lưu ý: Điều này được áp dụng trên toàn cầu ngoài các quy tắc cho mỗi lượt xem."
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/templates/edit/text-options.html
-msgid ""
-"Matching text will be ignored in the text snapshot (you can still see it but "
-"it wont trigger a change)"
-msgstr "Văn bản phù hợp sẽ bị bỏ qua trong ảnh chụp nhanh văn bản (bạn vẫn có thể thấy nó nhưng nó sẽ không kích hoạt thay đổi)"
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/templates/edit/text-options.html
+msgid "Matching text will be ignored in the text snapshot (you can still see it but it wont trigger a change)"
+msgstr ""
+"Văn bản phù hợp sẽ bị bỏ qua trong ảnh chụp nhanh văn bản (bạn vẫn có thể thấy nó nhưng nó sẽ không kích hoạt thay "
+"đổi)"
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/templates/edit/text-options.html
-msgid ""
-"Each line processed separately, any line matching will be ignored (removed "
-"before creating the checksum)"
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/templates/edit/text-options.html
+msgid "Each line processed separately, any line matching will be ignored (removed before creating the checksum)"
 msgstr "Mỗi dòng được xử lý riêng biệt, bất kỳ dòng nào phù hợp sẽ bị bỏ qua (xóa trước khi tạo tổng kiểm tra)"
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/templates/edit/text-options.html
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/templates/edit/text-options.html
 msgid "Regular Expression support, wrap the entire line in forward slash"
 msgstr "Hỗ trợ biểu thức chính quy, ngắt toàn bộ dòng trong dấu gạch chéo về phía trước"
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/templates/edit/text-options.html
-msgid ""
-"Changing this will affect the comparison checksum which may trigger an alert"
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/templates/edit/text-options.html
+msgid "Changing this will affect the comparison checksum which may trigger an alert"
 msgstr "Thay đổi điều này sẽ ảnh hưởng đến tổng kiểm tra so sánh có thể kích hoạt cảnh báo"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"Remove any text that appears in the \"Ignore text\" from the output "
-"(otherwise its just ignored for change-detection)"
-msgstr "Xóa bất kỳ văn bản nào xuất hiện trong \"Bỏ qua văn bản\" khỏi đầu ra (nếu không, nó chỉ bị bỏ qua để phát hiện thay đổi)"
+msgid "Remove any text that appears in the \"Ignore text\" from the output (otherwise its just ignored for change-detection)"
+msgstr ""
+"Xóa bất kỳ văn bản nào xuất hiện trong \"Bỏ qua văn bản\" khỏi đầu ra (nếu không, nó chỉ bị bỏ qua để phát hiện thay "
+"đổi)"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
 msgid "API Access"
@@ -873,9 +804,7 @@ msgid "Chrome Extension"
 msgstr "Tiện ích Chrome"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"Easily add any web-page to your changedetection.io installation from within "
-"Chrome."
+msgid "Easily add any web-page to your changedetection.io installation from within Chrome."
 msgstr "Dễ dàng thêm bất kỳ trang web nào vào cài đặt changedetection.io của bạn từ bên trong Chrome."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
@@ -919,32 +848,28 @@ msgid "Chrome Webstore"
 msgstr "Cửa hàng Chrome trực tuyến"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"Maximum number of history snapshots to include in the watch specific RSS "
-"feed."
+msgid "Maximum number of history snapshots to include in the watch specific RSS feed."
 msgstr "Số lượng ảnh chụp nhanh lịch sử tối đa để đưa vào nguồn cấp dữ liệu RSS cụ thể của mục giám sát."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"For watching other RSS feeds - When watching RSS/Atom feeds, convert them "
-"into clean text for better change detection."
-msgstr "Để xem các nguồn cấp dữ liệu RSS khác - Khi xem nguồn cấp dữ liệu RSS/Atom, hãy chuyển đổi chúng thành văn bản sạch để phát hiện thay đổi tốt hơn."
+msgid "For watching other RSS feeds - When watching RSS/Atom feeds, convert them into clean text for better change detection."
+msgstr ""
+"Để xem các nguồn cấp dữ liệu RSS khác - Khi xem nguồn cấp dữ liệu RSS/Atom, hãy chuyển đổi chúng thành văn bản sạch "
+"để phát hiện thay đổi tốt hơn."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
 msgid "Does your reader support HTML? Set it here"
 msgstr "Người đọc của bạn có hỗ trợ HTML không? Đặt nó ở đây"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"'System default' for the same template for all items, or re-use your "
-"\"Notification Body\" as the template."
+msgid "'System default' for the same template for all items, or re-use your \"Notification Body\" as the template."
 msgstr "'Mặc định hệ thống' cho cùng một mẫu cho tất cả các mục hoặc sử dụng lại \"Nội dung thông báo\" của bạn làm mẫu."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"Ensure the settings below are correct, they are used to manage the time "
-"schedule for checking your web page watches."
-msgstr "Đảm bảo các cài đặt dưới đây là chính xác, chúng được sử dụng để quản lý lịch trình kiểm tra các mục giám sát trên trang web của bạn."
+msgid "Ensure the settings below are correct, they are used to manage the time schedule for checking your web page watches."
+msgstr ""
+"Đảm bảo các cài đặt dưới đây là chính xác, chúng được sử dụng để quản lý lịch trình kiểm tra các mục giám sát trên "
+"trang web của bạn."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
 msgid "UTC Time & Date from Server:"
@@ -955,9 +880,7 @@ msgid "Local Time & Date in Browser:"
 msgstr "Giờ & Ngày địa phương trong Trình duyệt:"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"Enable this setting to open the diff page in a new tab. If disabled, the "
-"diff page will open in the current tab."
+msgid "Enable this setting to open the diff page in a new tab. If disabled, the diff page will open in the current tab."
 msgstr "Bật cài đặt này để mở trang khác trong tab mới. Nếu bị tắt, trang khác sẽ mở trong tab hiện tại."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
@@ -969,52 +892,54 @@ msgid "Enable or Disable Favicons next to the watch list"
 msgstr "Bật hoặc tắt Favicon bên cạnh danh sách theo dõi"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"Disabling this can speed up your page fetches because the favicon does not "
-"need to be fetched."
+msgid "Disabling this can speed up your page fetches because the favicon does not need to be fetched."
 msgstr "Vô hiệu hóa điều này có thể tăng tốc độ tìm nạp trang của bạn vì favicon không cần phải được tìm nạp."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
 msgid ""
-"This copies your watch to a temporary hosted database and returns a link to "
-"make sharing/copying the watch to other people"
-msgstr "Thao tác này sao chép mục giám sát của bạn vào cơ sở dữ liệu được lưu trữ tạm thời và trả về một liên kết để chia sẻ/sao chép mục giám sát cho người khác"
+"This copies your watch to a temporary hosted database and returns a link to make sharing/copying the watch to other "
+"people"
+msgstr ""
+"Thao tác này sao chép mục giám sát của bạn vào cơ sở dữ liệu được lưu trữ tạm thời và trả về một liên kết để chia "
+"sẻ/sao chép mục giám sát cho người khác"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
 msgid "Number of items per page in the watch overview list, 0 to disable."
 msgstr "Số lượng mục trên mỗi trang trong danh sách tổng quan về các mục giám sát, 0 để tắt."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"How \"Checked\" and \"Changed\" times are shown in the watch overview list."
+msgid "How \"Checked\" and \"Changed\" times are shown in the watch overview list."
 msgstr "Cách hiển thị thời gian \"Đã kiểm tra\" và \"Đã thay đổi\" trong danh sách tổng quan về các mục giám sát."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
 msgid ""
-"\"Collapsed icon rail\" keeps the left navigation slim and reveals labels on "
-"mouse-over; \"Always expanded\" keeps labels visible."
-msgstr "\"Đường ray biểu tượng thu gọn\" giữ cho điều hướng bên trái mỏng và hiển thị nhãn khi di chuột qua; \"Luôn mở rộng\" giữ cho nhãn hiển thị."
+"\"Collapsed icon rail\" keeps the left navigation slim and reveals labels on mouse-over; \"Always expanded\" keeps "
+"labels visible."
+msgstr ""
+"\"Đường ray biểu tượng thu gọn\" giữ cho điều hướng bên trái mỏng và hiển thị nhãn khi di chuột qua; \"Luôn mở rộng\""
+" giữ cho nhãn hiển thị."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
 msgid "Tip"
 msgstr "Gợi ý"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"\"Residential\" and \"Mobile\" proxy type can be more successful than \"Data "
-"Center\" for blocked websites."
-msgstr "Loại proxy \"Khu dân cư\" và \"Di động\" có thể thành công hơn loại proxy \"Trung tâm dữ liệu\" cho các trang web bị chặn."
+msgid "\"Residential\" and \"Mobile\" proxy type can be more successful than \"Data Center\" for blocked websites."
+msgstr ""
+"Loại proxy \"Khu dân cư\" và \"Di động\" có thể thành công hơn loại proxy \"Trung tâm dữ liệu\" cho các trang web bị "
+"chặn."
 
 #: changedetectionio/blueprint/settings/templates/settings.html
-msgid ""
-"\"Name\" will be used for selecting the proxy in the Watch Edit settings"
+msgid "\"Name\" will be used for selecting the proxy in the Watch Edit settings"
 msgstr "\"Tên\" sẽ được sử dụng để chọn proxy trong cài đặt Chỉnh sửa mục giám sát"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
 msgid ""
-"SOCKS5 proxies with authentication are only supported with 'plain requests' "
-"fetcher, for other fetchers you should whitelist the IP access instead"
-msgstr "Các proxy socks5 có xác thực chỉ được hỗ trợ với 'yêu cầu đơn giản', thay vào đó, đối với các trình tìm nạp khác, bạn nên đưa vào danh sách trắng quyền truy cập IP"
+"SOCKS5 proxies with authentication are only supported with 'plain requests' fetcher, for other fetchers you should "
+"whitelist the IP access instead"
+msgstr ""
+"Các proxy socks5 có xác thực chỉ được hỗ trợ với 'yêu cầu đơn giản', thay vào đó, đối với các trình tìm nạp khác, bạn"
+" nên đưa vào danh sách trắng quyền truy cập IP"
 
 #: changedetectionio/blueprint/settings/templates/settings.html
 msgid "Uptime:"
@@ -1063,9 +988,7 @@ msgid "AI-powered change monitoring"
 msgstr "Giám sát thay đổi do AI hỗ trợ"
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
-msgid ""
-"Connect an LLM to move from \"something changed\" to \"only the thing you "
-"care about changed\"."
+msgid "Connect an LLM to move from \"something changed\" to \"only the thing you care about changed\"."
 msgstr "Kết nối LLM để chuyển từ \"điều gì đó đã thay đổi\" sang \"chỉ điều bạn quan tâm mới thay đổi\"."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
@@ -1075,26 +998,29 @@ msgstr "Lọc theo ý định"
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 #, python-format
 msgid ""
-"Each watch or tag can carry a plain-text intent — %(ex1)s or %(ex2)s. On "
-"every detected change the AI evaluates the diff against it and suppresses "
-"irrelevant noise."
-msgstr "Mỗi mục giám sát hoặc thẻ có thể mang ý định văn bản thuần túy — %(ex1)s hoặc %(ex2)s. Trên mỗi thay đổi được phát hiện, AI đánh giá sự khác biệt chống lại nó và ngăn chặn tiếng ồn không liên quan."
+"Each watch or tag can carry a plain-text intent — %(ex1)s or %(ex2)s. On every detected change the AI evaluates the "
+"diff against it and suppresses irrelevant noise."
+msgstr ""
+"Mỗi mục giám sát hoặc thẻ có thể mang ý định văn bản thuần túy — %(ex1)s hoặc %(ex2)s. Trên mỗi thay đổi được phát "
+"hiện, AI đánh giá sự khác biệt chống lại nó và ngăn chặn tiếng ồn không liên quan."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 #, python-format
 msgid ""
-"Tip: intent evaluation benefits from a capable model — recommended %(local)s "
-"locally, or %(gpt)s / %(gemini)s. Very small models (≤3B) may misjudge "
-"numeric comparisons."
-msgstr "Mẹo: lợi ích đánh giá mục đích từ một mô hình có khả năng — khuyến nghị %(local)s chạy cục bộ hoặc %(gpt)s/%(gemini)s. Các mô hình rất nhỏ (≤3B) có thể đánh giá sai các so sánh số."
+"Tip: intent evaluation benefits from a capable model — recommended %(local)s locally, or %(gpt)s / %(gemini)s. Very "
+"small models (≤3B) may misjudge numeric comparisons."
+msgstr ""
+"Mẹo: lợi ích đánh giá mục đích từ một mô hình có khả năng — khuyến nghị %(local)s chạy cục bộ hoặc "
+"%(gpt)s/%(gemini)s. Các mô hình rất nhỏ (≤3B) có thể đánh giá sai các so sánh số."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 #, python-format
 msgid ""
-"Instead of raw diffs, receive plain-language summaries in notifications — "
-"%(ex1)s or %(ex2)s. Set a global default prompt here, or override per watch "
-"or tag."
-msgstr "Thay vì các khác biệt thô, hãy nhận các bản tóm tắt bằng ngôn ngữ đơn giản trong thông báo — %(ex1)s hoặc %(ex2)s. Đặt lời nhắc mặc định chung tại đây hoặc ghi đè lên mỗi mục giám sát hoặc thẻ."
+"Instead of raw diffs, receive plain-language summaries in notifications — %(ex1)s or %(ex2)s. Set a global default "
+"prompt here, or override per watch or tag."
+msgstr ""
+"Thay vì các khác biệt thô, hãy nhận các bản tóm tắt bằng ngôn ngữ đơn giản trong thông báo — %(ex1)s hoặc %(ex2)s. "
+"Đặt lời nhắc mặc định chung tại đây hoặc ghi đè lên mỗi mục giám sát hoặc thẻ."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid "Minimal cost"
@@ -1103,10 +1029,11 @@ msgstr "Chi phí tối thiểu"
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 #, python-format
 msgid ""
-"The AI sees only a unified diff of what changed — never full page HTML. Low-"
-"cost models like %(gpt)s or %(gemini)s handle this well, typically fractions "
-"of a cent per check."
-msgstr "AI chỉ thấy một sự khác biệt thống nhất về những gì đã thay đổi — không bao giờ HTML toàn trang. Các mô hình chi phí thấp như %(gpt)s hoặc %(gemini)s xử lý tốt điều này, thường là các phân số của một xu cho mỗi séc."
+"The AI sees only a unified diff of what changed — never full page HTML. Low-cost models like %(gpt)s or %(gemini)s "
+"handle this well, typically fractions of a cent per check."
+msgstr ""
+"AI chỉ thấy một sự khác biệt thống nhất về những gì đã thay đổi — không bao giờ HTML toàn trang. Các mô hình chi phí "
+"thấp như %(gpt)s hoặc %(gemini)s xử lý tốt điều này, thường là các phân số của một xu cho mỗi séc."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid "AI / LLM configured:"
@@ -1125,9 +1052,7 @@ msgid "AI Provider"
 msgstr "\"Nhà cung cấp AI\","
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
-msgid ""
-"Master switch — when off, all AI lookups are skipped even if a provider is "
-"configured below."
+msgid "Master switch — when off, all AI lookups are skipped even if a provider is configured below."
 msgstr "Công tắc chính — khi tắt, tất cả tra cứu AI sẽ bị bỏ qua ngay cả khi nhà cung cấp được định cấu hình bên dưới."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
@@ -1136,64 +1061,71 @@ msgstr "Truyền dữ liệu của bên thứ ba — vui lòng đọc"
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid ""
-"When AI features are active, change data from the websites you monitor — "
-"including page diffs and extracted text — is sent to an external AI provider "
-"of your choice."
-msgstr "Khi các tính năng AI hoạt động, hãy thay đổi dữ liệu từ các trang web bạn theo dõi — bao gồm cả trang khác và văn bản trích xuất — được gửi đến nhà cung cấp AI bên ngoài mà bạn chọn."
+"When AI features are active, change data from the websites you monitor — including page diffs and extracted text — is"
+" sent to an external AI provider of your choice."
+msgstr ""
+"Khi các tính năng AI hoạt động, hãy thay đổi dữ liệu từ các trang web bạn theo dõi — bao gồm cả trang khác và văn bản"
+" trích xuất — được gửi đến nhà cung cấp AI bên ngoài mà bạn chọn."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
-msgid ""
-"You are solely responsible for ensuring this complies with the terms of "
-"service of each website you monitor."
+msgid "You are solely responsible for ensuring this complies with the terms of service of each website you monitor."
 msgstr "Bạn hoàn toàn chịu trách nhiệm đảm bảo điều này tuân thủ các điều khoản dịch vụ của từng trang web mà bạn theo dõi."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid ""
-"You are solely responsible for compliance with applicable data-protection "
-"laws (e.g. GDPR) regarding any personal data that may appear in monitored "
-"content."
-msgstr "Bạn hoàn toàn chịu trách nhiệm tuân thủ luật bảo vệ dữ liệu hiện hành (ví dụ: GDPR) liên quan đến bất kỳ dữ liệu cá nhân nào có thể xuất hiện trong nội dung được giám sát."
+"You are solely responsible for compliance with applicable data-protection laws (e.g. GDPR) regarding any personal "
+"data that may appear in monitored content."
+msgstr ""
+"Bạn hoàn toàn chịu trách nhiệm tuân thủ luật bảo vệ dữ liệu hiện hành (ví dụ: GDPR) liên quan đến bất kỳ dữ liệu cá "
+"nhân nào có thể xuất hiện trong nội dung được giám sát."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid ""
-"API costs charged by your chosen provider are your own responsibility; this "
-"software has no visibility into or control over those charges."
-msgstr "Chi phí API do nhà cung cấp bạn chọn tính là trách nhiệm của riêng bạn; phần mềm này không có khả năng hiển thị hoặc kiểm soát các khoản phí đó."
+"API costs charged by your chosen provider are your own responsibility; this software has no visibility into or "
+"control over those charges."
+msgstr ""
+"Chi phí API do nhà cung cấp bạn chọn tính là trách nhiệm của riêng bạn; phần mềm này không có khả năng hiển thị hoặc "
+"kiểm soát các khoản phí đó."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid ""
-"AI / LLM models are known to hallucinate — producing plausible-sounding but "
-"factually incorrect or entirely fabricated output with apparent confidence — "
-"and by design may omit or truncate relevant data during summarisation. AI "
-"output must never be relied upon as complete or accurate. This software is "
-"provided as-is with no warranty of any kind."
-msgstr "Các mô hình AI / LLM được biết là gây ảo giác — tạo ra âm thanh hợp lý nhưng thực tế không chính xác hoặc hoàn toàn bịa đặt với độ tin cậy rõ ràng — và theo thiết kế có thể bỏ qua hoặc cắt ngắn dữ liệu liên quan trong quá trình tóm tắt. Không bao giờ được dựa vào đầu ra AI là hoàn chỉnh hoặc chính xác. Phần mềm này được cung cấp dưới dạng không có bảo hành dưới bất kỳ hình thức nào."
+"AI / LLM models are known to hallucinate — producing plausible-sounding but factually incorrect or entirely "
+"fabricated output with apparent confidence — and by design may omit or truncate relevant data during summarisation. "
+"AI output must never be relied upon as complete or accurate. This software is provided as-is with no warranty of any "
+"kind."
+msgstr ""
+"Các mô hình AI / LLM được biết là gây ảo giác — tạo ra âm thanh hợp lý nhưng thực tế không chính xác hoặc hoàn toàn "
+"bịa đặt với độ tin cậy rõ ràng — và theo thiết kế có thể bỏ qua hoặc cắt ngắn dữ liệu liên quan trong quá trình tóm "
+"tắt. Không bao giờ được dựa vào đầu ra AI là hoàn chỉnh hoặc chính xác. Phần mềm này được cung cấp dưới dạng không có"
+" bảo hành dưới bất kỳ hình thức nào."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid ""
-"By enabling AI features you personally indemnify and hold harmless the "
-"creator(s) and contributor(s) of this software from any claims, damages, or "
-"liability arising from this data transfer or your use of AI features."
-msgstr "Bằng cách kích hoạt các tính năng AI, cá nhân bạn phải bồi thường và đảm bảo rằng (các) người sáng tạo và (các) người đóng góp của phần mềm này không phải chịu bất kỳ khiếu nại, thiệt hại hoặc trách nhiệm pháp lý nào phát sinh từ việc truyền dữ liệu này hoặc việc bạn sử dụng các tính năng AI."
+"By enabling AI features you personally indemnify and hold harmless the creator(s) and contributor(s) of this software"
+" from any claims, damages, or liability arising from this data transfer or your use of AI features."
+msgstr ""
+"Bằng cách kích hoạt các tính năng AI, cá nhân bạn phải bồi thường và đảm bảo rằng (các) người sáng tạo và (các) người"
+" đóng góp của phần mềm này không phải chịu bất kỳ khiếu nại, thiệt hại hoặc trách nhiệm pháp lý nào phát sinh từ việc"
+" truyền dữ liệu này hoặc việc bạn sử dụng các tính năng AI."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
-msgid ""
-"I have read and understood the above. I accept full responsibility and "
-"indemnify the creator(s) of this software."
-msgstr "Tôi đã đọc và hiểu những điều trên. Tôi hoàn toàn chịu trách nhiệm và bồi thường cho (những) người sáng tạo ra phần mềm này."
+msgid "I have read and understood the above. I accept full responsibility and indemnify the creator(s) of this software."
+msgstr ""
+"Tôi đã đọc và hiểu những điều trên. Tôi hoàn toàn chịu trách nhiệm và bồi thường cho (những) người sáng tạo ra phần "
+"mềm này."
 
-#: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
-#: changedetectionio/templates/_common_fields.html
+#: changedetectionio/blueprint/settings/templates/settings_llm_tab.html changedetectionio/templates/_common_fields.html
 msgid "Note"
 msgstr "Thuyết minh"
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 #, python-format
 msgid ""
-"AI / LLM is configured via environment variables (<code>LLM_MODEL=%(model)s</"
-"code>%(api_base)s). Remove the <code>LLM_MODEL</code> environment variable "
-"to configure via this form instead."
-msgstr "AI / LLM được cấu hình thông qua các biến môi trường (<code>LLM_MODEL=%(model)s</code>%(api_base)s). Loại bỏ biến môi trường <code>LLM_MODEL</code> để định cấu hình thông qua biểu mẫu này thay thế."
+"AI / LLM is configured via environment variables (<code>LLM_MODEL=%(model)s</code>%(api_base)s). Remove the "
+"<code>LLM_MODEL</code> environment variable to configure via this form instead."
+msgstr ""
+"AI / LLM được cấu hình thông qua các biến môi trường (<code>LLM_MODEL=%(model)s</code>%(api_base)s). Loại bỏ biến môi"
+" trường <code>LLM_MODEL</code> để định cấu hình thông qua biểu mẫu này thay thế."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid "select a provider"
@@ -1208,22 +1140,23 @@ msgid "Saved. Use \"Remove provider\" below to change the provider or key."
 msgstr "Đã lưu. Sử dụng \"Xóa nhà cung cấp\" bên dưới để thay đổi nhà cung cấp hoặc mã khóa."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
-msgid ""
-"Only needed for Ollama or custom/self-hosted endpoints. Leave blank for "
-"cloud providers."
+msgid "Only needed for Ollama or custom/self-hosted endpoints. Leave blank for cloud providers."
 msgstr "Chỉ cần thiết cho Ollama hoặc các điểm cuối tùy chỉnh/tự lưu trữ. Để trống cho các nhà cung cấp dịch vụ đám mây."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 #, python-format
 msgid ""
-"Reasoning models (Qwen3, DeepSeek-R1, Gemma 3, etc.) emit chain-of-thought "
-"before the final answer. This multiplier scales every <code>max_tokens</"
-"code> cap for this endpoint to leave reasoning room. Defaults to "
-"%(default)s; raise it if responses come back truncated or empty, lower it "
-"(down to 1x) if you want tighter limits on a paid endpoint. Applied to "
-"Ollama and OpenAI-compatible endpoints — other cloud providers (OpenAI, "
-"Anthropic, Gemini) keep their original tight caps."
-msgstr "Các mô hình lý luận (Qwen3, DeepSeek-R1, Gemma 3, v.v.) phát ra chuỗi suy nghĩ trước câu trả lời cuối cùng. Hệ số nhân này mở rộng mọi giới hạn <code>max_tokens</code> cho điểm cuối này để rời khỏi phòng suy luận. Mặc định là %(default)s; nâng cao nó nếu câu trả lời bị cắt ngắn hoặc trống, hạ thấp nó (xuống 1x) nếu bạn muốn giới hạn chặt chẽ hơn trên một điểm cuối trả tiền. Áp dụng cho các điểm cuối tương thích với Ollama và OpenAI — các nhà cung cấp dịch vụ đám mây khác (OpenAI, Anthropic, Gemini) giữ nguyên giới hạn chặt chẽ ban đầu của họ."
+"Reasoning models (Qwen3, DeepSeek-R1, Gemma 3, etc.) emit chain-of-thought before the final answer. This multiplier "
+"scales every <code>max_tokens</code> cap for this endpoint to leave reasoning room. Defaults to %(default)s; raise it"
+" if responses come back truncated or empty, lower it (down to 1x) if you want tighter limits on a paid endpoint. "
+"Applied to Ollama and OpenAI-compatible endpoints — other cloud providers (OpenAI, Anthropic, Gemini) keep their "
+"original tight caps."
+msgstr ""
+"Các mô hình lý luận (Qwen3, DeepSeek-R1, Gemma 3, v.v.) phát ra chuỗi suy nghĩ trước câu trả lời cuối cùng. Hệ số "
+"nhân này mở rộng mọi giới hạn <code>max_tokens</code> cho điểm cuối này để rời khỏi phòng suy luận. Mặc định là "
+"%(default)s; nâng cao nó nếu câu trả lời bị cắt ngắn hoặc trống, hạ thấp nó (xuống 1x) nếu bạn muốn giới hạn chặt chẽ"
+" hơn trên một điểm cuối trả tiền. Áp dụng cho các điểm cuối tương thích với Ollama và OpenAI — các nhà cung cấp dịch "
+"vụ đám mây khác (OpenAI, Anthropic, Gemini) giữ nguyên giới hạn chặt chẽ ban đầu của họ."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid "Load available models"
@@ -1243,9 +1176,11 @@ msgstr "Nhập tên kiểu máy hoặc chọn từ các kiểu máy có sẵn"
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid ""
-"You can edit the model name directly or load available models above. Click "
-"Save to apply your change. Leave the API key blank to keep your saved key."
-msgstr "Bạn có thể chỉnh sửa tên mô hình trực tiếp hoặc tải các mô hình có sẵn ở trên. Nhấp vào Lưu để áp dụng thay đổi của bạn. Để trống khóa API để giữ khóa đã lưu của bạn."
+"You can edit the model name directly or load available models above. Click Save to apply your change. Leave the API "
+"key blank to keep your saved key."
+msgstr ""
+"Bạn có thể chỉnh sửa tên mô hình trực tiếp hoặc tải các mô hình có sẵn ở trên. Nhấp vào Lưu để áp dụng thay đổi của "
+"bạn. Để trống khóa API để giữ khóa đã lưu của bạn."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid "Change model"
@@ -1264,8 +1199,7 @@ msgid "Remove"
 msgstr "Xóa"
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
-#: changedetectionio/blueprint/ui/templates/clear_all_history.html
-#: changedetectionio/templates/base.html
+#: changedetectionio/blueprint/ui/templates/clear_all_history.html changedetectionio/templates/base.html
 msgid "Cancel"
 msgstr "Hủy"
 
@@ -1279,10 +1213,11 @@ msgstr "Kiểm tra kết nối"
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid ""
-"Your API key is stored locally and sent only to your chosen provider. On "
-"each detected change, the watch's diff and extracted text are sent to the "
-"LLM — no full page HTML."
-msgstr "Khóa API của bạn được lưu trữ cục bộ và chỉ được gửi đến nhà cung cấp bạn đã chọn. Trên mỗi thay đổi được phát hiện, khác biệt của mục giám sát và văn bản trích xuất được gửi đến LLM — không có HTML trang đầy đủ."
+"Your API key is stored locally and sent only to your chosen provider. On each detected change, the watch's diff and "
+"extracted text are sent to the LLM — no full page HTML."
+msgstr ""
+"Khóa API của bạn được lưu trữ cục bộ và chỉ được gửi đến nhà cung cấp bạn đã chọn. Trên mỗi thay đổi được phát hiện, "
+"khác biệt của mục giám sát và văn bản trích xuất được gửi đến LLM — không có HTML trang đầy đủ."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid "Cache"
@@ -1309,17 +1244,18 @@ msgid "Clear all summary cache"
 msgstr "Xóa tất cả bộ nhớ cache tóm tắt"
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
-msgid ""
-"Removes all cached AI change summaries across all watches. They will be "
-"regenerated on the next check."
-msgstr "Xóa tất cả các bản tóm tắt thay đổi AI được lưu trong bộ nhớ cache trên tất cả các mục giám sát. Chúng sẽ được tạo lại ở lần kiểm tra tiếp theo."
+msgid "Removes all cached AI change summaries across all watches. They will be regenerated on the next check."
+msgstr ""
+"Xóa tất cả các bản tóm tắt thay đổi AI được lưu trong bộ nhớ cache trên tất cả các mục giám sát. Chúng sẽ được tạo "
+"lại ở lần kiểm tra tiếp theo."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid ""
-"Enables litellm verbose output (routed through loguru). Useful when "
-"diagnosing provider errors or empty responses. Leave off in production — "
-"generates a lot of log volume."
-msgstr "Cho phép litellm đầu ra dài dòng (được định tuyến thông qua loguru). Hữu ích khi chẩn đoán lỗi của nhà cung cấp hoặc phản hồi trống. Nghỉ phép trong sản xuất — tạo ra rất nhiều khối lượng nhật ký."
+"Enables litellm verbose output (routed through loguru). Useful when diagnosing provider errors or empty responses. "
+"Leave off in production — generates a lot of log volume."
+msgstr ""
+"Cho phép litellm đầu ra dài dòng (được định tuyến thông qua loguru). Hữu ích khi chẩn đoán lỗi của nhà cung cấp hoặc "
+"phản hồi trống. Nghỉ phép trong sản xuất — tạo ra rất nhiều khối lượng nhật ký."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid "Default AI Change Summary"
@@ -1337,35 +1273,41 @@ msgstr "Sửa đổi lời nhắc mặc định"
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 #, python-format
 msgid ""
-"When enabled, the <code>%(diff)s</code> notification token shows the AI "
-"summary instead of the raw diff. Use <code>%(raw_diff)s</code> to always get "
-"the original."
-msgstr "Khi được bật, mã thông báo <code>%(diff)s</code> hiển thị tóm tắt AI thay vì chênh lệch thô. Sử dụng <code>%(raw_diff)s</code> để luôn nhận được bản gốc."
+"When enabled, the <code>%(diff)s</code> notification token shows the AI summary instead of the raw diff. Use "
+"<code>%(raw_diff)s</code> to always get the original."
+msgstr ""
+"Khi được bật, mã thông báo <code>%(diff)s</code> hiển thị tóm tắt AI thay vì chênh lệch thô. Sử dụng "
+"<code>%(raw_diff)s</code> để luôn nhận được bản gốc."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid ""
-"When enabled, the AI will be used as a last resort to extract price and "
-"stock status from product pages where no structured metadata (JSON-LD, "
-"microdata, OpenGraph) is found."
-msgstr "Khi bật, AI sẽ được dùng làm phương án cuối cùng để trích xuất giá và tình trạng kho hàng từ các trang sản phẩm không có siêu dữ liệu cấu trúc (JSON-LD, microdata, OpenGraph)."
+"When enabled, the AI will be used as a last resort to extract price and stock status from product pages where no "
+"structured metadata (JSON-LD, microdata, OpenGraph) is found."
+msgstr ""
+"Khi bật, AI sẽ được dùng làm phương án cuối cùng để trích xuất giá và tình trạng kho hàng từ các trang sản phẩm không"
+" có siêu dữ liệu cấu trúc (JSON-LD, microdata, OpenGraph)."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid ""
-"For Gemini 2.5+ models only. Thinking tokens improve reasoning quality but "
-"count against the output budget. Set to Off if summaries are being cut short."
-msgstr "Chỉ dành cho các mô hình Gemini 2.5+. Thinking tokens giúp cải thiện chất lượng lập luận nhưng tính vào hạn mức đầu ra. Hãy tắt nếu bản tóm tắt bị cắt ngắn."
+"For Gemini 2.5+ models only. Thinking tokens improve reasoning quality but count against the output budget. Set to "
+"Off if summaries are being cut short."
+msgstr ""
+"Chỉ dành cho các mô hình Gemini 2.5+. Thinking tokens giúp cải thiện chất lượng lập luận nhưng tính vào hạn mức đầu "
+"ra. Hãy tắt nếu bản tóm tắt bị cắt ngắn."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid ""
-"Upper limit on tokens the AI may use when writing a change summary. Higher "
-"values allow longer summaries but cost more."
-msgstr "Giới hạn tối đa token mà AI có thể sử dụng khi viết tóm tắt thay đổi. Giá trị cao hơn cho phép tóm tắt dài hơn nhưng tốn phí hơn."
+"Upper limit on tokens the AI may use when writing a change summary. Higher values allow longer summaries but cost "
+"more."
+msgstr ""
+"Giới hạn tối đa token mà AI có thể sử dụng khi viết tóm tắt thay đổi. Giá trị cao hơn cho phép tóm tắt dài hơn nhưng "
+"tốn phí hơn."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
-msgid ""
-"Which baseline the watchlist “Summary” link compares the latest version "
-"against by default."
-msgstr "Phiên bản cơ sở mà liên kết “Tóm tắt” trong danh sách giám sát sẽ dùng để so sánh với phiên bản mới nhất theo mặc định."
+msgid "Which baseline the watchlist “Summary” link compares the latest version against by default."
+msgstr ""
+"Phiên bản cơ sở mà liên kết “Tóm tắt” trong danh sách giám sát sẽ dùng để so sánh với phiên bản mới nhất theo mặc "
+"định."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid "Configure a provider first to unlock behaviour settings."
@@ -1393,8 +1335,7 @@ msgid "All-time total"
 msgstr "Tổng tất cả thời gian"
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
-msgid ""
-"Monthly token budget reached. AI summarisation is paused until next month."
+msgid "Monthly token budget reached. AI summarisation is paused until next month."
 msgstr "Đã đạt hạn mức token hàng tháng. Tính năng tóm tắt AI tạm dừng cho đến tháng sau."
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
@@ -1428,9 +1369,11 @@ msgstr "ký tự — hiện đang áp dụng: %(limit)s"
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid ""
-"tokens — skips AI evaluation on a watch once its usage within the current "
-"period (monthly) hits this cap (0 = unlimited)"
-msgstr "token — bỏ qua đánh giá AI đối với một lượt giám sát khi mức sử dụng trong chu kỳ hiện tại (hàng tháng) chạm hạn mức này (0 = không giới hạn)"
+"tokens — skips AI evaluation on a watch once its usage within the current period (monthly) hits this cap (0 = "
+"unlimited)"
+msgstr ""
+"token — bỏ qua đánh giá AI đối với một lượt giám sát khi mức sử dụng trong chu kỳ hiện tại (hàng tháng) chạm hạn mức "
+"này (0 = không giới hạn)"
 
 #: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
 msgid "No AI usage recorded yet."
@@ -1505,9 +1448,17 @@ msgid "Failed"
 msgstr "Thất bại"
 
 #: changedetectionio/blueprint/tags/__init__.py
+msgid "Top-level group"
+msgstr "Nhóm gốc"
+
+#: changedetectionio/blueprint/tags/__init__.py
 #, python-brace-format
 msgid "The tag \"{}\" already exists"
 msgstr "Thẻ \"{}\" đã tồn tại"
+
+#: changedetectionio/blueprint/tags/__init__.py
+msgid "Invalid parent group"
+msgstr "Nhóm cha không hợp lệ"
 
 #: changedetectionio/blueprint/tags/__init__.py
 msgid "Tag added"
@@ -1534,6 +1485,10 @@ msgid "Updated"
 msgstr "Đã cập nhật"
 
 #: changedetectionio/blueprint/tags/form.py
+msgid "Parent group"
+msgstr "Nhóm cha"
+
+#: changedetectionio/blueprint/tags/form.py
 msgid "Activate for individual watches in this tag/group?"
 msgstr "Kích hoạt cho từng mục giám sát trong thẻ/nhóm này?"
 
@@ -1545,8 +1500,7 @@ msgstr "Tự động áp dụng cho các mục giám sát có URL khớp với"
 msgid "e.g. *://example.com/* or github.com/myorg"
 msgstr "ví dụ: *://example.com/* hoặc github.com/myorg"
 
-#: changedetectionio/blueprint/tags/form.py
-#: changedetectionio/blueprint/tags/templates/edit-tag.html
+#: changedetectionio/blueprint/tags/form.py changedetectionio/blueprint/tags/templates/edit-tag.html
 msgid "Tag colour"
 msgstr "Màu thẻ"
 
@@ -1574,17 +1528,17 @@ msgstr "Để tùy chỉnh cho từng mục giám sát"
 msgid "Tag name"
 msgstr "Tên thẻ"
 
-#: changedetectionio/blueprint/tags/templates/edit-tag.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/tags/templates/edit-tag.html changedetectionio/blueprint/ui/templates/edit.html
 msgid "Filters & Triggers"
 msgstr "Bộ lọc & Trình kích hoạt"
 
 #: changedetectionio/blueprint/tags/templates/edit-tag.html
 msgid ""
-"Automatically applies this tag to any watch whose URL matches. Supports "
-"wildcards: <code>*example.com*</code> or plain substring: <code>github.com/"
-"myorg</code>"
-msgstr "Tự động áp dụng thẻ này cho bất kỳ mục giám sát nào có URL khớp. Hỗ trợ ký tự đại diện: <code>*example.com*</code> hoặc chuỗi con: <code>github.com/myorg</code>"
+"Automatically applies this tag to any watch whose URL matches. Supports wildcards: <code>*example.com*</code> or "
+"plain substring: <code>github.com/myorg</code>"
+msgstr ""
+"Tự động áp dụng thẻ này cho bất kỳ mục giám sát nào có URL khớp. Hỗ trợ ký tự đại diện: <code>*example.com*</code> "
+"hoặc chuỗi con: <code>github.com/myorg</code>"
 
 #: changedetectionio/blueprint/tags/templates/edit-tag.html
 msgid "Currently matching watches"
@@ -1600,48 +1554,39 @@ msgstr "Để trống để sử dụng màu tự động tạo dựa trên tên
 
 #. CJK fonts lack native italics; allow substitution with conventional local styling. dennis-ignore: W303
 #: changedetectionio/blueprint/tags/templates/edit-tag.html
-msgid ""
-"These settings are <strong><i>added</i></strong> to any existing watch "
-"configurations."
+msgid "These settings are <strong><i>added</i></strong> to any existing watch configurations."
 msgstr "Các thiết lập này được <strong><i>thêm vào</i></strong> bất kỳ cấu hình giám sát hiện có nào."
 
-#: changedetectionio/blueprint/tags/templates/edit-tag.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/tags/templates/edit-tag.html changedetectionio/blueprint/ui/templates/edit.html
 msgid "Text filtering"
 msgstr "Lọc văn bản"
 
-#: changedetectionio/blueprint/tags/templates/edit-tag.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/tags/templates/edit-tag.html changedetectionio/blueprint/ui/templates/edit.html
 msgid "Use with caution!"
 msgstr "Hãy thận trọng!"
 
-#: changedetectionio/blueprint/tags/templates/edit-tag.html
-#: changedetectionio/blueprint/ui/templates/edit.html
-msgid ""
-"This will easily fill up your email storage quota or flood other storages."
+#: changedetectionio/blueprint/tags/templates/edit-tag.html changedetectionio/blueprint/ui/templates/edit.html
+msgid "This will easily fill up your email storage quota or flood other storages."
 msgstr "Điều này sẽ dễ dàng làm đầy hạn mức lưu trữ email hoặc làm tràn các kho lưu trữ khác."
 
-#: changedetectionio/blueprint/tags/templates/edit-tag.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/tags/templates/edit-tag.html changedetectionio/blueprint/ui/templates/edit.html
 msgid "Look out!"
 msgstr "Chú ý!"
 
-#: changedetectionio/blueprint/tags/templates/edit-tag.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/tags/templates/edit-tag.html changedetectionio/blueprint/ui/templates/edit.html
 msgid "Lookout!"
 msgstr "Chú ý!"
 
-#: changedetectionio/blueprint/tags/templates/edit-tag.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/tags/templates/edit-tag.html changedetectionio/blueprint/ui/templates/edit.html
 #, python-format
 msgid ""
-"There are <a href=\"%(url)s\">system-wide notification URLs enabled</a>, "
-"this form will override notification settings for this watch only &dash; an "
-"empty Notification URL list here will still send notifications."
-msgstr "Có <a href=\"%(url)s\">các URL thông báo toàn hệ thống đang được bật</a>, biểu mẫu này sẽ ghi đè cài đặt thông báo chỉ cho mục giám sát này &dash; danh sách URL thông báo trống ở đây vẫn sẽ gửi thông báo."
+"There are <a href=\"%(url)s\">system-wide notification URLs enabled</a>, this form will override notification "
+"settings for this watch only &dash; an empty Notification URL list here will still send notifications."
+msgstr ""
+"Có <a href=\"%(url)s\">các URL thông báo toàn hệ thống đang được bật</a>, biểu mẫu này sẽ ghi đè cài đặt thông báo "
+"chỉ cho mục giám sát này &dash; danh sách URL thông báo trống ở đây vẫn sẽ gửi thông báo."
 
-#: changedetectionio/blueprint/tags/templates/edit-tag.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/tags/templates/edit-tag.html changedetectionio/blueprint/ui/templates/edit.html
 msgid "Use system defaults"
 msgstr "Sử dụng mặc định hệ thống"
 
@@ -1650,9 +1595,7 @@ msgid "Add a new organisational tag / group name."
 msgstr "Thêm thẻ tổ chức / tên nhóm mới."
 
 #: changedetectionio/blueprint/tags/templates/groups-overview.html
-msgid ""
-"Groups allows you to manage filters and notifications for multiple watches "
-"under a single organisational tag."
+msgid "Groups allows you to manage filters and notifications for multiple watches under a single organisational tag."
 msgstr "Nhóm cho phép bạn quản lý bộ lọc và thông báo cho nhiều mục giám sát dưới một thẻ tổ chức duy nhất."
 
 #: changedetectionio/blueprint/tags/templates/groups-overview.html
@@ -1667,8 +1610,7 @@ msgstr "Tên thẻ / Nhãn"
 msgid "No website organisational tags/groups configured"
 msgstr "Chưa cấu hình thẻ tổ chức/nhóm website nào"
 
-#: changedetectionio/blueprint/tags/templates/groups-overview.html
-#: changedetectionio/templates/menu.html
+#: changedetectionio/blueprint/tags/templates/groups-overview.html changedetectionio/templates/menu.html
 msgid "Mute notifications"
 msgstr "Tắt thông báo"
 
@@ -1678,8 +1620,7 @@ msgstr "Tắt thông báo"
 msgid "Recheck"
 msgstr "Kiểm tra lại"
 
-#: changedetectionio/blueprint/tags/templates/groups-overview.html
-#: changedetectionio/blueprint/ui/edit.py
+#: changedetectionio/blueprint/tags/templates/groups-overview.html changedetectionio/blueprint/ui/edit.py
 #: changedetectionio/blueprint/watchlist/templates/watch-overview-single-row.html
 msgid "Edit"
 msgstr "Chỉnh sửa"
@@ -1690,15 +1631,11 @@ msgstr "Xóa nhóm?"
 
 #: changedetectionio/blueprint/tags/templates/groups-overview.html
 #, python-format
-msgid ""
-"<p>Are you sure you want to delete group <strong>%(title)s</strong>?</"
-"p><p>This action cannot be undone.</p>"
+msgid "<p>Are you sure you want to delete group <strong>%(title)s</strong>?</p><p>This action cannot be undone.</p>"
 msgstr "<p>Bạn có chắc muốn xóa nhóm <strong>%(title)s</strong>?</p><p>Hành động này không thể hoàn tác.</p>"
 
-#: changedetectionio/blueprint/tags/templates/groups-overview.html
-#: changedetectionio/blueprint/ui/templates/edit.html
-#: changedetectionio/blueprint/watchlist/templates/watch-overview.html
-#: changedetectionio/templates/base.html
+#: changedetectionio/blueprint/tags/templates/groups-overview.html changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/watchlist/templates/watch-overview.html changedetectionio/templates/base.html
 msgid "Delete"
 msgstr "Xóa"
 
@@ -1713,12 +1650,13 @@ msgstr "Hủy liên kết nhóm?"
 #: changedetectionio/blueprint/tags/templates/groups-overview.html
 #, python-format
 msgid ""
-"<p>Are you sure you want to unlink all watches from group <strong>%(title)s</"
-"strong>?</p><p>The tag will be kept but watches will be removed from it.</p>"
-msgstr "<p>Bạn có chắc muốn hủy liên kết tất cả mục giám sát khỏi nhóm <strong>%(title)s</strong>?</p><p>Thẻ sẽ được giữ lại nhưng các mục giám sát sẽ bị gỡ bỏ.</p>"
+"<p>Are you sure you want to unlink all watches from group <strong>%(title)s</strong>?</p><p>The tag will be kept but "
+"watches will be removed from it.</p>"
+msgstr ""
+"<p>Bạn có chắc muốn hủy liên kết tất cả mục giám sát khỏi nhóm <strong>%(title)s</strong>?</p><p>Thẻ sẽ được giữ lại "
+"nhưng các mục giám sát sẽ bị gỡ bỏ.</p>"
 
-#: changedetectionio/blueprint/tags/templates/groups-overview.html
-#: changedetectionio/templates/base.html
+#: changedetectionio/blueprint/tags/templates/groups-overview.html changedetectionio/templates/base.html
 msgid "Unlink"
 msgstr "Hủy liên kết"
 
@@ -1726,8 +1664,7 @@ msgstr "Hủy liên kết"
 msgid "Keep the tag but unlink any watches"
 msgstr "Giữ lại thẻ nhưng hủy liên kết các mục giám sát"
 
-#: changedetectionio/blueprint/tags/templates/groups-overview.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/tags/templates/groups-overview.html changedetectionio/blueprint/ui/templates/edit.html
 msgid "RSS Feed for this watch"
 msgstr "Nguồn cấp RSS cho mục giám sát này"
 
@@ -1804,8 +1741,7 @@ msgstr "Proxy được chọn không hợp lệ"
 msgid "{} watches were tagged"
 msgstr "Đã gắn thẻ cho {} lượt giám sát"
 
-#: changedetectionio/blueprint/ui/__init__.py
-#: changedetectionio/blueprint/watchlist/__init__.py
+#: changedetectionio/blueprint/ui/__init__.py changedetectionio/blueprint/watchlist/__init__.py
 msgid "Watch not found"
 msgstr "Không tìm thấy lượt giám sát"
 
@@ -1814,8 +1750,7 @@ msgstr "Không tìm thấy lượt giám sát"
 msgid "Cleared snapshot history for watch {}"
 msgstr "Đã xóa lịch sử ảnh chụp cho lượt giám sát {}"
 
-#: changedetectionio/blueprint/ui/__init__.py
-#: changedetectionio/blueprint/ui/templates/clear_all_history.html
+#: changedetectionio/blueprint/ui/__init__.py changedetectionio/blueprint/ui/templates/clear_all_history.html
 msgid "clear"
 msgstr "xóa"
 
@@ -1850,9 +1785,7 @@ msgstr "Đã đưa 1 lượt giám sát vào hàng đợi để kiểm tra lại
 
 #: changedetectionio/blueprint/ui/__init__.py
 #, python-brace-format
-msgid ""
-"Queued {count} watches for rechecking ({skipped_count} already queued or "
-"running)."
+msgid "Queued {count} watches for rechecking ({skipped_count} already queued or running)."
 msgstr "Đã đưa {count} lượt giám sát vào hàng đợi để kiểm tra lại ({skipped_count} lượt đã trong hàng đợi hoặc đang chạy)."
 
 #: changedetectionio/blueprint/ui/__init__.py
@@ -1866,31 +1799,24 @@ msgstr "Đang đưa các lượt giám sát vào hàng đợi kiểm tra lại t
 
 #: changedetectionio/blueprint/ui/__init__.py
 #, python-brace-format
-msgid ""
-"Could not share, something went wrong while communicating with the share "
-"server - {}"
+msgid "Could not share, something went wrong while communicating with the share server - {}"
 msgstr "Không thể chia sẻ, đã xảy ra lỗi khi kết nối với máy chủ chia sẻ - {}"
 
 #: changedetectionio/blueprint/ui/__init__.py
 msgid "Language set to auto-detect from browser"
 msgstr "Ngôn ngữ được đặt tự động nhận diện từ trình duyệt"
 
-#: changedetectionio/blueprint/ui/diff.py
-#: changedetectionio/blueprint/ui/preview.py
+#: changedetectionio/blueprint/ui/diff.py changedetectionio/blueprint/ui/preview.py
 msgid "No history found for the specified link, bad link?"
 msgstr "Không tìm thấy lịch sử cho liên kết này, liên kết bị sai?"
 
 #: changedetectionio/blueprint/ui/diff.py
-msgid ""
-"Not enough history (2 snapshots required) to show difference page for this "
-"watch."
+msgid "Not enough history (2 snapshots required) to show difference page for this watch."
 msgstr "Không đủ lịch sử (cần 2 ảnh chụp) để hiển thị trang so sánh cho mục giám sát này."
 
 #: changedetectionio/blueprint/ui/diff.py
 #, python-format
-msgid ""
-"Monthly AI token budget of %(budget)s tokens reached (%(used)s used). Resets "
-"next month."
+msgid "Monthly AI token budget of %(budget)s tokens reached (%(used)s used). Resets next month."
 msgstr "Đã đạt hạn mức token AI hàng tháng %(budget)s token (đã dùng %(used)s). Sẽ reset vào tháng sau."
 
 #: changedetectionio/blueprint/ui/edit.py
@@ -1909,9 +1835,7 @@ msgstr "Đã chuyển sang chế độ - {}."
 
 #: changedetectionio/blueprint/ui/edit.py
 #, python-brace-format
-msgid ""
-"Could not load '{}' processor, processor plugin might be missing. Please "
-"select a different processor."
+msgid "Could not load '{}' processor, processor plugin might be missing. Please select a different processor."
 msgstr "Không thể tải bộ xử lý '{}', có thể thiếu plugin bộ xử lý. Vui lòng chọn bộ xử lý khác."
 
 #: changedetectionio/blueprint/ui/edit.py
@@ -1919,13 +1843,11 @@ msgstr "Không thể tải bộ xử lý '{}', có thể thiếu plugin bộ x�
 msgid "Could not load '{}' processor, processor plugin might be missing."
 msgstr "Không thể tải bộ xử lý '{}', có thể thiếu plugin bộ xử lý."
 
-#: changedetectionio/blueprint/ui/edit.py
-#: changedetectionio/blueprint/watchlist/templates/watch-overview.html
+#: changedetectionio/blueprint/ui/edit.py changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "System settings default"
 msgstr "Mặc định cài đặt hệ thống"
 
-#: changedetectionio/blueprint/ui/edit.py
-#: changedetectionio/blueprint/watchlist/templates/watch-overview.html
+#: changedetectionio/blueprint/ui/edit.py changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "Default"
 msgstr "Mặc định"
 
@@ -1945,8 +1867,7 @@ msgstr "Không có bản xem trước - Chưa hoàn tất việc lấy/kiểm tr
 msgid "Diff"
 msgstr "So sánh"
 
-#: changedetectionio/blueprint/ui/queue.py
-#: changedetectionio/blueprint/watchlist/__init__.py
+#: changedetectionio/blueprint/ui/queue.py changedetectionio/blueprint/watchlist/__init__.py
 #, python-brace-format
 msgid "displaying <b>{start} - {end}</b> {record_name} in total <b>{total}</b>"
 msgstr "hiển thị <b>{start} - {end}</b> {record_name} trên tổng số <b>{total}</b>"
@@ -1961,9 +1882,7 @@ msgid "Queue cleared ({} items removed)."
 msgstr "Đã xóa hàng đợi (loại bỏ {} mục)."
 
 #: changedetectionio/blueprint/ui/templates/clear_all_history.html
-msgid ""
-"This will remove version history (snapshots) for ALL watches, but keep your "
-"list of URLs!"
+msgid "This will remove version history (snapshots) for ALL watches, but keep your list of URLs!"
 msgstr "Thao tác này sẽ xóa lịch sử ảnh chụp của TẤT CẢ mục giám sát, nhưng vẫn giữ lại danh sách URL!"
 
 #. FIXME: fragment msgids (#4074)
@@ -2051,41 +1970,34 @@ msgid "Removed"
 msgstr "Đã xóa"
 
 #. 'Added' is a noun label for a diff display filter (toggles added lines), not a verb phrase or status badge
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/blueprint/ui/templates/edit.html
 msgctxt "diff filter"
 msgid "Added"
 msgstr "Đã thêm"
 
 #. 'Replaced' is a noun label for a diff display filter (toggles replaced lines), not a verb phrase or status badge
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/blueprint/ui/templates/edit.html
 msgctxt "diff filter"
 msgid "Replaced"
 msgstr "Đã thay thế"
 
 #: changedetectionio/blueprint/ui/templates/diff.html
-msgid ""
-"Include all intermediate snapshots between the selected versions in the AI "
-"summary"
+msgid "Include all intermediate snapshots between the selected versions in the AI summary"
 msgstr "Bao gồm tất cả ảnh chụp trung gian giữa các phiên bản đã chọn trong tóm tắt AI"
 
 #: changedetectionio/blueprint/ui/templates/diff.html
 msgid "AI: every change between versions"
 msgstr "AI: mọi thay đổi giữa các phiên bản"
 
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/blueprint/ui/templates/preview.html
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/blueprint/ui/templates/preview.html
 msgid "Keyboard:"
 msgstr "Bàn phím:"
 
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/blueprint/ui/templates/preview.html
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/blueprint/ui/templates/preview.html
 msgid "Previous"
 msgstr "Trước"
 
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/blueprint/ui/templates/preview.html
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/blueprint/ui/templates/preview.html
 msgid "Next"
 msgstr "Tiếp"
 
@@ -2097,31 +2009,26 @@ msgstr "Nhảy đến thay đổi tiếp theo"
 msgid "Jump"
 msgstr "Nhảy"
 
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/blueprint/ui/templates/preview.html
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/blueprint/ui/templates/preview.html
 #: changedetectionio/processors/templates/extract.html
 msgid "Error Text"
 msgstr "Văn bản lỗi"
 
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/blueprint/ui/templates/preview.html
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/blueprint/ui/templates/preview.html
 #: changedetectionio/processors/templates/extract.html
 msgid "Error Screenshot"
 msgstr "Ảnh chụp màn hình lỗi"
 
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/blueprint/ui/templates/preview.html
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/blueprint/ui/templates/preview.html
 #: changedetectionio/processors/templates/extract.html
 msgid "Text"
 msgstr "Văn bản"
 
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/processors/templates/extract.html
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/processors/templates/extract.html
 msgid "Screenshot"
 msgstr "Ảnh chụp màn hình"
 
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/processors/extract.py
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/processors/extract.py
 #: changedetectionio/processors/templates/extract.html
 msgid "Extract Data"
 msgstr "Trích xuất dữ liệu"
@@ -2130,8 +2037,7 @@ msgstr "Trích xuất dữ liệu"
 msgid "seconds ago."
 msgstr "giây trước."
 
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/blueprint/ui/templates/preview.html
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/blueprint/ui/templates/preview.html
 msgid "seconds ago"
 msgstr "giây trước"
 
@@ -2140,13 +2046,10 @@ msgid "Current error-ing screenshot from most recent request"
 msgstr "Ảnh chụp màn hình lỗi hiện tại từ yêu cầu gần nhất"
 
 #: changedetectionio/blueprint/ui/templates/diff.html
-msgid ""
-"Pro-tip: You can enable <strong>\"share access when password is enabled\"</"
-"strong> from settings."
+msgid "Pro-tip: You can enable <strong>\"share access when password is enabled\"</strong> from settings."
 msgstr "Mẹo: Bạn có thể bật <strong>\"share access when password is enabled\"</strong> trong cài đặt."
 
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/blueprint/watchlist/templates/watch-overview.html
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "Generating change summary…"
 msgstr "Đang tạo tóm tắt thay đổi…"
 
@@ -2162,21 +2065,18 @@ msgstr "Bôi đen văn bản để chia sẻ hoặc thêm vào danh sách bỏ q
 msgid "Download difference patch"
 msgstr "Tải xuống bản vá thay đổi"
 
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/blueprint/ui/templates/preview.html
-msgid ""
-"For now, Differences are performed on text, not graphically, only the latest "
-"screenshot is available."
-msgstr "Hiện tại, việc so sánh thay đổi được thực hiện trên văn bản, không phải đồ họa, chỉ có ảnh chụp màn hình mới nhất là khả dụng."
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/blueprint/ui/templates/preview.html
+msgid "For now, Differences are performed on text, not graphically, only the latest screenshot is available."
+msgstr ""
+"Hiện tại, việc so sánh thay đổi được thực hiện trên văn bản, không phải đồ họa, chỉ có ảnh chụp màn hình mới nhất là "
+"khả dụng."
 
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/blueprint/ui/templates/preview.html
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/blueprint/ui/templates/preview.html
 #: changedetectionio/processors/restock_diff/templates/restock_diff/difference.html
 msgid "Current screenshot from most recent request"
 msgstr "Ảnh chụp màn hình hiện tại từ yêu cầu gần nhất"
 
-#: changedetectionio/blueprint/ui/templates/diff.html
-#: changedetectionio/blueprint/ui/templates/preview.html
+#: changedetectionio/blueprint/ui/templates/diff.html changedetectionio/blueprint/ui/templates/preview.html
 #: changedetectionio/processors/restock_diff/templates/restock_diff/difference.html
 msgid "No screenshot available just yet! Try rechecking the page."
 msgstr "Hiện chưa có ảnh chụp màn hình! Hãy thử kiểm tra lại trang."
@@ -2231,9 +2131,7 @@ msgid "Also automatically applied by URL pattern:"
 msgstr "Đồng thời tự động áp dụng theo mẫu URL:"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
-msgid ""
-"Automatically uses the page title if found, you can also use your own title/"
-"description here"
+msgid "Automatically uses the page title if found, you can also use your own title/description here"
 msgstr "Tự động dùng tiêu đề trang nếu tìm thấy, bạn cũng có thể tự nhập tiêu đề/mô tả tại đây"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
@@ -2241,10 +2139,10 @@ msgid "Extra Page Title and Link options"
 msgstr "Tùy chọn bổ sung cho Tiêu đề trang và Liên kết"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
-msgid ""
-"Optional - links in the list, history and notifications open this URL "
-"instead. Does not change the URL being checked."
-msgstr "Không bắt buộc - các liên kết trong danh sách, lịch sử và thông báo sẽ mở URL này thay thế. Không làm thay đổi URL đang được giám sát."
+msgid "Optional - links in the list, history and notifications open this URL instead. Does not change the URL being checked."
+msgstr ""
+"Không bắt buộc - các liên kết trong danh sách, lịch sử và thông báo sẽ mở URL này thay thế. Không làm thay đổi URL "
+"đang được giám sát."
 
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid "The interval/amount of time between each check."
@@ -2275,9 +2173,7 @@ msgid "Show advanced options"
 msgstr "Hiện tùy chọn nâng cao"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
-msgid ""
-"Run this code before performing change detection, handy for filling in "
-"fields and other actions"
+msgid "Run this code before performing change detection, handy for filling in fields and other actions"
 msgstr "Chạy mã này trước khi kiểm tra thay đổi, hữu ích để điền trường và các tác vụ khác"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
@@ -2329,15 +2225,16 @@ msgid "Press \"Play\" to start."
 msgstr "Nhấn \"Play\" để bắt đầu."
 
 #: changedetectionio/blueprint/ui/templates/edit.html
-msgid ""
-"Visual Selector data is not ready, watch needs to be checked atleast once."
+msgid "Visual Selector data is not ready, watch needs to be checked atleast once."
 msgstr "Dữ liệu bộ chọn trực quan chưa sẵn sàng, lượt giám sát cần được kiểm tra ít nhất một lần."
 
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid ""
-"Sorry, this functionality only works with fetchers that support interactive "
-"Javascript (so far only Playwright based fetchers)"
-msgstr "Rất tiếc, chức năng này chỉ hoạt động với các fetcher hỗ trợ interactive Javascript (hiện tại chỉ có các fetcher dựa trên Playwright)"
+"Sorry, this functionality only works with fetchers that support interactive Javascript (so far only Playwright based "
+"fetchers)"
+msgstr ""
+"Rất tiếc, chức năng này chỉ hoạt động với các fetcher hỗ trợ interactive Javascript (hiện tại chỉ có các fetcher dựa "
+"trên Playwright)"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid "to one that supports interactive Javascript."
@@ -2354,14 +2251,14 @@ msgstr "Thiết lập phương thức lấy dữ liệu"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid ""
-"Sends a notification when the filter can no longer be seen on the page, good "
-"for knowing when the page changed and your filter will not work anymore."
-msgstr "Gửi thông báo khi không còn tìm thấy bộ lọc trên trang, giúp bạn biết khi nào trang thay đổi và bộ lọc không còn hoạt động."
+"Sends a notification when the filter can no longer be seen on the page, good for knowing when the page changed and "
+"your filter will not work anymore."
+msgstr ""
+"Gửi thông báo khi không còn tìm thấy bộ lọc trên trang, giúp bạn biết khi nào trang thay đổi và bộ lọc không còn hoạt"
+" động."
 
 #: changedetectionio/blueprint/ui/templates/edit.html
-msgid ""
-"Use the verify (✓) button to test if a condition passes against the current "
-"snapshot."
+msgid "Use the verify (✓) button to test if a condition passes against the current snapshot."
 msgstr "Sử dụng nút xác minh (✓) để kiểm tra xem điều kiện có khớp với ảnh chụp hiện tại hay không."
 
 #. FIXME: fragment msgids (#4074)
@@ -2391,10 +2288,11 @@ msgstr "Giới hạn trigger/ignore/block/extract cho;"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid ""
-"Note: Depending on the length and similarity of the text on each line, the "
-"algorithm may consider an <strong>addition</strong> instead of "
-"<strong>replacement</strong> for example."
-msgstr "Lưu ý: Tùy thuộc vào độ dài và sự tương đồng của văn bản trên mỗi dòng, thuật toán có thể coi là <strong>addition</strong> thay vì <strong>replacement</strong> chẳng hạn."
+"Note: Depending on the length and similarity of the text on each line, the algorithm may consider an "
+"<strong>addition</strong> instead of <strong>replacement</strong> for example."
+msgstr ""
+"Lưu ý: Tùy thuộc vào độ dài và sự tương đồng của văn bản trên mỗi dòng, thuật toán có thể coi là "
+"<strong>addition</strong> thay vì <strong>replacement</strong> chẳng hạn."
 
 #. FIXME: fragment msgids (#4074)
 #: changedetectionio/blueprint/ui/templates/edit.html
@@ -2424,17 +2322,18 @@ msgstr "Chỉ kích hoạt khi xuất hiện các dòng duy nhất"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid ""
-"Good for websites that just move the content around, and you want to know "
-"when NEW content is added, compares new lines against all history for this "
-"watch."
-msgstr "Phù hợp cho các trang web chỉ di chuyển nội dung, và bạn muốn biết khi nội dung MỚI được thêm vào; so sánh các dòng mới với toàn bộ lịch sử của lượt giám sát này."
+"Good for websites that just move the content around, and you want to know when NEW content is added, compares new "
+"lines against all history for this watch."
+msgstr ""
+"Phù hợp cho các trang web chỉ di chuyển nội dung, và bạn muốn biết khi nội dung MỚI được thêm vào; so sánh các dòng "
+"mới với toàn bộ lịch sử của lượt giám sát này."
 
 #. CJK fonts lack native italics; allow substitution with conventional local styling. dennis-ignore: W303
 #: changedetectionio/blueprint/ui/templates/edit.html
-msgid ""
-"Helps reduce changes detected caused by sites shuffling lines around, "
-"combine with <i>check unique lines</i> below."
-msgstr "Giúp giảm thiểu các thay đổi bị phát hiện do trang web xáo trộn các dòng, kết hợp với <i>check unique lines</i> bên dưới."
+msgid "Helps reduce changes detected caused by sites shuffling lines around, combine with <i>check unique lines</i> below."
+msgstr ""
+"Giúp giảm thiểu các thay đổi bị phát hiện do trang web xáo trộn các dòng, kết hợp với <i>check unique lines</i> bên "
+"dưới."
 
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid "Remove any whitespace before and after each line of text"
@@ -2459,8 +2358,8 @@ msgstr "văn bản"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid ""
-"elements that will be used for the change detection. It automatically fills-"
-"in the filters in the \"CSS/JSONPath/JQ/XPath Filters\" box of the"
+"elements that will be used for the change detection. It automatically fills-in the filters in the "
+"\"CSS/JSONPath/JQ/XPath Filters\" box of the"
 msgstr "phần tử sẽ được dùng để phát hiện thay đổi. Công cụ này tự động điền bộ lọc vào ô \"bộ lọc CSS/JSONPath/JQ/XPath\" của"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
@@ -2488,9 +2387,7 @@ msgid "One moment, fetching screenshot and element information.."
 msgstr "Vui lòng đợi, đang lấy ảnh chụp màn hình và thông tin phần tử..."
 
 #: changedetectionio/blueprint/ui/templates/edit.html
-msgid ""
-"Sorry, this functionality only works with fetchers that support Javascript "
-"and screenshots (such as playwright etc)."
+msgid "Sorry, this functionality only works with fetchers that support Javascript and screenshots (such as playwright etc)."
 msgstr "Xin lỗi, chức năng này chỉ hoạt động với các fetcher hỗ trợ Javascript và chụp ảnh màn hình (như playwright, v.v.)."
 
 #: changedetectionio/blueprint/ui/templates/edit.html
@@ -2521,13 +2418,11 @@ msgstr "Số thông báo cảnh báo"
 msgid "Server type reply"
 msgstr "Phản hồi loại máy chủ"
 
-#: changedetectionio/blueprint/ui/templates/edit.html
-#: changedetectionio/widgets/ternary_boolean.py
+#: changedetectionio/blueprint/ui/templates/edit.html changedetectionio/widgets/ternary_boolean.py
 msgid "Yes"
 msgstr "Có"
 
-#: changedetectionio/blueprint/ui/templates/edit.html
-#: changedetectionio/widgets/ternary_boolean.py
+#: changedetectionio/blueprint/ui/templates/edit.html changedetectionio/widgets/ternary_boolean.py
 msgid "No"
 msgstr "Không"
 
@@ -2568,9 +2463,7 @@ msgid "Are you sure you want to clear all history for:"
 msgstr "Bạn có chắc chắn muốn xóa toàn bộ lịch sử cho:"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
-msgid ""
-"This will remove all snapshots and previous versions. This action cannot be "
-"undone."
+msgid "This will remove all snapshots and previous versions. This action cannot be undone."
 msgstr "Thao tác này sẽ xóa tất cả ảnh chụp và các phiên bản trước đó. Hành động này không thể hoàn tác."
 
 #: changedetectionio/blueprint/ui/templates/edit.html
@@ -2595,9 +2488,7 @@ msgid "Current erroring screenshot from most recent request"
 msgstr "Ảnh chụp màn hình lỗi từ yêu cầu gần nhất"
 
 #: changedetectionio/blueprint/ui/templates/preview.html
-msgid ""
-"Screenshot requires a Content Fetcher ( Sockpuppetbrowser, selenium, etc ) "
-"that supports screenshots."
+msgid "Screenshot requires a Content Fetcher ( Sockpuppetbrowser, selenium, etc ) that supports screenshots."
 msgstr "Ảnh chụp màn hình yêu cầu Content Fetcher (Sockpuppetbrowser, selenium, v.v.) có hỗ trợ chụp màn hình."
 
 #: changedetectionio/blueprint/ui/templates/queue.html
@@ -2642,9 +2533,7 @@ msgid "Check queue"
 msgstr "Kiểm tra hàng đợi"
 
 #: changedetectionio/blueprint/ui/templates/queue.html
-msgid ""
-"Live view of what the workers are doing right now and what is waiting in "
-"line."
+msgid "Live view of what the workers are doing right now and what is waiting in line."
 msgstr "Xem trực tiếp các worker đang làm gì và các tác vụ đang chờ."
 
 #: changedetectionio/blueprint/ui/templates/queue.html
@@ -2665,10 +2554,10 @@ msgid "Clear Queue?"
 msgstr "Xóa hàng đợi?"
 
 #: changedetectionio/blueprint/ui/templates/queue.html
-msgid ""
-"<p>This will remove every pending check from the queue.</p><p>Running checks "
-"will continue.</p>"
-msgstr "<p>Thao tác này sẽ xóa mọi lượt kiểm tra đang chờ khỏi hàng đợi.</p><p>Các lượt kiểm tra đang chạy vẫn sẽ tiếp tục.</p>"
+msgid "<p>This will remove every pending check from the queue.</p><p>Running checks will continue.</p>"
+msgstr ""
+"<p>Thao tác này sẽ xóa mọi lượt kiểm tra đang chờ khỏi hàng đợi.</p><p>Các lượt kiểm tra đang chạy vẫn sẽ tiếp "
+"tục.</p>"
 
 #: changedetectionio/blueprint/ui/templates/queue.html
 msgid "Clear"
@@ -2780,8 +2669,7 @@ msgctxt "timestamp"
 msgid "Checked"
 msgstr "Đã kiểm tra"
 
-#: changedetectionio/blueprint/watchlist/templates/watch-overview-single-row.html
-#: changedetectionio/templates/base.html
+#: changedetectionio/blueprint/watchlist/templates/watch-overview-single-row.html changedetectionio/templates/base.html
 #: changedetectionio/templates/sidebar-nav.html
 msgid "Checking now"
 msgstr "Đang kiểm tra"
@@ -2807,8 +2695,7 @@ msgid "Preview"
 msgstr "Xem trước"
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
-msgid ""
-"Changedetection.io can monitor more than just web-pages! See our plugins!"
+msgid "Changedetection.io can monitor more than just web-pages! See our plugins!"
 msgstr "Changedetection.io có thể giám sát nhiều hơn là chỉ các trang web! Hãy xem các plugin của chúng tôi!"
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
@@ -2951,8 +2838,7 @@ msgstr "trong '%(title)s'"
 msgid "RSS Feed"
 msgstr "Nguồn cấp RSS"
 
-#: changedetectionio/blueprint/watchlist/templates/watch-overview.html
-#: changedetectionio/templates/base.html
+#: changedetectionio/blueprint/watchlist/templates/watch-overview.html changedetectionio/templates/base.html
 msgid "Close"
 msgstr "Đóng"
 
@@ -3009,9 +2895,7 @@ msgid "Clear Histories"
 msgstr "Xóa lịch sử"
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
-msgid ""
-"<p>Are you sure you want to clear history for the selected items?</p><p>This "
-"action cannot be undone.</p>"
+msgid "<p>Are you sure you want to clear history for the selected items?</p><p>This action cannot be undone.</p>"
 msgstr "<p>Bạn có chắc chắn muốn xóa lịch sử của các mục đã chọn?</p><p>Hành động này không thể hoàn tác.</p>"
 
 #. Universally recognized; typically left as-is. dennis-ignore: W302
@@ -3028,9 +2912,7 @@ msgid "Delete Watches?"
 msgstr "Xóa mục giám sát?"
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
-msgid ""
-"<p><strong>Are you sure you want to delete the selected watches?</strong></"
-"p><p>This action cannot be undone.</p>"
+msgid "<p><strong>Are you sure you want to delete the selected watches?</strong></p><p>This action cannot be undone.</p>"
 msgstr "<p><strong>Bạn có chắc chắn muốn xóa các mục giám sát đã chọn?</strong></p><p>Hành động này không thể hoàn tác.</p>"
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
@@ -3058,9 +2940,7 @@ msgstr "Nhập hàng & Giá"
 
 #. FIXME: fragment msgids (#4074)
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
-msgid ""
-"No web page change detection watches configured, please add a URL in the box "
-"above, or"
+msgid "No web page change detection watches configured, please add a URL in the box above, or"
 msgstr "Chưa có mục giám sát thay đổi trang web nào được cấu hình, vui lòng thêm URL vào ô phía trên, hoặc"
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
@@ -3201,9 +3081,11 @@ msgstr "Phần trăm tương đồng"
 
 #: changedetectionio/conditions/plugins/levenshtein_plugin.py
 msgid ""
-"Levenshtein metrics compare the last two snapshots, measuring how many "
-"character edits are needed to transform one into the other."
-msgstr "Chỉ số Levenshtein so sánh hai ảnh chụp gần nhất, đo lường số lần chỉnh sửa ký tự cần thiết để chuyển đổi cái này thành cái kia."
+"Levenshtein metrics compare the last two snapshots, measuring how many character edits are needed to transform one "
+"into the other."
+msgstr ""
+"Chỉ số Levenshtein so sánh hai ảnh chụp gần nhất, đo lường số lần chỉnh sửa ký tự cần thiết để chuyển đổi cái này "
+"thành cái kia."
 
 #: changedetectionio/conditions/plugins/levenshtein_plugin.py
 msgid "Error calculating Levenshtein metrics"
@@ -3222,17 +3104,15 @@ msgid "Word count (latest snapshot)"
 msgstr "Số từ (ảnh chụp mới nhất)"
 
 #: changedetectionio/conditions/plugins/wordcount_plugin.py
-msgid ""
-"Word count is a simple measure of content length, calculated by splitting "
-"text on whitespace."
+msgid "Word count is a simple measure of content length, calculated by splitting text on whitespace."
 msgstr "Số từ là thước đo đơn giản về độ dài nội dung, được tính bằng cách chia văn bản theo khoảng trắng."
 
 #: changedetectionio/content_fetchers/requests.py
 msgid "Basic fast Plaintext/HTTP Client"
 msgstr "Ứng dụng khách văn bản thuần túy/HTTP cơ bản, tốc độ cao"
 
-#: changedetectionio/blueprint/watchlist/templates/watch-overview-single-row.html
-#: changedetectionio/flask_app.py changedetectionio/realtime/socket_server.py
+#: changedetectionio/blueprint/watchlist/templates/watch-overview-single-row.html changedetectionio/flask_app.py
+#: changedetectionio/realtime/socket_server.py
 msgid "Not yet"
 msgstr "Chưa"
 
@@ -3292,8 +3172,7 @@ msgstr "phút"
 msgid "second"
 msgstr "giây"
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/flask_app.py
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/flask_app.py
 msgid "seconds"
 msgstr "giây"
 
@@ -3310,15 +3189,11 @@ msgid "Incorrect password"
 msgstr "Sai mật khẩu"
 
 #: changedetectionio/forms.py
-msgid ""
-"At least one time interval (weeks, days, hours, minutes, or seconds) must be "
-"specified."
+msgid "At least one time interval (weeks, days, hours, minutes, or seconds) must be specified."
 msgstr "Phải chỉ định ít nhất một khoảng thời gian (tuần, ngày, giờ, phút hoặc giây)."
 
 #: changedetectionio/forms.py
-msgid ""
-"At least one time interval (weeks, days, hours, minutes, or seconds) must be "
-"specified when not using global settings."
+msgid "At least one time interval (weeks, days, hours, minutes, or seconds) must be specified when not using global settings."
 msgstr "Phải chỉ định ít nhất một khoảng thời gian (tuần, ngày, giờ, phút hoặc giây) khi không sử dụng cài đặt chung."
 
 #: changedetectionio/forms.py
@@ -3446,8 +3321,7 @@ msgstr "Giá trị không hợp lệ."
 msgid "Group tag"
 msgstr "Thẻ nhóm"
 
-#: changedetectionio/blueprint/ui/templates/queue.html
-#: changedetectionio/blueprint/watchlist/templates/watch-overview.html
+#: changedetectionio/blueprint/ui/templates/queue.html changedetectionio/blueprint/watchlist/templates/watch-overview.html
 #: changedetectionio/forms.py
 msgid "Watch"
 msgstr "Giám sát"
@@ -3456,8 +3330,7 @@ msgstr "Giám sát"
 msgid "Processor"
 msgstr "Bộ xử lý"
 
-#: changedetectionio/blueprint/watchlist/templates/watch-overview.html
-#: changedetectionio/forms.py
+#: changedetectionio/blueprint/watchlist/templates/watch-overview.html changedetectionio/forms.py
 msgid "Browser"
 msgstr "Trình duyệt"
 
@@ -3509,8 +3382,7 @@ msgstr "Ghi đè URL cơ sở của thông báo"
 msgid "Not set"
 msgstr "Chưa thiết lập"
 
-#: changedetectionio/blueprint/tags/form.py
-#: changedetectionio/blueprint/tags/templates/groups-overview.html
+#: changedetectionio/blueprint/tags/form.py changedetectionio/blueprint/tags/templates/groups-overview.html
 #: changedetectionio/forms.py
 msgid "Save"
 msgstr "Lưu"
@@ -3575,8 +3447,7 @@ msgstr "Sử dụng thiết lập chung cho thời gian kiểm tra và lịch tr
 msgid "AI Change Intent - Notify me when.."
 msgstr "Ý định thay đổi AI - Thông báo cho tôi khi.."
 
-#: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
-#: changedetectionio/blueprint/ui/templates/diff.html
+#: changedetectionio/blueprint/settings/templates/settings_llm_tab.html changedetectionio/blueprint/ui/templates/diff.html
 #: changedetectionio/forms.py
 msgid "AI Change Summary"
 msgstr "Tóm tắt thay đổi AI"
@@ -3613,8 +3484,7 @@ msgstr "Trích xuất các dòng chứa"
 msgid "Extract text"
 msgstr "Trích xuất văn bản"
 
-#: changedetectionio/blueprint/imports/templates/import.html
-#: changedetectionio/forms.py
+#: changedetectionio/blueprint/imports/templates/import.html changedetectionio/forms.py
 msgid "Title"
 msgstr "Tiêu đề"
 
@@ -3638,8 +3508,7 @@ msgstr "Bỏ qua mã trạng thái (xử lý các mã không phải 2xx như bì
 msgid "Only trigger when unique lines appear in all history"
 msgstr "Chỉ kích hoạt khi xuất hiện các dòng duy nhất trong toàn bộ lịch sử"
 
-#: changedetectionio/blueprint/ui/templates/edit.html
-#: changedetectionio/forms.py
+#: changedetectionio/blueprint/ui/templates/edit.html changedetectionio/forms.py
 msgid "Remove duplicate lines of text"
 msgstr "Xóa các dòng văn bản trùng lặp"
 
@@ -3679,8 +3548,7 @@ msgstr "Chặn phát hiện thay đổi khi văn bản khớp"
 msgid "Execute JavaScript before change detection"
 msgstr "Thực thi JavaScript trước khi phát hiện thay đổi"
 
-#: changedetectionio/blueprint/watchlist/templates/watch-overview.html
-#: changedetectionio/forms.py
+#: changedetectionio/blueprint/watchlist/templates/watch-overview.html changedetectionio/forms.py
 msgid "Proxy"
 msgstr "Proxy"
 
@@ -3692,8 +3560,7 @@ msgstr "Gửi thông báo khi không còn tìm thấy bộ lọc trên trang"
 msgid "On"
 msgstr "Bật"
 
-#: changedetectionio/blueprint/tags/templates/edit-tag.html
-#: changedetectionio/blueprint/ui/templates/edit.html
+#: changedetectionio/blueprint/tags/templates/edit-tag.html changedetectionio/blueprint/ui/templates/edit.html
 #: changedetectionio/forms.py changedetectionio/templates/sidebar-nav.html
 msgid "Notifications"
 msgstr "Thông báo"
@@ -3863,8 +3730,7 @@ msgstr "Bỏ qua khoảng trắng"
 msgid "Screenshot: Minimum Change Percentage"
 msgstr "Screenshot: Tỷ lệ thay đổi tối thiểu"
 
-#: changedetectionio/forms.py
-#: changedetectionio/processors/image_ssim_diff/forms.py
+#: changedetectionio/forms.py changedetectionio/processors/image_ssim_diff/forms.py
 msgid "Must be between 0 and 100"
 msgstr "Phải nằm trong khoảng từ 0 đến 100"
 
@@ -3928,8 +3794,7 @@ msgstr "Số lần bộ lọc bị thiếu trước khi gửi thông báo"
 msgid "Model"
 msgstr "Mô hình"
 
-#: changedetectionio/blueprint/settings/templates/settings.html
-#: changedetectionio/forms.py
+#: changedetectionio/blueprint/settings/templates/settings.html changedetectionio/forms.py
 msgid "API Key"
 msgstr "Khóa API"
 
@@ -3945,8 +3810,7 @@ msgstr "Hệ số nhân token cho các model reasoning cục bộ"
 msgid "Default AI Change Summary prompt"
 msgstr "Prompt tóm tắt thay đổi bằng AI mặc định"
 
-#: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
-#: changedetectionio/forms.py
+#: changedetectionio/blueprint/settings/templates/settings_llm_tab.html changedetectionio/forms.py
 msgid "Max tokens per watch per period"
 msgstr "Số token tối đa mỗi mục giám sát mỗi chu kỳ"
 
@@ -3954,8 +3818,7 @@ msgstr "Số token tối đa mỗi mục giám sát mỗi chu kỳ"
 msgid "Monthly token budget"
 msgstr "Ngân sách token hàng tháng"
 
-#: changedetectionio/blueprint/settings/templates/settings_llm_tab.html
-#: changedetectionio/forms.py
+#: changedetectionio/blueprint/settings/templates/settings_llm_tab.html changedetectionio/forms.py
 msgid "Max input characters"
 msgstr "Số ký tự đầu vào tối đa"
 
@@ -4146,8 +4009,7 @@ msgid "in %syr"
 msgstr "trong %syr"
 
 #: changedetectionio/processors/extract.py
-msgid ""
-"No matches found while scanning all of the watch history for that RegEx."
+msgid "No matches found while scanning all of the watch history for that RegEx."
 msgstr "Không tìm thấy kết quả phù hợp khi quét toàn bộ lịch sử giám sát cho RegEx này."
 
 #: changedetectionio/processors/image_ssim_diff/difference.py
@@ -4221,8 +4083,7 @@ msgid "Visual / Image screenshot change detection"
 msgstr "Phát hiện thay đổi hình ảnh / screenshot trực quan"
 
 #: changedetectionio/processors/image_ssim_diff/processor.py
-msgid ""
-"Compares screenshots using fast OpenCV algorithm, 10-100x faster than SSIM"
+msgid "Compares screenshots using fast OpenCV algorithm, 10-100x faster than SSIM"
 msgstr "So sánh screenshot bằng thuật toán OpenCV nhanh, nhanh hơn 10-100 lần so với SSIM"
 
 #: changedetectionio/processors/restock_diff/difference.py
@@ -4311,9 +4172,7 @@ msgid "Stock"
 msgstr "Tồn kho"
 
 #: changedetectionio/processors/restock_diff/templates/restock_diff/difference.html
-msgid ""
-"Not enough price data points yet to draw a graph - keep monitoring and the "
-"price history will appear here."
+msgid "Not enough price data points yet to draw a graph - keep monitoring and the price history will appear here."
 msgstr "Chưa đủ dữ liệu giá để vẽ biểu đồ - hãy tiếp tục giám sát và lịch sử giá sẽ xuất hiện tại đây."
 
 #: changedetectionio/processors/templates/extract.html
@@ -4321,9 +4180,7 @@ msgid "This tool will extract text data from all of the watch history."
 msgstr "Công cụ này sẽ trích xuất dữ liệu văn bản từ toàn bộ lịch sử giám sát."
 
 #: changedetectionio/processors/templates/extract.html
-msgid ""
-"A <strong>RegEx</strong> is a pattern that identifies exactly which part "
-"inside of the text that you want to extract."
+msgid "A <strong>RegEx</strong> is a pattern that identifies exactly which part inside of the text that you want to extract."
 msgstr "Một <strong>RegEx</strong> là một mẫu xác định chính xác phần văn bản mà bạn muốn trích xuất."
 
 #: changedetectionio/processors/templates/extract.html
@@ -4361,8 +4218,7 @@ msgstr "Phát hiện tất cả các thay đổi văn bản nếu có thể"
 
 #: changedetectionio/store/__init__.py
 #, python-brace-format
-msgid ""
-"Watch limit reached ({current}/{limit} watches). Cannot add more watches."
+msgid "Watch limit reached ({current}/{limit} watches). Cannot add more watches."
 msgstr "Đã đạt giới hạn theo dõi ({current}/{limit} mục theo dõi). Không thể thêm nhiều hơn."
 
 #: changedetectionio/store/__init__.py
@@ -4384,8 +4240,7 @@ msgid "Body for all notifications — You can use"
 msgstr "Nội dung cho tất cả thông báo — Bạn có thể sử dụng"
 
 #: changedetectionio/templates/_common_fields.html
-msgid ""
-"templating in the notification title, body and URL, and tokens from below."
+msgid "templating in the notification title, body and URL, and tokens from below."
 msgstr "mẫu (templating) trong tiêu đề, nội dung, URL thông báo và các token bên dưới."
 
 #: changedetectionio/templates/_common_fields.html
@@ -4410,10 +4265,11 @@ msgstr "URL đang được giám sát."
 
 #: changedetectionio/templates/_common_fields.html
 msgid ""
-"The Open Link Override set on the watch, otherwise the same as watch_url. "
-"Use this when the watched URL is an API endpoint or RSS feed but you want to "
-"link to the real page."
-msgstr "Ghi đè liên kết mở được thiết lập cho mục giám sát, nếu không sẽ giống với watch_url. Dùng tùy chọn này khi URL được giám sát là một điểm cuối API hoặc nguồn cấp RSS nhưng bạn muốn liên kết tới trang thực tế."
+"The Open Link Override set on the watch, otherwise the same as watch_url. Use this when the watched URL is an API "
+"endpoint or RSS feed but you want to link to the real page."
+msgstr ""
+"Ghi đè liên kết mở được thiết lập cho mục giám sát, nếu không sẽ giống với watch_url. Dùng tùy chọn này khi URL được "
+"giám sát là một điểm cuối API hoặc nguồn cấp RSS nhưng bạn muốn liên kết tới trang thực tế."
 
 #: changedetectionio/templates/_common_fields.html
 msgid "The UUID of the watch."
@@ -4433,8 +4289,7 @@ msgstr "URL của trang xem trước được tạo bởi changedetection.io."
 
 #: changedetectionio/templates/_common_fields.html
 #, python-format
-msgid ""
-"Date/time of the change, accepts format=, %(call)s, default is '%(default)s'"
+msgid "Date/time of the change, accepts format=, %(call)s, default is '%(default)s'"
 msgstr "Ngày/giờ thay đổi, chấp nhận format=, %(call)s, mặc định là '%(default)s'"
 
 #: changedetectionio/templates/_common_fields.html
@@ -4492,22 +4347,22 @@ msgstr "Kết quả diff - patch định dạng unified"
 
 #: changedetectionio/templates/_common_fields.html
 msgid ""
-"Only the changed words/values from the previous version — e.g. the old "
-"price. Best when a single value changes per line; multiple changed fragments "
-"are joined by newline."
-msgstr "Chỉ các từ/giá trị đã thay đổi từ phiên bản trước — ví dụ: giá cũ. Tốt nhất khi một dòng chỉ thay đổi một giá trị; nhiều đoạn thay đổi sẽ được nối bằng dòng mới."
+"Only the changed words/values from the previous version — e.g. the old price. Best when a single value changes per "
+"line; multiple changed fragments are joined by newline."
+msgstr ""
+"Chỉ các từ/giá trị đã thay đổi từ phiên bản trước — ví dụ: giá cũ. Tốt nhất khi một dòng chỉ thay đổi một giá trị; "
+"nhiều đoạn thay đổi sẽ được nối bằng dòng mới."
 
 #: changedetectionio/templates/_common_fields.html
 msgid ""
-"Only the changed words/values from the new version — e.g. the new price. "
-"Best when a single value changes per line; multiple changed fragments are "
-"joined by newline."
-msgstr "Chỉ các từ/giá trị đã thay đổi từ phiên bản mới — ví dụ: giá mới. Tốt nhất khi một dòng chỉ thay đổi một giá trị; nhiều đoạn thay đổi sẽ được nối bằng dòng mới."
+"Only the changed words/values from the new version — e.g. the new price. Best when a single value changes per line; "
+"multiple changed fragments are joined by newline."
+msgstr ""
+"Chỉ các từ/giá trị đã thay đổi từ phiên bản mới — ví dụ: giá mới. Tốt nhất khi một dòng chỉ thay đổi một giá trị; "
+"nhiều đoạn thay đổi sẽ được nối bằng dòng mới."
 
 #: changedetectionio/templates/_common_fields.html
-msgid ""
-"The current snapshot text contents value, useful when combined with JSON or "
-"CSS filters"
+msgid "The current snapshot text contents value, useful when combined with JSON or CSS filters"
 msgstr "Giá trị nội dung văn bản của ảnh chụp hiện tại, hữu ích khi kết hợp với bộ lọc JSON hoặc CSS"
 
 #: changedetectionio/templates/_common_fields.html
@@ -4520,18 +4375,18 @@ msgstr "(đã nâng cấp)"
 
 #: changedetectionio/templates/_common_fields.html
 msgid ""
-"When AI Change Summary is configured, contains the AI-generated description "
-"instead of the raw diff. Falls back to raw diff when not configured."
-msgstr "Khi đã cấu hình tóm tắt thay đổi bằng AI, mục này chứa mô tả do AI tạo thay vì phần chênh lệch thô. Nếu chưa cấu hình, mục này dùng phần chênh lệch thô."
+"When AI Change Summary is configured, contains the AI-generated description instead of the raw diff. Falls back to "
+"raw diff when not configured."
+msgstr ""
+"Khi đã cấu hình tóm tắt thay đổi bằng AI, mục này chứa mô tả do AI tạo thay vì phần chênh lệch thô. Nếu chưa cấu "
+"hình, mục này dùng phần chênh lệch thô."
 
 #: changedetectionio/templates/_common_fields.html
 msgid "Always the raw +/- diff, regardless of AI Change Summary setting."
 msgstr "Luôn là phần chênh lệch +/- thô, bất kể cài đặt tóm tắt thay đổi bằng AI."
 
 #: changedetectionio/templates/_common_fields.html
-msgid ""
-"The AI Change Summary text (same as the upgraded {{diff}} — explicit "
-"reference)."
+msgid "The AI Change Summary text (same as the upgraded {{diff}} — explicit reference)."
 msgstr "Văn bản tóm tắt thay đổi bằng AI (giống với {{diff}} — tham chiếu tường minh)."
 
 #: changedetectionio/templates/_common_fields.html
@@ -4552,9 +4407,7 @@ msgid "depend on how the difference algorithm perceives the change."
 msgstr "phụ thuộc vào cách thuật toán diff nhận diện thay đổi."
 
 #: changedetectionio/templates/_common_fields.html
-msgid ""
-"For example, an addition or removal could be perceived as a change in some "
-"cases."
+msgid "For example, an addition or removal could be perceived as a change in some cases."
 msgstr "Ví dụ: việc thêm hoặc xóa có thể được coi là một thay đổi trong một số trường hợp."
 
 #: changedetectionio/templates/_common_fields.html
@@ -4587,20 +4440,17 @@ msgstr "Đang xử lý.."
 
 #: changedetectionio/templates/_common_fields.html
 #, python-format
-msgid ""
-"Use <a target=\"newwindow\" href=\"%(url)s\">AppRise Notification URLs</a> "
-"for notification to just about any service!"
-msgstr "Sử dụng <a target=\"newwindow\" href=\"%(url)s\">AppRise Notification URLs</a> để gửi thông báo đến hầu hết mọi dịch vụ!"
+msgid "Use <a target=\"newwindow\" href=\"%(url)s\">AppRise Notification URLs</a> for notification to just about any service!"
+msgstr ""
+"Sử dụng <a target=\"newwindow\" href=\"%(url)s\">AppRise Notification URLs</a> để gửi thông báo đến hầu hết mọi dịch "
+"vụ!"
 
 #. CJK fonts lack native italics; allow substitution with conventional local styling. dennis-ignore: W303
 #: changedetectionio/templates/_common_fields.html
-msgid ""
-"<i>Please read the notification services wiki here for important "
-"configuration notes</i>"
+msgid "<i>Please read the notification services wiki here for important configuration notes</i>"
 msgstr "<i>Vui lòng đọc wiki về các dịch vụ thông báo tại đây để biết các lưu ý cấu hình quan trọng</i>"
 
-#: changedetectionio/templates/_common_fields.html
-#: changedetectionio/templates/edit/include_subtract.html
+#: changedetectionio/templates/_common_fields.html changedetectionio/templates/edit/include_subtract.html
 msgid "Show advanced help and tips"
 msgstr "Hiển thị hướng dẫn và mẹo nâng cao"
 
@@ -4622,9 +4472,7 @@ msgid "of notification text, including the title."
 msgstr "văn bản thông báo, bao gồm cả tiêu đề."
 
 #: changedetectionio/templates/_common_fields.html
-msgid ""
-"bots can't send messages to other bots, so you should specify chat ID of non-"
-"bot user."
+msgid "bots can't send messages to other bots, so you should specify chat ID of non-bot user."
 msgstr "bot không thể gửi tin nhắn cho bot khác, vì vậy bạn nên chỉ định chat ID của người dùng không phải bot."
 
 #. FIXME: fragment msgids (#4074)
@@ -4686,9 +4534,7 @@ msgid "Regular-expression replace, use"
 msgstr "Thay thế bằng Regular-expression, sử dụng"
 
 #: changedetectionio/templates/_common_fields.html
-msgid ""
-"For a complete reference of all Jinja2 built-in filters, users can refer to "
-"the"
+msgid "For a complete reference of all Jinja2 built-in filters, users can refer to the"
 msgstr "Để tham khảo đầy đủ tất cả các bộ lọc tích hợp của Jinja2, người dùng có thể xem"
 
 #: changedetectionio/templates/_common_fields.html
@@ -4753,9 +4599,7 @@ msgid "Reset"
 msgstr "Đặt lại"
 
 #: changedetectionio/templates/_helpers.html
-msgid ""
-"Warning, one or more of your 'days' has a duration that would extend into "
-"the next day."
+msgid "Warning, one or more of your 'days' has a duration that would extend into the next day."
 msgstr "Cảnh báo, một hoặc nhiều 'ngày' của bạn có thời lượng kéo dài sang ngày hôm sau."
 
 #: changedetectionio/templates/_helpers.html
@@ -4778,19 +4622,15 @@ msgstr "Trước tiên hãy xác nhận/lưu Cài đặt Múi giờ của bạn"
 msgid "Triggered text"
 msgstr "Văn bản kích hoạt"
 
-#: changedetectionio/templates/_helpers.html
-#: changedetectionio/templates/base.html
-msgid ""
-"Triggers a change if this text appears, AND something changed in the "
-"document."
+#: changedetectionio/templates/_helpers.html changedetectionio/templates/base.html
+msgid "Triggers a change if this text appears, AND something changed in the document."
 msgstr "Kích hoạt thay đổi nếu văn bản này xuất hiện VÀ có điều gì đó thay đổi trong tài liệu."
 
 #: changedetectionio/templates/_helpers.html
 msgid "Ignored text"
 msgstr "Văn bản bị bỏ qua"
 
-#: changedetectionio/templates/_helpers.html
-#: changedetectionio/templates/base.html
+#: changedetectionio/templates/_helpers.html changedetectionio/templates/base.html
 msgid "Ignored for calculating changes, but still shown."
 msgstr "Bị bỏ qua khi tính toán thay đổi, nhưng vẫn được hiển thị."
 
@@ -4798,8 +4638,7 @@ msgstr "Bị bỏ qua khi tính toán thay đổi, nhưng vẫn được hiển 
 msgid "Blocked text"
 msgstr "Văn bản bị chặn"
 
-#: changedetectionio/templates/_helpers.html
-#: changedetectionio/templates/base.html
+#: changedetectionio/templates/_helpers.html changedetectionio/templates/base.html
 msgid "No change-detection will occur because this text exists."
 msgstr "Không có phát hiện thay đổi nào xảy ra vì văn bản này tồn tại."
 
@@ -4830,9 +4669,7 @@ msgstr "Xóa %(name)s?"
 
 #: changedetectionio/templates/base.html
 #, python-format
-msgid ""
-"<p>Are you sure you want to delete <strong>%(name)s</strong>?</p><p>This "
-"action cannot be undone.</p>"
+msgid "<p>Are you sure you want to delete <strong>%(name)s</strong>?</p><p>This action cannot be undone.</p>"
 msgstr "<p>Bạn có chắc chắn muốn xóa <strong>%(name)s</strong>?</p><p>Hành động này không thể hoàn tác.</p>"
 
 #: changedetectionio/templates/base.html
@@ -4843,9 +4680,11 @@ msgstr "Hủy liên kết %(name)s?"
 #: changedetectionio/templates/base.html
 #, python-format
 msgid ""
-"<p>Are you sure you want to unlink all watches from <strong>%(name)s</"
-"strong>?</p><p>The tag will be kept but watches will be removed from it.</p>"
-msgstr "<p>Bạn có chắc chắn muốn hủy liên kết tất cả các giám sát khỏi <strong>%(name)s</strong>?</p><p>Thẻ sẽ được giữ lại nhưng các giám sát sẽ bị xóa khỏi thẻ đó.</p>"
+"<p>Are you sure you want to unlink all watches from <strong>%(name)s</strong>?</p><p>The tag will be kept but watches"
+" will be removed from it.</p>"
+msgstr ""
+"<p>Bạn có chắc chắn muốn hủy liên kết tất cả các giám sát khỏi <strong>%(name)s</strong>?</p><p>Thẻ sẽ được giữ lại "
+"nhưng các giám sát sẽ bị xóa khỏi thẻ đó.</p>"
 
 #: changedetectionio/templates/base.html
 msgid "There was an error communicating with the server."
@@ -4889,9 +4728,7 @@ msgid "Failed to copy image. Your browser may not support this feature."
 msgstr "Sao chép hình ảnh thất bại. Trình duyệt của bạn có thể không hỗ trợ tính năng này."
 
 #: changedetectionio/templates/base.html
-msgid ""
-"Please select the text/lines you want to capture first by highlighting with "
-"your mouse."
+msgid "Please select the text/lines you want to capture first by highlighting with your mouse."
 msgstr "Vui lòng chọn văn bản/dòng bạn muốn chụp bằng cách bôi đen bằng chuột."
 
 #: changedetectionio/templates/base.html
@@ -4912,8 +4749,7 @@ msgid "Check out this change detected via changedetection.io"
 msgstr "Xem thay đổi này được phát hiện qua changedetection.io"
 
 #: changedetectionio/templates/base.html
-msgid ""
-"Please fill in all fields (Field, Operator, and Value) before verifying."
+msgid "Please fill in all fields (Field, Operator, and Value) before verifying."
 msgstr "Vui lòng điền đầy đủ các trường (Trường, Toán tử và Giá trị) trước khi xác minh."
 
 #: changedetectionio/templates/base.html
@@ -4953,9 +4789,7 @@ msgid "Auto-detect from browser"
 msgstr "Tự động phát hiện từ trình duyệt"
 
 #: changedetectionio/templates/base.html
-msgid ""
-"Language support is in beta, please help us improve by opening a PR on "
-"GitHub with any updates."
+msgid "Language support is in beta, please help us improve by opening a PR on GitHub with any updates."
 msgstr "Hỗ trợ ngôn ngữ đang trong bản beta, vui lòng giúp chúng tôi cải thiện bằng cách mở PR trên GitHub."
 
 #: changedetectionio/templates/base.html
@@ -4963,17 +4797,14 @@ msgid "AI / LLM not configured"
 msgstr "AI / LLM chưa được cấu hình"
 
 #: changedetectionio/templates/base.html
-msgid ""
-"LLM-powered summaries are not yet enabled. Configure an AI provider in "
-"Settings to get started."
+msgid "LLM-powered summaries are not yet enabled. Configure an AI provider in Settings to get started."
 msgstr "Tóm tắt bằng LLM chưa được kích hoạt. Hãy cấu hình nhà cung cấp AI trong Cài đặt để bắt đầu."
 
 #: changedetectionio/templates/base.html
 msgid "Go to AI / LLM Settings"
 msgstr "Đi tới Cài đặt AI / LLM"
 
-#: changedetectionio/templates/base.html
-#: changedetectionio/templates/sidebar-nav.html
+#: changedetectionio/templates/base.html changedetectionio/templates/sidebar-nav.html
 msgid "Search"
 msgstr "Tìm kiếm"
 
@@ -4992,11 +4823,13 @@ msgstr "Chỉ tìm kiếm trong nhóm hiện tại '%(title)s'"
 
 #: changedetectionio/templates/edit/include_llm_intent.html
 msgid ""
-"<strong>On</strong> &ndash; every watch in this group uses the AI settings "
-"below, unless it fills in its own. <strong>Off</strong> &ndash; no AI for "
-"any watch in this group. <strong>Leave it to each watch</strong> &ndash; "
-"this group has no say; each watch uses its own AI settings."
-msgstr "<strong>Bật</strong> &ndash; mọi lượt giám sát trong nhóm này đều sử dụng cài đặt AI bên dưới, trừ khi có cài đặt riêng. <strong>Tắt</strong> &ndash; không sử dụng AI cho bất kỳ lượt giám sát nào trong nhóm này. <strong>Để từng lượt giám sát tự quyết định</strong> &ndash; nhóm này không áp đặt; mỗi lượt giám sát sử dụng cài đặt AI riêng."
+"<strong>On</strong> &ndash; every watch in this group uses the AI settings below, unless it fills in its own. "
+"<strong>Off</strong> &ndash; no AI for any watch in this group. <strong>Leave it to each watch</strong> &ndash; this "
+"group has no say; each watch uses its own AI settings."
+msgstr ""
+"<strong>Bật</strong> &ndash; mọi lượt giám sát trong nhóm này đều sử dụng cài đặt AI bên dưới, trừ khi có cài đặt "
+"riêng. <strong>Tắt</strong> &ndash; không sử dụng AI cho bất kỳ lượt giám sát nào trong nhóm này. <strong>Để từng "
+"lượt giám sát tự quyết định</strong> &ndash; nhóm này không áp đặt; mỗi lượt giám sát sử dụng cài đặt AI riêng."
 
 #: changedetectionio/templates/edit/include_llm_intent.html
 #, python-format
@@ -5010,15 +4843,17 @@ msgstr "Nhóm %(name)s quyết định: AI ĐANG TẮT cho mọi lượt giám s
 
 #: changedetectionio/templates/edit/include_llm_intent.html
 msgid ""
-"Describe what you care about. The AI evaluates every detected change against "
-"this and only notifies you when it matches."
-msgstr "Mô tả những gì bạn quan tâm. AI sẽ đối chiếu mọi thay đổi phát hiện được với nội dung này và chỉ thông báo cho bạn khi khớp."
+"Describe what you care about. The AI evaluates every detected change against this and only notifies you when it "
+"matches."
+msgstr ""
+"Mô tả những gì bạn quan tâm. AI sẽ đối chiếu mọi thay đổi phát hiện được với nội dung này và chỉ thông báo cho bạn "
+"khi khớp."
 
 #: changedetectionio/templates/edit/include_llm_intent.html
-msgid ""
-"Set a change intent for all watches in this tag/group. Each watch can "
-"override with its own."
-msgstr "Thiết lập mục đích theo dõi cho tất cả lượt giám sát trong tag/nhóm này. Mỗi lượt giám sát có thể ghi đè bằng cài đặt riêng."
+msgid "Set a change intent for all watches in this tag/group. Each watch can override with its own."
+msgstr ""
+"Thiết lập mục đích theo dõi cho tất cả lượt giám sát trong tag/nhóm này. Mỗi lượt giám sát có thể ghi đè bằng cài đặt"
+" riêng."
 
 #: changedetectionio/templates/edit/include_llm_intent.html
 #, python-format
@@ -5026,15 +4861,13 @@ msgid "From group '%(name)s': %(value)s"
 msgstr "Từ nhóm '%(name)s': %(value)s"
 
 #: changedetectionio/templates/edit/include_llm_intent.html
-msgid ""
-"e.g. Alert me when the price drops below $300, or a new product is launched. "
-"Ignore footer and navigation changes."
-msgstr "Ví dụ: Thông báo cho tôi khi giá giảm xuống dưới $300, hoặc có sản phẩm mới ra mắt. Bỏ qua thay đổi ở footer và thanh điều hướng."
+msgid "e.g. Alert me when the price drops below $300, or a new product is launched. Ignore footer and navigation changes."
+msgstr ""
+"Ví dụ: Thông báo cho tôi khi giá giảm xuống dưới $300, hoặc có sản phẩm mới ra mắt. Bỏ qua thay đổi ở footer và thanh"
+" điều hướng."
 
 #: changedetectionio/templates/edit/include_llm_intent.html
-msgid ""
-"e.g. Flag price changes or new product launches across all watches in this "
-"group"
+msgid "e.g. Flag price changes or new product launches across all watches in this group"
 msgstr "Ví dụ: Đánh dấu thay đổi giá hoặc ra mắt sản phẩm mới cho tất cả lượt giám sát trong nhóm này"
 
 #: changedetectionio/templates/edit/include_llm_intent.html
@@ -5042,18 +4875,15 @@ msgid "Examples:"
 msgstr "Ví dụ:"
 
 #: changedetectionio/templates/edit/include_llm_intent.html
-msgid ""
-"Only notify if the price drops below $200, or a limited-time deal is added"
+msgid "Only notify if the price drops below $200, or a limited-time deal is added"
 msgstr "Chỉ thông báo nếu giá giảm xuống dưới $200, hoặc có thêm ưu đãi giới hạn thời gian"
 
 #: changedetectionio/templates/edit/include_llm_intent.html
-msgid ""
-"Alert when a new recall, safety notice, or product withdrawal is published"
+msgid "Alert when a new recall, safety notice, or product withdrawal is published"
 msgstr "Thông báo khi có thông báo thu hồi, cảnh báo an toàn hoặc rút sản phẩm mới được công bố"
 
 #: changedetectionio/templates/edit/include_llm_intent.html
-msgid ""
-"Notify when a new grant round opens or an application deadline is announced"
+msgid "Notify when a new grant round opens or an application deadline is announced"
 msgstr "Thông báo khi một đợt cấp vốn mới mở hoặc thời hạn nộp đơn được công bố"
 
 #: changedetectionio/templates/edit/include_llm_intent.html
@@ -5062,37 +4892,37 @@ msgstr "Chỉ quan trọng nếu phiên bản package thay đổi hoặc có đ�
 
 #: changedetectionio/templates/edit/include_llm_intent.html
 #, python-format
-msgid ""
-"AI pre-filter active: <code>%(filter)s</code> — narrows content scope before "
-"evaluation"
+msgid "AI pre-filter active: <code>%(filter)s</code> — narrows content scope before evaluation"
 msgstr "Đang bật bộ lọc AI: <code>%(filter)s</code> — thu hẹp phạm vi nội dung trước khi đánh giá"
 
 #: changedetectionio/templates/edit/include_llm_intent.html
 #, python-format
 msgid ""
-"When a change is detected, the AI describes it according to your "
-"instructions and replaces <code>%(diff)s</code> in your notification. Use "
-"<code>%(raw_diff)s</code> if you still want the original diff."
-msgstr "Khi phát hiện thay đổi, AI sẽ mô tả theo hướng dẫn của bạn và thay thế <code>%(diff)s</code> trong thông báo. Sử dụng <code>%(raw_diff)s</code> nếu bạn vẫn muốn nhận bản diff gốc."
+"When a change is detected, the AI describes it according to your instructions and replaces <code>%(diff)s</code> in "
+"your notification. Use <code>%(raw_diff)s</code> if you still want the original diff."
+msgstr ""
+"Khi phát hiện thay đổi, AI sẽ mô tả theo hướng dẫn của bạn và thay thế <code>%(diff)s</code> trong thông báo. Sử dụng"
+" <code>%(raw_diff)s</code> nếu bạn vẫn muốn nhận bản diff gốc."
 
 #: changedetectionio/templates/edit/include_llm_intent.html
-msgid ""
-"Describe how changes should be summarised in notifications for all watches "
-"in this group."
+msgid "Describe how changes should be summarised in notifications for all watches in this group."
 msgstr "Mô tả cách tóm tắt các thay đổi trong thông báo cho tất cả các mục giám sát trong nhóm này."
 
 #: changedetectionio/templates/edit/include_llm_intent.html
 msgid ""
-"Appending keeps the prompt inherited from the group or from global settings "
-"and adds your text after it, so later edits to that prompt still reach this "
-"watch."
-msgstr "Chế độ 'Appending' (thêm vào sau) sẽ giữ lại prompt kế thừa từ nhóm hoặc cài đặt chung và thêm văn bản của bạn vào sau, nên các chỉnh sửa prompt sau này vẫn sẽ áp dụng cho mục giám sát này."
+"Appending keeps the prompt inherited from the group or from global settings and adds your text after it, so later "
+"edits to that prompt still reach this watch."
+msgstr ""
+"Chế độ 'Appending' (thêm vào sau) sẽ giữ lại prompt kế thừa từ nhóm hoặc cài đặt chung và thêm văn bản của bạn vào "
+"sau, nên các chỉnh sửa prompt sau này vẫn sẽ áp dụng cho mục giám sát này."
 
 #: changedetectionio/templates/edit/include_llm_intent.html
 msgid ""
-"Appending keeps the prompt inherited from global settings and adds your text "
-"after it, so later edits to that prompt still reach this group."
-msgstr "Chế độ 'Appending' (thêm vào sau) sẽ giữ lại prompt kế thừa từ cài đặt chung và thêm văn bản của bạn vào sau, nên các chỉnh sửa prompt sau này vẫn sẽ áp dụng cho nhóm này."
+"Appending keeps the prompt inherited from global settings and adds your text after it, so later edits to that prompt "
+"still reach this group."
+msgstr ""
+"Chế độ 'Appending' (thêm vào sau) sẽ giữ lại prompt kế thừa từ cài đặt chung và thêm văn bản của bạn vào sau, nên các"
+" chỉnh sửa prompt sau này vẫn sẽ áp dụng cho nhóm này."
 
 #: changedetectionio/templates/edit/include_llm_intent.html
 msgid "List each new item added with its name and price. Translate to English."
@@ -5113,39 +4943,34 @@ msgstr "AI"
 #: changedetectionio/templates/edit/include_llm_intent.html
 #, python-format
 msgid ""
-"Configure an AI / LLM provider in <a href=\"%(url)s\">Settings → AI / LLM</"
-"a> to enable AI Change Intent and AI Change Summary."
-msgstr "Hãy cấu hình nhà cung cấp AI / LLM trong <a href=\"%(url)s\">Cài đặt → AI / LLM</a> để bật tính năng mục đích thay đổi và tóm tắt thay đổi bằng AI."
+"Configure an AI / LLM provider in <a href=\"%(url)s\">Settings → AI / LLM</a> to enable AI Change Intent and AI "
+"Change Summary."
+msgstr ""
+"Hãy cấu hình nhà cung cấp AI / LLM trong <a href=\"%(url)s\">Cài đặt → AI / LLM</a> để bật tính năng mục đích thay "
+"đổi và tóm tắt thay đổi bằng AI."
 
 #: changedetectionio/templates/edit/include_llm_intent.html
 #, python-format
-msgid ""
-"Configure an AI / LLM provider in <a href=\"%(url)s\">Settings → AI / LLM</"
-"a> to enable AI features for this group."
-msgstr "Hãy cấu hình nhà cung cấp AI / LLM trong <a href=\"%(url)s\">Cài đặt → AI / LLM</a> để bật các tính năng AI cho nhóm này."
+msgid "Configure an AI / LLM provider in <a href=\"%(url)s\">Settings → AI / LLM</a> to enable AI features for this group."
+msgstr ""
+"Hãy cấu hình nhà cung cấp AI / LLM trong <a href=\"%(url)s\">Cài đặt → AI / LLM</a> để bật các tính năng AI cho nhóm "
+"này."
 
 #: changedetectionio/templates/edit/include_subtract.html
-msgid ""
-"Note!: //text() function does not work where the <element> contains <!"
-"[CDATA[]]>"
+msgid "Note!: //text() function does not work where the <element> contains <![CDATA[]]>"
 msgstr "Lưu ý!: hàm //text() không hoạt động khi <element> chứa <![CDATA[]]>"
 
 #. CJK fonts lack native italics; allow substitution with conventional local styling. dennis-ignore: W303
 #: changedetectionio/templates/edit/include_subtract.html
-msgid ""
-"One CSS, xPath 1 & 2, JSON Path/JQ selector per line, <i>any</i> rules that "
-"matches will be used."
+msgid "One CSS, xPath 1 & 2, JSON Path/JQ selector per line, <i>any</i> rules that matches will be used."
 msgstr "Mỗi dòng một bộ chọn CSS, xPath 1 & 2, JSON Path/JQ; <i>bất kỳ</i> quy tắc nào khớp sẽ được sử dụng."
 
 #: changedetectionio/templates/edit/include_subtract.html
-msgid ""
-"Limit text to this CSS rule, only text matching this CSS rule is included."
+msgid "Limit text to this CSS rule, only text matching this CSS rule is included."
 msgstr "Giới hạn văn bản theo quy tắc CSS này, chỉ văn bản khớp với quy tắc CSS này mới được bao gồm."
 
 #: changedetectionio/templates/edit/include_subtract.html
-msgid ""
-"Prefix with <code>json:</code>, use <code>json:$</code> to force re-"
-"formatting if required,"
+msgid "Prefix with <code>json:</code>, use <code>json:$</code> to force re-formatting if required,"
 msgstr "Tiền tố bằng <code>json:</code>, sử dụng <code>json:$</code> để buộc định dạng lại nếu cần,"
 
 #: changedetectionio/templates/edit/include_subtract.html
@@ -5153,9 +4978,7 @@ msgid "test your JSONPath here"
 msgstr "kiểm tra JSONPath của bạn tại đây"
 
 #: changedetectionio/templates/edit/include_subtract.html
-msgid ""
-"Prefix <code>jqraw:</code> outputs the results as text instead of a JSON "
-"list."
+msgid "Prefix <code>jqraw:</code> outputs the results as text instead of a JSON list."
 msgstr "Tiền tố <code>jqraw:</code> sẽ xuất kết quả dưới dạng văn bản thay vì danh sách JSON."
 
 #: changedetectionio/templates/edit/include_subtract.html
@@ -5164,10 +4987,11 @@ msgstr "jq support chưa được cài đặt"
 
 #: changedetectionio/templates/edit/include_subtract.html
 msgid ""
-"Limit text to this XPath rule, simply start with a forward-slash. To specify "
-"XPath to be used explicitly or the XPath rule starts with an XPath function: "
-"Prefix with <code>xpath:</code>"
-msgstr "Giới hạn văn bản theo quy tắc XPath này, chỉ cần bắt đầu bằng dấu gạch chéo xuôi. Để chỉ định rõ ràng XPath được sử dụng hoặc nếu quy tắc XPath bắt đầu bằng một hàm XPath: Tiền tố bằng <code>xpath:</code>"
+"Limit text to this XPath rule, simply start with a forward-slash. To specify XPath to be used explicitly or the XPath"
+" rule starts with an XPath function: Prefix with <code>xpath:</code>"
+msgstr ""
+"Giới hạn văn bản theo quy tắc XPath này, chỉ cần bắt đầu bằng dấu gạch chéo xuôi. Để chỉ định rõ ràng XPath được sử "
+"dụng hoặc nếu quy tắc XPath bắt đầu bằng một hàm XPath: Tiền tố bằng <code>xpath:</code>"
 
 #: changedetectionio/templates/edit/include_subtract.html
 msgid "test your XPath here"
@@ -5186,15 +5010,13 @@ msgid "here for more CSS selector help"
 msgstr "tại đây để được hỗ trợ thêm về CSS selector"
 
 #: changedetectionio/templates/edit/text-options.html
-msgid ""
-"Text to wait for before triggering a change/notification, all text and regex "
-"are tested case-insensitive."
-msgstr "Văn bản cần đợi trước khi kích hoạt thay đổi/thông báo; tất cả văn bản và regex đều không phân biệt chữ hoa chữ thường."
+msgid "Text to wait for before triggering a change/notification, all text and regex are tested case-insensitive."
+msgstr ""
+"Văn bản cần đợi trước khi kích hoạt thay đổi/thông báo; tất cả văn bản và regex đều không phân biệt chữ hoa chữ "
+"thường."
 
 #: changedetectionio/templates/edit/text-options.html
-msgid ""
-"Trigger text is processed from the result-text that comes out of any CSS/"
-"JSON Filters for this monitor"
+msgid "Trigger text is processed from the result-text that comes out of any CSS/JSON Filters for this monitor"
 msgstr "Văn bản kích hoạt được xử lý từ kết quả văn bản sau các bộ lọc CSS/JSON của trình giám sát này"
 
 #: changedetectionio/templates/edit/text-options.html
@@ -5224,19 +5046,22 @@ msgid ""
 "Sold out\n"
 "Not in stock\n"
 "Unavailable"
-msgstr "Ví dụ: Out of stock\nSold out\nNot in stock\nUnavailable"
+msgstr ""
+"Ví dụ: Out of stock\n"
+"Sold out\n"
+"Not in stock\n"
+"Unavailable"
 
 #: changedetectionio/templates/edit/text-options.html
 msgid ""
-"Block change-detection while this text is on the page, all text and regex "
-"are tested case-insensitive, good for waiting for when a product is "
-"available again"
-msgstr "Chặn phát hiện thay đổi khi văn bản này xuất hiện trên trang; văn bản và regex không phân biệt chữ hoa chữ thường, hữu ích để đợi khi sản phẩm có hàng trở lại"
+"Block change-detection while this text is on the page, all text and regex are tested case-insensitive, good for "
+"waiting for when a product is available again"
+msgstr ""
+"Chặn phát hiện thay đổi khi văn bản này xuất hiện trên trang; văn bản và regex không phân biệt chữ hoa chữ thường, "
+"hữu ích để đợi khi sản phẩm có hàng trở lại"
 
 #: changedetectionio/templates/edit/text-options.html
-msgid ""
-"Block text is processed from the result-text that comes out of any CSS/JSON "
-"Filters for this monitor"
+msgid "Block text is processed from the result-text that comes out of any CSS/JSON Filters for this monitor"
 msgstr "Văn bản chặn được xử lý từ kết quả văn bản sau các bộ lọc CSS/JSON của trình giám sát này"
 
 #: changedetectionio/templates/edit/text-options.html
@@ -5248,34 +5073,29 @@ msgid ""
 "celsius\n"
 "temperature\n"
 "price"
-msgstr "độ C\nnhiệt độ\ngiá"
+msgstr ""
+"độ C\n"
+"nhiệt độ\n"
+"giá"
 
 #: changedetectionio/templates/edit/text-options.html
-msgid ""
-"Keep only lines that contain any of these words or phrases (plain text, case-"
-"insensitive)"
+msgid "Keep only lines that contain any of these words or phrases (plain text, case-insensitive)"
 msgstr "Chỉ giữ lại các dòng chứa bất kỳ từ hoặc cụm từ nào sau đây (văn bản thuần, không phân biệt chữ hoa chữ thường)"
 
 #: changedetectionio/templates/edit/text-options.html
-msgid ""
-"One entry per line — any line in the page text that contains a match is kept"
+msgid "One entry per line — any line in the page text that contains a match is kept"
 msgstr "Mỗi mục một dòng — bất kỳ dòng nào trong văn bản trang chứa kết quả khớp sẽ được giữ lại"
 
 #: changedetectionio/templates/edit/text-options.html
-msgid ""
-"Simpler alternative to regex — use this when you just want lines about a "
-"specific topic"
+msgid "Simpler alternative to regex — use this when you just want lines about a specific topic"
 msgstr "Giải pháp thay thế đơn giản hơn regex — dùng khi bạn chỉ muốn lấy các dòng về một chủ đề cụ thể"
 
 #: changedetectionio/templates/edit/text-options.html
-msgid ""
-"enter <code>celsius</code> to keep only lines mentioning temperature readings"
+msgid "enter <code>celsius</code> to keep only lines mentioning temperature readings"
 msgstr "nhập <code>celsius</code> để chỉ giữ lại các dòng đề cập đến chỉ số nhiệt độ"
 
 #: changedetectionio/templates/edit/text-options.html
-msgid ""
-"Extracts text in the final output (line by line) after other filters using "
-"regular expressions or string match:"
+msgid "Extracts text in the final output (line by line) after other filters using regular expressions or string match:"
 msgstr "Trích xuất văn bản trong kết quả cuối cùng (từng dòng) sau các bộ lọc khác bằng regular expressions hoặc khớp chuỗi:"
 
 #: changedetectionio/templates/edit/text-options.html
@@ -5288,9 +5108,7 @@ msgstr "Đừng quên xem xét khoảng trắng ở đầu dòng"
 
 #: changedetectionio/templates/edit/text-options.html
 #, python-format
-msgid ""
-"Use <code>//(?aiLmsux))</code> type flags (more <a "
-"href=\"%(url)s\">information here</a>)"
+msgid "Use <code>//(?aiLmsux))</code> type flags (more <a href=\"%(url)s\">information here</a>)"
 msgstr "Sử dụng cờ loại <code>//(?aiLmsux))</code> (xem thêm <a href=\"%(url)s\">thông tin tại đây</a>)"
 
 #: changedetectionio/templates/edit/text-options.html
@@ -5440,11 +5258,13 @@ msgstr "API Base URL không phải là một URL http(s) hợp lệ."
 
 #: changedetectionio/validate_url.py
 msgid ""
-"API Base URL resolves to a private, loopback, link-local or reserved IP "
-"address and was blocked to prevent SSRF. To allow LLM endpoints on private "
-"networks (e.g. a local Ollama server) set the environment variable "
+"API Base URL resolves to a private, loopback, link-local or reserved IP address and was blocked to prevent SSRF. To "
+"allow LLM endpoints on private networks (e.g. a local Ollama server) set the environment variable "
 "ALLOW_IANA_RESTRICTED_ADDRESSES=true and restart."
-msgstr "URL cơ sở API phân giải ra một địa chỉ IP riêng tư, loopback, link-local hoặc dự phòng nên đã bị chặn để ngăn chặn SSRF. Để cho phép các điểm cuối LLM trên mạng nội bộ (ví dụ: máy chủ Ollama cục bộ), hãy thiết lập biến môi trường ALLOW_IANA_RESTRICTED_ADDRESSES=true và khởi động lại."
+msgstr ""
+"URL cơ sở API phân giải ra một địa chỉ IP riêng tư, loopback, link-local hoặc dự phòng nên đã bị chặn để ngăn chặn "
+"SSRF. Để cho phép các điểm cuối LLM trên mạng nội bộ (ví dụ: máy chủ Ollama cục bộ), hãy thiết lập biến môi trường "
+"ALLOW_IANA_RESTRICTED_ADDRESSES=true và khởi động lại."
 
 #: changedetectionio/widgets/ternary_boolean.py
 msgid "Main settings"

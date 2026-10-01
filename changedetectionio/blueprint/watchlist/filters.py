@@ -30,6 +30,7 @@ def list_filters_from_args(datastore, args):
         # Missing and unknown groups are different: an unknown group must never
         # turn a filtered bulk Recheck into a Recheck of every watch.
         'invalid_tag': bool(active_tag_req and not tag_uuid),
+        'tag_uuids': datastore.get_tag_descendant_uuids(tag_uuid) if tag_uuid else set(),
         'search_q': args.get('q').strip().lower() if args.get('q') else False,
     }
 
@@ -50,10 +51,16 @@ def watch_is_deal(watch):
 
 
 def watch_matches_tag(datastore, watch, f):
-    # A parent view includes its direct watches and the watches in its children.
-    return not f.get('invalid_tag') and (
-        not f['tag_uuid'] or f['tag_uuid'] in datastore.get_group_path_for_watch(watch['uuid'])
-    )
+    if f.get('invalid_tag'):
+        return False
+    # Membership includes tags auto-applied via a Tag's url_match_pattern, not just
+    # watch['tags'] (manually-assigned) — otherwise a regex-matched watch shows its
+    # tag badge on the row but silently drops out of that tag's filtered/tab view.
+    if not f['tag_uuid']:
+        return True
+
+    tag_uuids = f.get('tag_uuids') or {f['tag_uuid']}
+    return any(tag_uuid in tag_uuids for tag_uuid in datastore.get_all_tags_for_watch(watch['uuid']))
 
 
 def watch_in_context(datastore, watch, f):

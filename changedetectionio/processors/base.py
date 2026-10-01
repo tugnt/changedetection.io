@@ -1,4 +1,5 @@
 import hashlib
+import json
 
 from changedetectionio.browser_steps.browser_steps import browser_steps_get_valid_steps
 from changedetectionio.content_fetchers.base import Fetcher
@@ -11,6 +12,20 @@ from loguru import logger
 
 SCREENSHOT_FORMAT_JPEG = 'JPEG'
 SCREENSHOT_FORMAT_PNG = 'PNG'
+
+
+def _redact_proxy_url(proxy_url):
+    if not proxy_url:
+        return proxy_url
+    try:
+        parsed = urlparse(proxy_url)
+        if not parsed.hostname:
+            return '<configured proxy>'
+        port = f':{parsed.port}' if parsed.port else ''
+        return f'{parsed.scheme}://{parsed.hostname}{port}'
+    except ValueError:
+        return '<configured proxy>'
+
 
 class difference_detection_processor():
     browser_steps = None
@@ -98,6 +113,68 @@ class difference_detection_processor():
         except IOError as e:
             logger.warning(f"Failed to read checksum file for {self.watch_uuid}: {e}")
             self.last_raw_content_checksum = None
+
+    @staticmethod
+    def _http_cache_key(url, request_method, request_body, request_headers, proxy_id):
+        """Build a stable key for the representation returned by a GET request."""
+        request_method = (request_method or 'GET').upper()
+        if request_method != 'GET':
+            return None
+
+        headers = sorted(
+            (str(name).lower(), str(value))
+            for name, value in request_headers.items()
+            if str(name).lower() not in ('if-none-match', 'if-modified-since')
+        )
+        cache_input = {
+            'body': request_body or '',
+            'headers': headers,
+            'method': request_method.upper(),
+            'proxy': proxy_id or '',
+            'url': url,
+        }
+        return hashlib.sha256(
+            json.dumps(cache_input, ensure_ascii=True, sort_keys=True).encode('utf-8')
+        ).hexdigest()
+
+    def _configure_http_cache(self, prefer_fetch_backend, url, request_method,
+                              request_body, request_headers, preferred_proxy_id):
+        """Attach cached HTTP validators when this request can safely use them."""
+        if (
+            prefer_fetch_backend != 'html_requests'
+            or os.getenv('HTTP_CACHE_VALIDATORS', 'true').strip().lower()
+            not in ('1', 'true', 'yes', 'on')
+        ):
+            return
+
+        cache_key = self._http_cache_key(
+            url=url,
+            request_method=request_method,
+            request_body=request_body,
+            request_headers=request_headers,
+            proxy_id=preferred_proxy_id,
+        )
+        if not cache_key:
+            return
+
+        self.fetcher.http_cache_key = cache_key
+        cached = self.watch.get('http_cache') or {}
+        if not isinstance(cached, dict):
+            cached = {}
+
+        # A configuration edit can change the extracted result even when the HTTP
+        # representation is unchanged, so force one full response after edits.
+        if self.watch.was_edited or cached.get('key') != cache_key:
+            return
+
+        etag = cached.get('etag')
+        last_modified = cached.get('last_modified')
+        if etag and 'If-None-Match' not in request_headers:
+            request_headers['If-None-Match'] = etag
+            self.fetcher.http_cache_etag = etag
+        if last_modified and 'If-Modified-Since' not in request_headers:
+            request_headers['If-Modified-Since'] = last_modified
+            self.fetcher.http_cache_last_modified = last_modified
 
     async def validate_url_is_fetchable(self):
         """Pre-flight fetch gate for the regular check path (all fetchers, since they all come
@@ -196,18 +273,20 @@ class difference_detection_processor():
             # Custom browser endpoints should NOT have a proxy added
             if not prefer_fetch_backend.startswith('extra_browser_'):
                 proxy_url = self.datastore.get_proxy_url(preferred_proxy_id)
-                logger.debug(f"Selected proxy key '{preferred_proxy_id}' as proxy URL '{proxy_url}' for {url}")
+                logger.debug(f"Selected proxy key '{preferred_proxy_id}' as proxy endpoint '{_redact_proxy_url(proxy_url)}' for {url}")
             else:
                 logger.debug("Skipping adding proxy data when custom Browser endpoint is specified. ")
 
-        logger.debug(f"Using proxy '{proxy_url}' for {self.watch['uuid']}")
+        logger.debug(f"Using proxy '{_redact_proxy_url(proxy_url)}' for {self.watch['uuid']}")
 
         # Now call the fetcher (playwright/requests/etc) with arguments that only a fetcher would need.
         # When browser_connection_url is None, it method should default to working out whats the best defaults (os env vars etc)
         self.fetcher = fetcher_obj(proxy_override=proxy_url,
                                    custom_browser_connection_url=custom_browser_connection_url,
                                    screenshot_format=self.screenshot_format,
-                                   worker_id=self.worker_id
+                                   worker_id=self.worker_id,
+                                   curl_cffi_enabled=self.datastore.data['settings']['requests'].get('curl_cffi_enabled', False),
+                                   curl_cffi_impersonate=self.datastore.data['settings']['requests'].get('curl_cffi_impersonate', 'chrome120'),
                                    )
 
         # Stamp the resolved backend name so downstream consumers (processors, plugins)
@@ -248,6 +327,15 @@ class difference_detection_processor():
 
         request_method = self.watch.get('method')
         ignore_status_codes = self.watch.get('ignore_status_codes', False)
+
+        self._configure_http_cache(
+            prefer_fetch_backend=prefer_fetch_backend,
+            url=url,
+            request_method=request_method,
+            request_body=request_body,
+            request_headers=request_headers,
+            preferred_proxy_id=preferred_proxy_id,
+        )
 
         # Configurable per-watch or global extra delay before extracting text (for webDriver types)
         system_webdriver_delay = self.datastore.data['settings']['application'].get('webdriver_delay', None)

@@ -27,6 +27,8 @@ class model(dict):
                 'requests': {
                     'extra_proxies': [], # Configurable extra proxies via the UI
                     'extra_browsers': [],  # Configurable extra proxies via the UI
+                    'curl_cffi_enabled': False,
+                    'curl_cffi_impersonate': 'chrome120',
                     'jitter_seconds': 0,
                     'proxy': None, # Preferred proxy connection
                     'time_between_check': {'weeks': None, 'days': None, 'hours': 3, 'minutes': None, 'seconds': None},

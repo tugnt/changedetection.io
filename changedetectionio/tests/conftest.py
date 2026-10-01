@@ -430,6 +430,7 @@ def app(request, datastore_path):
 
     datastore = store.ChangeDetectionStore(datastore_path=app_config['datastore_path'], include_default_watches=False)
     app = changedetection_app(app_config, datastore)
+    app.config['BABEL_DEFAULT_LOCALE'] = 'en_GB'
 
     # Disable CSRF while running tests
     app.config['WTF_CSRF_ENABLED'] = False

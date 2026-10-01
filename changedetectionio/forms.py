@@ -1172,6 +1172,21 @@ class globalSettingsRequestForm(Form):
                            validators=[validators.NumberRange(min=1, max=999,
                                                               message=_l("Should be between 1 and 999"))])
 
+    curl_cffi_enabled = BooleanField(
+        _l('Use curl_cffi browser impersonation for plain HTTP requests'),
+        default=False,
+        validators=[validators.Optional()],
+    )
+    curl_cffi_impersonate = SelectField(
+        _l('curl_cffi browser fingerprint'),
+        choices=[
+            ('chrome120', 'Chrome 120'),
+            ('chrome136', 'Chrome 136'),
+        ],
+        default='chrome120',
+        validators=[validators.Optional()],
+    )
+
     extra_proxies = FieldList(FormField(SingleExtraProxy), min_entries=5)
     extra_browsers = FieldList(FormField(SingleExtraBrowser), min_entries=5)
 

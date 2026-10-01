@@ -47,6 +47,9 @@ services:
   #        Plain requests - proxy support example.
   #      - HTTP_PROXY=socks5h://10.10.1.10:1080
   #      - HTTPS_PROXY=socks5h://10.10.1.10:1080
+  #        Conditional HTTP validators (ETag/Last-Modified) are enabled by default
+  #        for html_requests; set false to disable them if needed.
+  #      - HTTP_CACHE_VALIDATORS=false
   #
   #        An exclude list (useful for notification URLs above) can be specified by with
   #      - NO_PROXY="localhost,192.168.0.0/24"

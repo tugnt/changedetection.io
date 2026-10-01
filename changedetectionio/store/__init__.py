@@ -1132,6 +1132,91 @@ class ChangeDetectionStore(DatastoreUpdatesMixin, FileSavingDataStore):
 
         return None
 
+    def get_tag_descendant_uuids(self, tag_uuid, include_self=True):
+        """Return a tag and/or all of its descendants, cycle-safe."""
+        tags = self.__data['settings']['application'].get('tags', {})
+        if tag_uuid not in tags:
+            return set()
+
+        children = {}
+        for child_uuid, tag in tags.items():
+            parent_uuid = tag.get('parent_uuid')
+            if parent_uuid in tags:
+                children.setdefault(parent_uuid, []).append(child_uuid)
+
+        result = {tag_uuid} if include_self else set()
+        pending = [tag_uuid]
+        while pending:
+            current_uuid = pending.pop()
+            for child_uuid in children.get(current_uuid, []):
+                if child_uuid not in result:
+                    result.add(child_uuid)
+                    pending.append(child_uuid)
+
+        return result
+
+    def get_tag_ancestor_uuids(self, tag_uuid, include_self=True):
+        """Return a tag and/or its ancestors, cycle-safe."""
+        tags = self.__data['settings']['application'].get('tags', {})
+        if tag_uuid not in tags:
+            return set()
+
+        result = set()
+        current_uuid = tag_uuid
+        while current_uuid in tags and current_uuid not in result:
+            if include_self or current_uuid != tag_uuid:
+                result.add(current_uuid)
+            current_uuid = tags[current_uuid].get('parent_uuid')
+
+        return result
+
+    def validate_tag_parent(self, tag_uuid, parent_uuid):
+        """Return whether parent_uuid is a valid parent for tag_uuid."""
+        parent_uuid = parent_uuid or None
+        if parent_uuid is None:
+            return True
+
+        tags = self.__data['settings']['application'].get('tags', {})
+        if parent_uuid not in tags:
+            return False
+
+        return not tag_uuid or parent_uuid not in self.get_tag_descendant_uuids(tag_uuid)
+
+    def get_tag_tree_rows(self, exclude_uuid=None):
+        """Return ``(uuid, tag, depth)`` rows in parent-before-child order."""
+        tags = self.__data['settings']['application'].get('tags', {})
+        excluded = self.get_tag_descendant_uuids(exclude_uuid) if exclude_uuid else set()
+        visible = {uuid: tag for uuid, tag in tags.items() if uuid not in excluded}
+        children = {}
+
+        for uuid, tag in visible.items():
+            parent_uuid = tag.get('parent_uuid')
+            if parent_uuid not in visible:
+                parent_uuid = None
+            children.setdefault(parent_uuid, []).append(uuid)
+
+        for child_uuids in children.values():
+            child_uuids.sort(key=lambda item: visible[item].get('title', '').casefold())
+
+        rows = []
+        visited = set()
+
+        def append_branch(uuid, depth):
+            if uuid in visited:
+                return
+            visited.add(uuid)
+            rows.append((uuid, visible[uuid], depth))
+            for child_uuid in children.get(uuid, []):
+                append_branch(child_uuid, depth + 1)
+
+        for root_uuid in children.get(None, []):
+            append_branch(root_uuid, 0)
+
+        for uuid in sorted(visible, key=lambda item: visible[item].get('title', '').casefold()):
+            append_branch(uuid, 0)
+
+        return rows
+
     def add_tag(self, title, parent_uuid='', allow_existing=True):
         # If name exists, return that
         n = title.strip().lower()

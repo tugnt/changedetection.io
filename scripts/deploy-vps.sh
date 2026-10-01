@@ -6,7 +6,7 @@ cd "$(dirname "$0")/.."
 
 exec 9>/tmp/changedetection-deploy.lock
 flock -n 9 || { echo 'Another deployment is running.' >&2; exit 1; }
-sudo -v
+sudo -n docker version >/dev/null
 revision=$(git rev-parse HEAD)
 image=${1:-changedetection-local:$(git rev-parse --short=8 HEAD)}
 stamp=$(date +%Y%m%d-%H%M%S)

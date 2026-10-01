@@ -253,6 +253,23 @@ de tranh ghi de cac thay doi moi. Khong xoa volume `changedetection-data`.
 Sau khi xac nhan ban moi on dinh, co the xoa rieng container rollback cu bang
 `sudo docker rm <ten-container-cu>`.
 
+### Lan deploy da xac nhan: 2026-10-01 UTC / 2026-10-02 JST
+
+- Source ung dung: commit `48273a989e66d062648fb32fb744fc28f0b4d1b6`.
+- Image dang chay: `changedetection-local:48273a98`.
+- Datastore: giu nguyen volume `changedetection-data`.
+- Backup: `/var/backups/changedetection/datastore-20261001-161842.tar.gz`.
+- Container cu: `changedetection-rollback-20261001-161842` (stopped).
+- Public `/`, `/tags/list`, `/settings`: HTTP 200.
+- HTML mac dinh: `data-darkmode="true"`.
+- CSS public: 108.596 bytes, trung voi CSS moi trong repo.
+- SHA256 CSS:
+  `2c05965e8989d3a24a03604238b1535ec1dca7661787c2528e6fee4076613569`.
+
+Cac commit tai lieu/script sau commit ung dung tren khong thay doi giao dien.
+Lan deploy tiep theo, script mac dinh build va gan image theo commit checkout
+hien tai.
+
 ## Xu ly loi thuong gap
 
 ### `Permission denied (publickey)`
